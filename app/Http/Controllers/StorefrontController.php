@@ -1,0 +1,168 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Support\Catalog;
+use App\Support\Fulfillment;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+
+class StorefrontController extends Controller
+{
+    public function home(): View
+    {
+        $favorites = Catalog::products()
+            ->sortBy('price')
+            ->filter(fn (array $product): bool => ($product['badge'] ?? null) !== null)
+            ->take(4)
+            ->values();
+
+        if ($favorites->count() < 4) {
+            $favorites = Catalog::products()->take(4)->values();
+        }
+
+        return view('pages.home', [
+            'title' => 'Dezato Cake House | Cakes & Desserts in Karachi',
+            'metaDescription' => 'Order cakes, cupcakes, eclairs, brownies, cheesecakes, tarts, mini pies and sundaes from Dezato Cake House in Karachi. Pickup & delivery in PKR.',
+            'favorites' => $favorites->all(),
+        ]);
+    }
+
+    public function menu(Request $request): View
+    {
+        $category = $request->string('category')->toString() ?: 'all';
+        $categories = config('dezato.menu.categories', []);
+        $validIds = collect($categories)->pluck('id')->all();
+
+        if (! in_array($category, $validIds, true)) {
+            $category = 'all';
+        }
+
+        $products = Catalog::products()
+            ->when($category !== 'all', fn ($items) => $items->where('category', $category))
+            ->values()
+            ->all();
+
+        $categoryLabel = $category === 'all'
+            ? 'All desserts'
+            : Catalog::categoryLabel($category);
+
+        return view('pages.menu', [
+            'title' => $categoryLabel.' | Dezato Cake House',
+            'metaDescription' => 'Browse '.$categoryLabel.' from Dezato Cake House, Karachi. Prices in PKR (₨).',
+            'categories' => $categories,
+            'products' => $products,
+            'activeCategory' => $category,
+        ]);
+    }
+
+    public function locations(): View
+    {
+        return view('pages.locations', [
+            'title' => 'Locations | Dezato Cake House Karachi',
+            'metaDescription' => 'Visit Dezato Cake House in DHA Phase 6 and Gizri, Karachi - hours, addresses, and delivery.',
+            'locations' => config('dezato.locations', []),
+        ]);
+    }
+
+    public function services(): View
+    {
+        return view('pages.services', [
+            'title' => 'Our Services | Dezato Cake House',
+            'metaDescription' => 'Catering, dessert tables, office sweet boxes, and corporate gifting from Dezato Cake House Karachi.',
+            'packages' => config('dezato.services.packages', []),
+        ]);
+    }
+
+    public function about(): View
+    {
+        return view('pages.about', [
+            'title' => 'About Us | Dezato Cake House',
+            'metaDescription' => 'Learn how Dezato Cake House has baked celebration cakes and desserts for Karachi since 2018.',
+            'intro' => (string) config('dezato.about.intro', ''),
+            'milestones' => config('dezato.about.milestones', []),
+        ]);
+    }
+
+    public function customization(): View
+    {
+        return view('pages.customization', [
+            'title' => 'Cake Customization | Dezato Cake House',
+            'metaDescription' => 'Custom celebration cakes in Karachi - flavours, sizes, inscriptions, and finishes from Dezato Cake House.',
+            'options' => config('dezato.customization.options', []),
+        ]);
+    }
+
+    public function order(Fulfillment $fulfillment): View|RedirectResponse
+    {
+        if (! $fulfillment->has()) {
+            return redirect()
+                ->route('home', ['fulfillment' => 1])
+                ->with('open_fulfillment', true);
+        }
+
+        return view('pages.order', [
+            'title' => 'Order | Dezato Cake House',
+            'metaDescription' => 'Order Dezato for Karachi pickup, local delivery, or Pakistan courier shipping.',
+            'options' => config('dezato.order.options', []),
+            'fulfillmentSummary' => $fulfillment->summary(),
+        ]);
+    }
+
+    public function product(string $product): View
+    {
+        $item = Catalog::findProduct($product);
+
+        abort_if($item === null, 404);
+
+        $related = Catalog::products()
+            ->where('category', $item['category'])
+            ->where('id', '!=', $item['id'])
+            ->take(3)
+            ->values()
+            ->all();
+
+        return view('pages.product', [
+            'title' => $item['name'].' | Dezato Cake House',
+            'metaDescription' => $item['description'],
+            'product' => $item,
+            'categoryLabel' => Catalog::categoryLabel($item['category']),
+            'related' => $related,
+            'fulfillmentSummary' => app(Fulfillment::class)->summary(),
+        ]);
+    }
+
+    public function sitemap(): Response
+    {
+        $urls = [
+            ['loc' => route('home'), 'changefreq' => 'weekly', 'priority' => '1.0'],
+            ['loc' => route('menu'), 'changefreq' => 'daily', 'priority' => '0.9'],
+            ['loc' => route('about'), 'changefreq' => 'monthly', 'priority' => '0.7'],
+            ['loc' => route('services'), 'changefreq' => 'monthly', 'priority' => '0.7'],
+            ['loc' => route('customization'), 'changefreq' => 'monthly', 'priority' => '0.8'],
+            ['loc' => route('locations'), 'changefreq' => 'monthly', 'priority' => '0.8'],
+            ['loc' => route('order'), 'changefreq' => 'weekly', 'priority' => '0.6'],
+        ];
+
+        foreach (Catalog::products() as $product) {
+            $urls[] = [
+                'loc' => route('products.show', $product['id']),
+                'changefreq' => 'weekly',
+                'priority' => '0.7',
+            ];
+        }
+
+        $xml = view('seo.sitemap', ['urls' => $urls])->render();
+
+        return response($xml, 200)->header('Content-Type', 'application/xml');
+    }
+
+    public function robots(): Response
+    {
+        $body = "User-agent: *\nAllow: /\n\nSitemap: ".url('/sitemap.xml')."\n";
+
+        return response($body, 200)->header('Content-Type', 'text/plain');
+    }
+}
