@@ -28,15 +28,35 @@
     <section class="section-block product-page">
         <div class="container product-layout">
             <div class="product-layout__media" data-reveal>
-                <img
-                    src="{{ asset($product['image']) }}"
-                    alt="{{ $product['name'] }}"
-                    width="1000"
-                    height="1000"
-                >
-                @if (! empty($product['badge']))
-                    <span class="product-card__badge">{{ $product['badge'] }}</span>
-                @endif
+                <div class="product-gallery" data-gallery>
+                    <div class="product-gallery__main">
+                        <img
+                            data-gallery-main
+                            src="{{ asset($gallery[0] ?? $product['image']) }}"
+                            alt="{{ $product['name'] }}"
+                            width="1000"
+                            height="1000"
+                        >
+                        @if (! empty($product['badge']))
+                            <span class="product-card__badge">{{ $product['badge'] }}</span>
+                        @endif
+                    </div>
+                    @if (count($gallery) > 1)
+                        <div class="product-gallery__thumbs">
+                            @foreach ($gallery as $i => $image)
+                                <button
+                                    type="button"
+                                    class="{{ $i === 0 ? 'is-active' : '' }}"
+                                    data-gallery-thumb
+                                    data-src="{{ asset($image) }}"
+                                    aria-label="View image {{ $i + 1 }}"
+                                >
+                                    <img src="{{ asset($image) }}" alt="" width="160" height="160" loading="lazy">
+                                </button>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
             </div>
 
             <div class="product-layout__copy" data-reveal>
@@ -85,3 +105,7 @@
         </section>
     @endif
 @endsection
+
+@push('scripts')
+<script src="{{ asset('js/features.js') }}" defer></script>
+@endpush

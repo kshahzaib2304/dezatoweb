@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#FAF6F2">
+    <title>{{ $title ?? 'Dezato Cake House' }}</title>
+    <meta name="description" content="{{ $metaDescription ?? 'Dezato Cake House' }}">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('images/brand/logo-mark.svg') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/dezato.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/theme-home.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/features.css') }}">
+</head>
+<body class="auth-body">
+    <a class="sr-only" href="#main">Skip to content</a>
+    <main id="main" class="auth-shell">
+        <a class="auth-brand" href="{{ route('home') }}">
+            <img src="{{ asset('images/brand/logo-mark.svg') }}" width="40" height="40" alt="">
+            <span>Dezato</span>
+        </a>
+        <div class="auth-card">
+            @yield('content')
+        </div>
+        <p class="auth-foot">
+            <a href="{{ route('home') }}">← Back to store</a>
+            <span>·</span>
+            <a href="{{ route('menu') }}">Continue as guest</a>
+        </p>
+    </main>
+</body>
+</html>

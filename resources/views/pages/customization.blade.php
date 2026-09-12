@@ -7,14 +7,14 @@
         text="Tell us the flavour, size, and message - we’ll bake a celebration cake for your Karachi occasion."
         image="images/home/promo-anniversary.jpg"
     >
-        <a class="btn btn--primary" href="#customize">Start your order</a>
+        <a class="btn btn--primary" href="{{ route('builder.show') }}">Open cake builder</a>
     </x-page-hero>
 
     <section class="section-block">
         <div class="container">
             <div class="section-head">
                 <h2>How customization works</h2>
-                <p>Three simple choices - then we confirm availability and price in PKR.</p>
+                <p>Use the full builder for uploads and live pricing — or leave a quick request below.</p>
             </div>
             <div class="package-grid">
                 @foreach ($options as $option)

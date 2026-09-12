@@ -15,6 +15,9 @@
             height="800"
             loading="lazy"
         >
+        @if (! empty($product['badge']))
+            <span class="product-card__badge">{{ $product['badge'] }}</span>
+        @endif
     </a>
     <div class="product-card__body">
         <div class="product-card__meta">

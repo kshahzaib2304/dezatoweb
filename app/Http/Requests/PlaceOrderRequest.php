@@ -22,7 +22,14 @@ class PlaceOrderRequest extends FormRequest
             'email' => ['required', 'email', 'max:180'],
             'phone' => ['required', 'string', 'max:40'],
             'notes' => ['nullable', 'string', 'max:1000'],
-            'payment_method' => ['required', Rule::in(['pay_later'])],
+            'payment_method' => ['required', 'string', Rule::in(['pay_later', 'cod', 'card', 'jazzcash', 'easypaisa', 'bnpl'])],
+            'delivery_date' => ['nullable', 'date'],
+            'delivery_slot' => ['nullable', 'string', 'max:80'],
+            'express' => ['nullable', 'boolean'],
+            'promo' => ['nullable', 'string', 'max:40'],
+            'gift_card' => ['nullable', 'string', 'max:60'],
+            'points' => ['nullable', 'integer', 'min:0'],
+            'save_card' => ['nullable', 'boolean'],
             'agree' => ['accepted'],
         ];
     }

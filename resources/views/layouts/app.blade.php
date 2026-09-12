@@ -37,6 +37,7 @@
 
     <link rel="stylesheet" href="{{ asset('css/dezato.css') }}">
     <link rel="stylesheet" href="{{ asset('css/theme-home.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/features.css') }}">
     @stack('head')
 
     <script type="application/ld+json">

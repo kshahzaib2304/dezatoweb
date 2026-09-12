@@ -1,5 +1,9 @@
 <?php
 
+use App\Http\Controllers\AccountController;
+use App\Http\Controllers\Admin\AdminPageController;
+use App\Http\Controllers\AuthPageController;
+use App\Http\Controllers\CakeBuilderController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\FulfillmentController;
@@ -16,11 +20,42 @@ Route::get('/locations', [StorefrontController::class, 'locations'])->name('loca
 Route::get('/about-us', [StorefrontController::class, 'about'])->name('about');
 Route::get('/our-services', [StorefrontController::class, 'services'])->name('services');
 Route::get('/cake-customization', [StorefrontController::class, 'customization'])->name('customization');
+Route::get('/custom-cake', [CakeBuilderController::class, 'show'])->name('builder.show');
+Route::post('/custom-cake', [CakeBuilderController::class, 'stub'])->name('builder.stub');
 
 Route::redirect('/our-story', '/about-us', 301);
 Route::redirect('/catering', '/our-services', 301);
 
 Route::post('/inquiries', [InquiryController::class, 'store'])->name('inquiries.store');
+
+/* Auth UI */
+Route::get('/login', [AuthPageController::class, 'login'])->name('login');
+Route::get('/register', [AuthPageController::class, 'register'])->name('register');
+Route::get('/forgot-password', [AuthPageController::class, 'forgot'])->name('password.request');
+Route::get('/reset-password', [AuthPageController::class, 'reset'])->name('password.reset');
+Route::post('/auth/ui', [AuthPageController::class, 'stub'])->name('auth.stub');
+
+/* Account UI */
+Route::prefix('account')->name('account.')->group(function (): void {
+    Route::get('/', fn () => redirect()->route('account.profile'));
+    Route::get('/profile', [AccountController::class, 'profile'])->name('profile');
+    Route::get('/addresses', [AccountController::class, 'addresses'])->name('addresses');
+    Route::get('/orders', [AccountController::class, 'orders'])->name('orders');
+    Route::get('/orders/{number}', [AccountController::class, 'track'])->name('track');
+    Route::post('/ui', [AccountController::class, 'stub'])->name('stub');
+});
+
+/* Admin UI shell */
+Route::prefix('admin')->name('admin.')->group(function (): void {
+    Route::get('/', [AdminPageController::class, 'dashboard'])->name('dashboard');
+    Route::get('/products', [AdminPageController::class, 'products'])->name('products');
+    Route::get('/orders', [AdminPageController::class, 'orders'])->name('orders');
+    Route::get('/customers', [AdminPageController::class, 'customers'])->name('customers');
+    Route::get('/promotions', [AdminPageController::class, 'promotions'])->name('promotions');
+    Route::get('/content', [AdminPageController::class, 'content'])->name('content');
+    Route::get('/reports', [AdminPageController::class, 'reports'])->name('reports');
+    Route::post('/ui', [AdminPageController::class, 'stub'])->name('stub');
+});
 
 Route::get('/order', [StorefrontController::class, 'order'])->name('order');
 Route::get('/order/start', [FulfillmentController::class, 'start'])->name('order.start');

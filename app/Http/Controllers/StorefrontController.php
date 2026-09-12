@@ -40,10 +40,38 @@ class StorefrontController extends Controller
             $category = 'all';
         }
 
+        $query = $request->string('q')->trim()->toString();
+        $sort = $request->string('sort')->toString() ?: 'featured';
+        $minPrice = $request->integer('min_price', 0);
+        $maxPrice = $request->integer('max_price', 0);
+        $weight = $request->string('weight')->toString();
+        $occasion = $request->string('occasion')->toString();
+
         $products = Catalog::products()
             ->when($category !== 'all', fn ($items) => $items->where('category', $category))
-            ->values()
-            ->all();
+            ->when($query !== '', function ($items) use ($query) {
+                $needle = mb_strtolower($query);
+
+                return $items->filter(function (array $product) use ($needle): bool {
+                    $haystack = mb_strtolower($product['name'].' '.$product['description'].' '.($product['badge'] ?? ''));
+
+                    return str_contains($haystack, $needle);
+                });
+            })
+            ->when($minPrice > 0, fn ($items) => $items->filter(fn (array $p): bool => (float) $p['price'] >= $minPrice))
+            ->when($maxPrice > 0, fn ($items) => $items->filter(fn (array $p): bool => (float) $p['price'] <= $maxPrice))
+            ->when($weight !== '', fn ($items) => $items->filter(fn (array $p): bool => ($p['weight'] ?? '') === $weight))
+            ->when($occasion === 'bestsellers', fn ($items) => $items->filter(fn (array $p): bool => in_array($p['badge'] ?? null, ['Bestseller', 'Popular', 'Guest favorite', 'Signature'], true)))
+            ->when($occasion === 'new', fn ($items) => $items->filter(fn (array $p): bool => ($p['badge'] ?? null) === 'New'))
+            ->values();
+
+        $products = match ($sort) {
+            'price_asc' => $products->sortBy('price')->values(),
+            'price_desc' => $products->sortByDesc('price')->values(),
+            'newest' => $products->sortByDesc(fn (array $p): int => ($p['badge'] ?? null) === 'New' ? 1 : 0)->values(),
+            'popular' => $products->sortByDesc(fn (array $p): int => ($p['badge'] ?? null) !== null ? 1 : 0)->values(),
+            default => $products,
+        };
 
         $categoryLabel = $category === 'all'
             ? 'All desserts'
@@ -53,8 +81,16 @@ class StorefrontController extends Controller
             'title' => $categoryLabel.' | Dezato Cake House',
             'metaDescription' => 'Browse '.$categoryLabel.' from Dezato Cake House, Karachi. Prices in PKR (₨).',
             'categories' => $categories,
-            'products' => $products,
+            'products' => $products->all(),
             'activeCategory' => $category,
+            'filters' => [
+                'q' => $query,
+                'sort' => $sort,
+                'min_price' => $minPrice ?: '',
+                'max_price' => $maxPrice ?: '',
+                'weight' => $weight,
+                'occasion' => $occasion,
+            ],
         ]);
     }
 
@@ -124,12 +160,21 @@ class StorefrontController extends Controller
             ->values()
             ->all();
 
+        $gallery = collect([$item['image']])
+            ->merge(collect($related)->pluck('image'))
+            ->filter()
+            ->unique()
+            ->take(4)
+            ->values()
+            ->all();
+
         return view('pages.product', [
             'title' => $item['name'].' | Dezato Cake House',
             'metaDescription' => $item['description'],
             'product' => $item,
             'categoryLabel' => Catalog::categoryLabel($item['category']),
             'related' => $related,
+            'gallery' => $gallery,
             'fulfillmentSummary' => app(Fulfillment::class)->summary(),
         ]);
     }

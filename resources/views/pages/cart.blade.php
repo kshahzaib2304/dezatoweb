@@ -89,6 +89,10 @@
                                 <dd>{{ pkr($deliveryFee) }}</dd>
                             </div>
                         @endif
+                        <div>
+                            <dt>Tax</dt>
+                            <dd>{{ pkr(0) }}</dd>
+                        </div>
                         <div class="cart-totals__total">
                             <dt>Total</dt>
                             <dd>{{ pkr($total) }}</dd>
@@ -102,4 +106,23 @@
             @endif
         </div>
     </section>
+
+    @php
+        $upsells = collect(config('dezato.menu.products', []))->where('badge', '!=', null)->take(3)->values();
+    @endphp
+    @if ($upsells->isNotEmpty())
+        <section class="section-block section-block--tint">
+            <div class="container">
+                <div class="section-head">
+                    <h2>You might also like</h2>
+                    <p>Add a little extra to your order.</p>
+                </div>
+                <div class="upsell-row">
+                    @foreach ($upsells as $product)
+                        <x-product-card :product="$product" />
+                    @endforeach
+                </div>
+            </div>
+        </section>
+    @endif
 @endsection

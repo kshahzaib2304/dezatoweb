@@ -65,13 +65,64 @@
                 </div>
 
                 <div class="checkout-form__section">
+                    <h2>Delivery timing</h2>
+                    <div class="checkout-extras">
+                        <div class="form-grid">
+                            <div class="form-row">
+                                <label class="field-label" for="delivery_date">Date</label>
+                                <input id="delivery_date" class="field-input" type="date" name="delivery_date" value="{{ old('delivery_date') }}">
+                            </div>
+                            <div class="form-row">
+                                <label class="field-label" for="delivery_slot">Time slot</label>
+                                <select id="delivery_slot" class="field-input" name="delivery_slot">
+                                    <option value="">Select a window</option>
+                                    @foreach (config('dezato_ui.checkout.time_slots', []) as $slot)
+                                        <option value="{{ $slot }}" @selected(old('delivery_slot') === $slot)>{{ $slot }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="form-row form-row--full">
+                                <label class="check-inline">
+                                    <input type="checkbox" name="express" value="1" @checked(old('express'))>
+                                    <span>Express / same-day delivery (availability confirmed at checkout)</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checkout-form__section">
+                    <h2>Promo &amp; rewards</h2>
+                    <div class="form-grid">
+                        <div class="form-row">
+                            <label class="field-label" for="promo">Promo code</label>
+                            <input id="promo" class="field-input" type="text" name="promo" value="{{ old('promo') }}" placeholder="DEZATO10">
+                        </div>
+                        <div class="form-row">
+                            <label class="field-label" for="gift_card">Gift card</label>
+                            <input id="gift_card" class="field-input" type="text" name="gift_card" value="{{ old('gift_card') }}" placeholder="Optional">
+                        </div>
+                        <div class="form-row form-row--full">
+                            <label class="field-label" for="points">Reward points</label>
+                            <input id="points" class="field-input" type="number" name="points" min="0" value="{{ old('points', 0) }}" placeholder="0">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checkout-form__section">
                     <h2>Payment</h2>
-                    <label class="pay-option">
-                        <input type="radio" name="payment_method" value="pay_later" checked>
-                        <span>
-                            <strong>{{ $paymentHint }}</strong>
-                            <small>We confirm your order in PKR (₨) and collect payment with pickup, delivery, or courier.</small>
-                        </span>
+                    @foreach (config('dezato_ui.checkout.payment_methods', []) as $i => $method)
+                        <label class="pay-option">
+                            <input type="radio" name="payment_method" value="{{ $method['id'] }}" @checked(old('payment_method', 'cod') === $method['id'] || ($i === 0 && ! old('payment_method')))>
+                            <span>
+                                <strong>{{ $method['label'] }}</strong>
+                                <small>{{ $method['hint'] }}</small>
+                            </span>
+                        </label>
+                    @endforeach
+                    <label class="check-inline" style="margin-top:0.75rem">
+                        <input type="checkbox" name="save_card" value="1">
+                        <span>Save card for 1-click checkout (UI — connects with gateway later)</span>
                     </label>
                     <label class="agree-row">
                         <input type="checkbox" name="agree" value="1" @checked(old('agree')) required>

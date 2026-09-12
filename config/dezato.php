@@ -19,7 +19,7 @@ return [
         ['label' => 'Home', 'route' => 'home'],
         ['label' => 'About Us', 'route' => 'about'],
         ['label' => 'Our Services', 'route' => 'services'],
-        ['label' => 'Cake Customization', 'route' => 'customization'],
+        ['label' => 'Cake Customization', 'route' => 'builder.show'],
     ],
 
     'home' => [

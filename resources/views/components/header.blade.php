@@ -43,6 +43,12 @@
         </nav>
 
         <div class="header-tools">
+            <a class="icon-btn" href="{{ route('account.profile') }}" aria-label="Account">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <circle cx="12" cy="8" r="3.5"/>
+                    <path d="M5.5 19.5c1.8-3 4-4.5 6.5-4.5s4.7 1.5 6.5 4.5"/>
+                </svg>
+            </a>
             @if ($hasFulfillment)
                 <a class="btn btn--primary header-cta" href="{{ route('menu') }}">Order</a>
             @else
