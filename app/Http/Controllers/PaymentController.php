@@ -48,7 +48,7 @@ class PaymentController extends Controller
         if ($ok) {
             return redirect()
                 ->route('checkout.confirmation', $order)
-                ->with('status', 'Payment received — thank you! We are preparing your order.');
+                ->with('status', 'Payment received - thank you! We are preparing your order.');
         }
 
         return redirect()

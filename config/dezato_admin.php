@@ -55,7 +55,7 @@ return [
             'ratio' => 'Landscape (4:3)',
             'formats' => 'JPG or WebP',
             'max' => '3 MB',
-            'tip' => 'Front of shop or inviting interior — well lit.',
+            'tip' => 'Front of shop or inviting interior - well lit.',
         ],
         'package' => [
             'label' => 'Services package photo',
@@ -71,7 +71,7 @@ return [
             'ratio' => 'Landscape (4:3)',
             'formats' => 'JPG or WebP',
             'max' => '3 MB',
-            'tip' => 'Pickup counter, delivery box, or catering table — one clear photo per card.',
+            'tip' => 'Pickup counter, delivery box, or catering table - one clear photo per card.',
         ],
         'reference' => [
             'label' => 'Custom cake reference photo',

@@ -173,7 +173,7 @@
                                     @if ($meta['secret']) placeholder="••••••••" @endif
                                 >
                                 @if ($meta['secret'])
-                                    <p class="field-hint">{{ $meta['set'] ? 'Saved — leave blank to keep.' : 'Not set yet.' }}</p>
+                                    <p class="field-hint">{{ $meta['set'] ? 'Saved - leave blank to keep.' : 'Not set yet.' }}</p>
                                 @endif
                             </div>
                         @endforeach

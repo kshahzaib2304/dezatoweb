@@ -6,7 +6,7 @@ use App\Models\SiteSetting;
 use Illuminate\Support\Facades\Route;
 
 /**
- * Primary website navigation — labels & order editable from Admin.
+ * Primary website navigation - labels & order editable from Admin.
  */
 final class NavigationMenu
 {

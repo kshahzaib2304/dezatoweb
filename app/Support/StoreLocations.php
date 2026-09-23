@@ -6,7 +6,7 @@ use App\Models\SiteSetting;
 use Illuminate\Support\Str;
 
 /**
- * Bakery store locations — editable from Admin (addresses, hours, map link, photo).
+ * Bakery store locations - editable from Admin (addresses, hours, map link, photo).
  */
 final class StoreLocations
 {

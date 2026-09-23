@@ -2,25 +2,7 @@
 
 @push('head')
 <script type="application/ld+json">
-{!! json_encode([
-    '@context' => 'https://schema.org',
-    '@type' => 'Product',
-    'name' => $product['name'],
-    'description' => $product['description'],
-    'image' => asset($product['image']),
-    'sku' => $product['id'],
-    'brand' => [
-        '@type' => 'Brand',
-        'name' => 'Dezato Cake House',
-    ],
-    'offers' => [
-        '@type' => 'Offer',
-        'priceCurrency' => 'PKR',
-        'price' => (string) (int) $product['price'],
-        'availability' => 'https://schema.org/InStock',
-        'url' => route('products.show', $product['id']),
-    ],
-], JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_HEX_TAG|JSON_HEX_AMP) !!}
+{!! \App\Support\SeoSchema::product($product) !!}
 </script>
 @endpush
 

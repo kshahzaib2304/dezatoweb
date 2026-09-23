@@ -1,4 +1,4 @@
-{{-- Initial page load: branded cake loader. Hidden after load. --}}
+{{-- Branded first-visit loader only. Return navigations skip via sessionStorage + html.skip-bake-loader. --}}
 <div
     id="bake-loader"
     class="bake-loader"

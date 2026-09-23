@@ -7,7 +7,7 @@
     @php
         $brandName = $brandName ?? \App\Support\SiteBrand::name();
         $pageTitle = $title ?? $brandName;
-        $pageDescription = $metaDescription ?? $brandName.' — cakes, cupcakes, eclairs, brownies, cheesecakes, tarts, mini pies and sundaes in Karachi. Order in PKR.';
+        $pageDescription = $metaDescription ?? $brandName.' - cakes, cupcakes, eclairs, brownies, cheesecakes, tarts, mini pies and sundaes in Karachi. Order in PKR.';
         $canonical = $canonical ?? url()->current();
         $ogImage = asset($ogImage ?? 'images/brand/logo-icon.jpg');
     @endphp
@@ -40,25 +40,19 @@
     <link rel="stylesheet" href="{{ asset('css/features.css') }}">
     @stack('head')
 
+    {{-- Hide bake-loader before paint on return visits (avoids flash on every click) --}}
+    <script>
+        (function () {
+            try {
+                if (sessionStorage.getItem('dezato.loaderSeen') === '1') {
+                    document.documentElement.classList.add('skip-bake-loader');
+                }
+            } catch (e) {}
+        })();
+    </script>
+
     <script type="application/ld+json">
-        {!! json_encode([
-            '@context' => 'https://schema.org',
-            '@type' => 'Bakery',
-            'name' => $brandName,
-            'url' => url('/'),
-            'image' => asset('images/brand/logo-icon.jpg'),
-            'description' => $pageDescription,
-            'address' => [
-                '@type' => 'PostalAddress',
-                'addressLocality' => 'Karachi',
-                'addressRegion' => 'Sindh',
-                'addressCountry' => 'PK',
-            ],
-            'areaServed' => 'Karachi',
-            'currenciesAccepted' => 'PKR',
-            'priceRange' => '₨₨',
-            'servesCuisine' => 'Bakery',
-        ], JSON_UNESCAPED_SLASHES|JSON_UNESCAPED_UNICODE|JSON_HEX_TAG|JSON_HEX_AMP) !!}
+        {!! \App\Support\SeoSchema::bakery($brandName, $pageDescription) !!}
     </script>
 </head>
 <body class="{{ ($currentRoute ?? null) === 'home' ? 'is-home' : '' }}">

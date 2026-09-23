@@ -4,21 +4,31 @@
   const doc = document;
   const body = doc.body;
 
-  /* ---------- Cake baking page loader ---------- */
+  /* ---------- Cake baking page loader (first visit only) ---------- */
   const bakeLoader = doc.getElementById('bake-loader');
-  if (bakeLoader) {
+  const skipBakeLoader = doc.documentElement.classList.contains('skip-bake-loader');
+
+  if (bakeLoader && skipBakeLoader) {
+    bakeLoader.remove();
+  } else if (bakeLoader) {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const minMs = reduceMotion ? 0 : 1200;
+    // Brand moment on first open only — never block later navigations.
+    const minMs = reduceMotion ? 0 : 280;
     const started = performance.now();
     body.classList.add('is-baking');
 
     const finish = () => {
+      try {
+        sessionStorage.setItem('dezato.loaderSeen', '1');
+      } catch (e) {}
+
       const wait = Math.max(0, minMs - (performance.now() - started));
       window.setTimeout(() => {
         bakeLoader.classList.add('is-done');
         bakeLoader.setAttribute('aria-busy', 'false');
         body.classList.remove('is-baking');
-        window.setTimeout(() => bakeLoader.remove(), 500);
+        doc.documentElement.classList.add('skip-bake-loader');
+        window.setTimeout(() => bakeLoader.remove(), 400);
       }, wait);
     };
 
@@ -55,21 +65,6 @@
     link.addEventListener('click', () => setNav(false));
   });
 
-  doc.addEventListener('keydown', (e) => {
-    if (e.key !== 'Escape') return;
-    const modal = doc.querySelector('[data-fulfillment-modal]');
-    if (modal && !modal.hidden) {
-      const dismissForm = doc.getElementById('fulfillment-dismiss-form');
-      if (dismissForm) {
-        dismissForm.requestSubmit();
-      } else {
-        setFulfillmentModal(false);
-      }
-      return;
-    }
-    setNav(false);
-  });
-
   /* ---------- Accordion in drawer ---------- */
   doc.querySelectorAll('[data-accordion]').forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -91,7 +86,10 @@
 
   /* ---------- Reveal on scroll ---------- */
   const reveals = doc.querySelectorAll('[data-reveal]');
-  if (reveals.length && 'IntersectionObserver' in window) {
+  // After the first visit, show content immediately — staggered fades feel like "loading" on every click.
+  if (skipBakeLoader || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    reveals.forEach((el) => el.classList.add('is-visible'));
+  } else if (reveals.length && 'IntersectionObserver' in window) {
     const io = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -135,6 +133,34 @@
       el.disabled = !enabled;
     };
 
+    const filterStores = () => {
+      const method = methodInput?.value || 'pickup';
+      if (method === 'shipping') {
+        if (empty) empty.hidden = true;
+        return;
+      }
+
+      const query = (searchInput?.value || '').trim().toLowerCase();
+      let visible = 0;
+
+      options.forEach((option) => {
+        const delivers = option.getAttribute('data-delivers') === '1';
+        const name = option.getAttribute('data-store-name') || '';
+        const matchesQuery = !query || name.includes(query);
+        const matchesMethod = method === 'pickup' || delivers;
+        const show = matchesQuery && matchesMethod;
+        option.hidden = !show;
+        if (!show) {
+          const radio = option.querySelector('input[type="radio"]');
+          if (radio?.checked) radio.checked = false;
+        } else {
+          visible += 1;
+        }
+      });
+
+      if (empty) empty.hidden = visible > 0;
+    };
+
     const setMethod = (method) => {
       if (methodInput) methodInput.value = method;
 
@@ -164,34 +190,6 @@
       });
 
       filterStores();
-    };
-
-    const filterStores = () => {
-      const method = methodInput?.value || 'pickup';
-      if (method === 'shipping') {
-        if (empty) empty.hidden = true;
-        return;
-      }
-
-      const query = (searchInput?.value || '').trim().toLowerCase();
-      let visible = 0;
-
-      options.forEach((option) => {
-        const delivers = option.getAttribute('data-delivers') === '1';
-        const name = option.getAttribute('data-store-name') || '';
-        const matchesQuery = !query || name.includes(query);
-        const matchesMethod = method === 'pickup' || delivers;
-        const show = matchesQuery && matchesMethod;
-        option.hidden = !show;
-        if (!show) {
-          const radio = option.querySelector('input[type="radio"]');
-          if (radio?.checked) radio.checked = false;
-        } else {
-          visible += 1;
-        }
-      });
-
-      if (empty) empty.hidden = visible > 0;
     };
 
     tabs.forEach((tab) => {
@@ -224,6 +222,7 @@
 
   /* ---------- Fulfillment modal (first visit / order gate) ---------- */
   const fulfillmentModal = doc.querySelector('[data-fulfillment-modal]');
+  const dismissForm = doc.getElementById('fulfillment-dismiss-form');
 
   function setFulfillmentModal(open) {
     if (!fulfillmentModal) return;
@@ -234,6 +233,38 @@
       fulfillmentModal.querySelector('.fulfillment-modal__dialog')?.focus({ preventScroll: true });
     }
   }
+
+  /** Persist "welcome seen" without a full page reload. */
+  function dismissWelcomeQuietly() {
+    setFulfillmentModal(false);
+    if (!dismissForm) return;
+
+    fetch(dismissForm.action, {
+      method: 'POST',
+      body: new FormData(dismissForm),
+      headers: {
+        Accept: 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+      },
+      credentials: 'same-origin',
+    }).catch(() => {
+      // Best-effort; UI already closed.
+    });
+  }
+
+  doc.addEventListener('keydown', (e) => {
+    if (e.key !== 'Escape') return;
+    if (fulfillmentModal && !fulfillmentModal.hidden) {
+      dismissWelcomeQuietly();
+      return;
+    }
+    setNav(false);
+  });
+
+  dismissForm?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    dismissWelcomeQuietly();
+  });
 
   doc.querySelectorAll('[data-fulfillment-open]').forEach((el) => {
     el.addEventListener('click', (event) => {
@@ -250,13 +281,9 @@
   });
 
   fulfillmentModal?.querySelectorAll('[data-fulfillment-dismiss]').forEach((el) => {
-    el.addEventListener('click', () => {
-      const dismissForm = doc.getElementById('fulfillment-dismiss-form');
-      if (dismissForm) {
-        dismissForm.requestSubmit();
-        return;
-      }
-      setFulfillmentModal(false);
+    el.addEventListener('click', (event) => {
+      event.preventDefault();
+      dismissWelcomeQuietly();
     });
   });
 

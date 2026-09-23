@@ -99,7 +99,7 @@ class StorefrontController extends Controller
 
         return view('pages.locations', [
             'title' => 'Locations | Dezato Cake House Karachi',
-            'metaDescription' => 'Visit Dezato Cake House in Karachi — hours, addresses, and delivery.',
+            'metaDescription' => 'Visit Dezato Cake House in Karachi - hours, addresses, and delivery.',
             'locations' => $locations,
         ]);
     }
@@ -111,7 +111,7 @@ class StorefrontController extends Controller
             'metaDescription' => 'Catering, dessert tables, office sweet boxes, and corporate gifting from Dezato Cake House Karachi.',
             'intro' => SiteContent::section(
                 'services_intro',
-                'From office boxes to full dessert tables — custom selections of Dezato’s best for every occasion.'
+                'From office boxes to full dessert tables - custom selections of Dezato’s best for every occasion.'
             ),
             'packages' => StoryBlocks::packagesForStorefront(),
         ]);

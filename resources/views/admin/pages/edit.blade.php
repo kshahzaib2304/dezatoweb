@@ -6,7 +6,7 @@
         <ol class="admin-steps">
             <li>Update About / Services introductions (short paragraphs).</li>
             <li>Use <strong>Add</strong> buttons for timeline items, packages, and choice cards.</li>
-            <li>Edit Privacy, Terms, and FAQ in plain language — blank line between paragraphs.</li>
+            <li>Edit Privacy, Terms, and FAQ in plain language - blank line between paragraphs.</li>
             <li>For FAQ: question on the first line, then the answer.</li>
         </ol>
         <p class="admin-muted">No coding needed. Changes appear on the website after you save. Package / order photos ≈ {{ $packageGuide['size'] }}.</p>
@@ -43,7 +43,7 @@
             @foreach ($milestones as $index => $item)
                 <article class="admin-slide-card">
                     <div class="admin-panel__head">
-                        <strong>{{ $item['year'] }} — {{ $item['title'] }}</strong>
+                        <strong>{{ $item['year'] }} - {{ $item['title'] }}</strong>
                         @if (count($milestones) > 1)
                             <button class="btn btn--ghost btn--sm" type="submit" form="delete-milestone-{{ $item['id'] }}" onclick="return confirm('Remove this timeline item?')">Remove</button>
                         @endif

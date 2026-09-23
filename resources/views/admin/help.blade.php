@@ -15,19 +15,19 @@
         <section class="admin-panel">
             <h2>Everyday tasks</h2>
             <ul class="admin-tips">
-                <li><strong>Products</strong> — Add, edit, hide items and upload photos. Use “Needs real photo” to replace homepage placeholders (1200 × 1200).</li>
-                <li><strong>Categories</strong> — Menu groups shown in the mobile nav drawer. Add/rename here; they appear on the website automatically.</li>
-                <li><strong>Payment options</strong> — Tick COD / bank / JazzCash / Easypaisa and fill account numbers customers should pay to.</li>
-                <li><strong>Delivery times</strong> — Edit the pickup/delivery time windows shown at checkout.</li>
-                <li><strong>Orders</strong> — Update status, mark transfer payments as paid, and print an invoice / packing slip.</li>
-                <li><strong>Messages</strong> — Read contact-form requests; reply by email, call, or WhatsApp.</li>
-                <li><strong>Store locations</strong> — Addresses, hours, Maps links, delivery fees. Use <em>Add location</em> for a new shop.</li>
-                <li><strong>Homepage &amp; text</strong> — Announcement, hero slides, category shortcuts, and occasion tiles. Use <em>Add tile</em> for new shortcuts.</li>
-                <li><strong>Website pages</strong> — About intro, timeline, Services packages, Cake Customization cards, Order choice cards (Pickup / Courier / Catering), Privacy / Terms / FAQ. Use the <em>Add</em> buttons for new rows.</li>
-                <li><strong>Contact &amp; store</strong> — Brand name (“Dezato Cake House”), top menu labels/order, phone, WhatsApp, emails, courier fee, and admin password.</li>
-                <li><strong>Email, logins &amp; links</strong> — SMTP, Google/Facebook login, footer links, online payment API keys.</li>
-                <li><strong>Custom cake prices / Promo codes</strong> — All editable without a developer.</li>
-                <li><strong>Reports</strong> — Snapshot plus CSV export (7 / 30 / 90 days).</li>
+                <li><strong>Products</strong> - Add, edit, hide items and upload photos. Use “Needs real photo” to replace homepage placeholders (1200 × 1200).</li>
+                <li><strong>Categories</strong> - Menu groups shown in the mobile nav drawer. Add/rename here; they appear on the website automatically.</li>
+                <li><strong>Payment options</strong> - Tick COD / bank / JazzCash / Easypaisa and fill account numbers customers should pay to.</li>
+                <li><strong>Delivery times</strong> - Edit the pickup/delivery time windows shown at checkout.</li>
+                <li><strong>Orders</strong> - Update status, mark transfer payments as paid, and print an invoice / packing slip.</li>
+                <li><strong>Messages</strong> - Read contact-form requests; reply by email, call, or WhatsApp.</li>
+                <li><strong>Store locations</strong> - Addresses, hours, Maps links, delivery fees. Use <em>Add location</em> for a new shop.</li>
+                <li><strong>Homepage &amp; text</strong> - Announcement, hero slides, category shortcuts, and occasion tiles. Use <em>Add tile</em> for new shortcuts.</li>
+                <li><strong>Website pages</strong> - About intro, timeline, Services packages, Cake Customization cards, Order choice cards (Pickup / Courier / Catering), Privacy / Terms / FAQ. Use the <em>Add</em> buttons for new rows.</li>
+                <li><strong>Contact &amp; store</strong> - Brand name (“Dezato Cake House”), top menu labels/order, phone, WhatsApp, emails, courier fee, and admin password.</li>
+                <li><strong>Email, logins &amp; links</strong> - SMTP, Google/Facebook login, footer links, online payment API keys.</li>
+                <li><strong>Custom cake prices / Promo codes</strong> - All editable without a developer.</li>
+                <li><strong>Reports</strong> - Snapshot plus CSV export (7 / 30 / 90 days).</li>
             </ul>
         </section>
 
@@ -38,7 +38,7 @@
                 <div><dt>Top links (Home / About / Services…)</dt><dd>Contact &amp; store → Top website menu</dd></div>
                 <div><dt>Cake Customization blurbs</dt><dd>Website pages → Cake Customization cards</dd></div>
                 <div><dt>Order page Pickup / Courier / Catering</dt><dd>Website pages → Order page choice cards</dd></div>
-                <div><dt>Mobile menu cake categories</dt><dd>Categories (left menu) — they sync from your product categories</dd></div>
+                <div><dt>Mobile menu cake categories</dt><dd>Categories (left menu) - they sync from your product categories</dd></div>
             </dl>
         </section>
 
@@ -94,7 +94,7 @@
 
         <section class="admin-panel">
             <h2>Need a developer?</h2>
-            <p>Ask your web partner only for: connecting real email sending (SMTP), online payment gateways (JazzCash/card), or unique product photography. Day-to-day store management — including brand name, menus, locations, tiles, packages, and page cards — is fully covered in this Admin.</p>
+            <p>Ask your web partner only for: connecting real email sending (SMTP), online payment gateways (JazzCash/card), or unique product photography. Day-to-day store management - including brand name, menus, locations, tiles, packages, and page cards - is fully covered in this Admin.</p>
         </section>
     </div>
 @endsection

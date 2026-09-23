@@ -53,7 +53,7 @@ class PagesController extends Controller
             ),
             'servicesIntro' => SiteContent::section(
                 'services_intro',
-                'Catering, dessert tables, office sweet boxes, and thoughtful corporate gifting — baked fresh in Karachi.'
+                'Catering, dessert tables, office sweet boxes, and thoughtful corporate gifting - baked fresh in Karachi.'
             ),
             'milestones' => StoryBlocks::milestones(),
             'packages' => $packages,

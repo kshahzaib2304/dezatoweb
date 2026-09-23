@@ -70,6 +70,14 @@ final class BakeryProfile
         return $url;
     }
 
+    /**
+     * Publish the bakery's public URL into config for mail / queues.
+     *
+     * Never force that URL onto browser requests when the host or port differs
+     * (e.g. Admin has http://localhost but you open http://127.0.0.1:8000) -
+     * that makes asset() point at the wrong origin and the site looks like
+     * unstyled plain HTML.
+     */
     public static function applySiteUrl(): void
     {
         $url = self::siteUrl();
@@ -79,11 +87,47 @@ final class BakeryProfile
         }
 
         Config::set('app.url', $url);
+
+        if (app()->runningInConsole()) {
+            self::forceRoot($url);
+
+            return;
+        }
+
+        if (! self::matchesCurrentRequest($url)) {
+            return;
+        }
+
+        self::forceRoot($url);
+    }
+
+    private static function forceRoot(string $url): void
+    {
         URL::forceRootUrl($url);
 
         if (str_starts_with($url, 'https://')) {
             URL::forceScheme('https');
         }
+    }
+
+    private static function matchesCurrentRequest(string $url): bool
+    {
+        $parts = parse_url($url);
+
+        if ($parts === false || empty($parts['host'])) {
+            return false;
+        }
+
+        $request = request();
+        $scheme = $parts['scheme'] ?? 'http';
+        $host = strtolower((string) $parts['host']);
+        $port = isset($parts['port'])
+            ? (int) $parts['port']
+            : ($scheme === 'https' ? 443 : 80);
+
+        return strtolower($request->getHost()) === $host
+            && (int) $request->getPort() === $port
+            && $request->getScheme() === $scheme;
     }
 
     /**

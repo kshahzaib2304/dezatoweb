@@ -59,7 +59,7 @@ final class PaymentMethods
             [
                 'id' => 'card',
                 'label' => 'Credit / Debit card',
-                'hint' => 'Online card checkout (Stripe) — turn on under Email, logins & links when keys are ready',
+                'hint' => 'Online card checkout (Stripe) - turn on under Email, logins & links when keys are ready',
                 'enabled_by_default' => false,
                 'live' => true,
                 'type' => 'gateway',

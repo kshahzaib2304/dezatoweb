@@ -24,6 +24,10 @@ h3,
 }
 
 /* ---------- Cake baking loader ---------- */
+html.skip-bake-loader .bake-loader {
+    display: none !important;
+}
+
 .bake-loader {
     position: fixed;
     inset: 0;
@@ -35,7 +39,7 @@ h3,
     background:
         radial-gradient(circle at 50% 42%, rgba(232, 208, 220, 0.4), transparent 55%),
         var(--dz-cream);
-    transition: opacity 0.45s var(--ease-out), visibility 0.45s;
+    transition: opacity 0.35s var(--ease-out), visibility 0.35s;
 }
 
 .bake-loader.is-done {
@@ -46,6 +50,10 @@ h3,
 
 body.is-baking {
     overflow: hidden;
+}
+
+html.skip-bake-loader body.is-baking {
+    overflow: auto;
 }
 
 .bake-loader__stage {
@@ -872,6 +880,13 @@ body.is-baking {
 [data-reveal].is-visible {
     opacity: 1;
     transform: none;
+}
+
+/* Return visits: no fade-in (felt like loading on every click) */
+html.skip-bake-loader [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

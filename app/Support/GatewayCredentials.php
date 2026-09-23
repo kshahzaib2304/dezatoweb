@@ -5,7 +5,7 @@ namespace App\Support;
 use App\Models\SiteSetting;
 
 /**
- * Online payment gateway keys (JazzCash / Easypaisa / card) — Admin-managed.
+ * Online payment gateway keys (JazzCash / Easypaisa / card) - Admin-managed.
  * Transfer account numbers stay under Payment options.
  */
 final class GatewayCredentials

@@ -5,7 +5,7 @@ namespace App\Support;
 use App\Models\SiteSetting;
 
 /**
- * Public brand name / short label — editable from Admin.
+ * Public brand name / short label - editable from Admin.
  */
 final class SiteBrand
 {

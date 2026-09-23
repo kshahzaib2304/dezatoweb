@@ -79,6 +79,7 @@
                 <div class="form-row">
                     <label class="field-label" for="site_url">Website address *</label>
                     <input id="site_url" class="field-input" type="url" name="site_url" value="{{ old('site_url', $siteUrl) }}" required placeholder="https://dezato.pk">
+                    <p class="field-hint">Live site URL for emails and sharing. Locally, match how you open the site (e.g. <code>http://127.0.0.1:8000</code>). Wrong value used to break CSS.</p>
                 </div>
                 <div class="form-row">
                     <label class="field-label" for="public_phone">Bakery phone *</label>

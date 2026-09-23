@@ -6,7 +6,7 @@ use App\Models\SiteSetting;
 use Illuminate\Support\Facades\Config;
 
 /**
- * Pakistan courier fee / ETA — editable from Admin.
+ * Pakistan courier fee / ETA - editable from Admin.
  */
 final class ShippingSettings
 {

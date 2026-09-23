@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\SaveFulfillmentRequest;
 use App\Support\Catalog;
 use App\Support\Fulfillment;
+use App\Support\ShippingSettings;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class FulfillmentController extends Controller
 {
@@ -26,12 +29,12 @@ class FulfillmentController extends Controller
             $this->fulfillment->put([
                 'method' => Fulfillment::METHOD_SHIPPING,
                 'location_id' => null,
-                'location_name' => \App\Support\ShippingSettings::label(),
+                'location_name' => ShippingSettings::label(),
                 'address' => $request->string('address')->trim()->toString(),
                 'city' => $request->string('city')->trim()->toString(),
                 'region' => $request->string('region')->trim()->toString(),
                 'postal_code' => $request->string('postal_code')->trim()->toString(),
-                'fee' => \App\Support\ShippingSettings::fee(),
+                'fee' => ShippingSettings::fee(),
             ]);
 
             return redirect()
@@ -71,9 +74,13 @@ class FulfillmentController extends Controller
             ->with('status', 'Great - your order preferences are saved.');
     }
 
-    public function dismiss(): RedirectResponse
+    public function dismiss(Request $request): RedirectResponse|JsonResponse
     {
         $this->fulfillment->markWelcomeSeen();
+
+        if ($request->expectsJson() || $request->ajax()) {
+            return response()->json(['ok' => true]);
+        }
 
         return back()->with('status', 'Browse away - choose pickup, delivery, or courier anytime you order.');
     }
