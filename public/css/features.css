@@ -320,7 +320,8 @@
 
 .menu-tools__row {
     display: grid;
-    gap: 0.75rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.65rem;
 }
 
 .menu-search {
@@ -338,14 +339,8 @@
     font: inherit;
 }
 
-.menu-filters {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.65rem;
-}
-
-.menu-filters select,
-.menu-sort select {
+.menu-sort select,
+.menu-size select {
     width: 100%;
     min-height: 44px;
     border: 1px solid var(--line);
@@ -358,12 +353,8 @@
 
 @media (min-width: 768px) {
     .menu-tools__row {
-        grid-template-columns: 1.4fr 1fr;
-        align-items: end;
-    }
-
-    .menu-filters {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+        grid-template-columns: 1fr 1fr;
+        max-width: 28rem;
     }
 }
 
@@ -476,8 +467,7 @@
 }
 
 .option-tile input,
-.check-tile input,
-.color-swatch input {
+.check-tile input {
     position: absolute;
     opacity: 0;
     pointer-events: none;
@@ -520,10 +510,23 @@
 .color-row {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 0.55rem;
 }
 
-.color-swatch span {
+.color-swatch {
+    position: relative;
+    display: block;
+    cursor: pointer;
+}
+
+.color-swatch > input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.color-swatch > span {
     display: block;
     width: 36px;
     height: 36px;
@@ -533,8 +536,56 @@
     box-shadow: 0 0 0 1px var(--line);
 }
 
-.color-swatch input:checked + span {
+.color-swatch > input[type="radio"]:checked + span,
+.color-swatch > input[type="radio"]:focus-visible + span {
     box-shadow: 0 0 0 2px var(--plum-600);
+}
+
+.color-swatch--custom > span {
+    position: relative;
+    overflow: hidden;
+    background:
+        linear-gradient(135deg, #f7f1e8 0%, #e8d0dc 35%, #c45c6a 70%, #4a3428 100%);
+}
+
+.color-swatch--custom.is-active > span {
+    background: var(--swatch);
+}
+
+.color-swatch--custom > span::after {
+    content: "+";
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(36, 24, 32, 0.45);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.color-swatch--custom.is-active > span::after {
+    content: "";
+}
+
+.color-swatch__custom input[type="color"] {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    border-radius: 50%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.color-hint {
+    margin: 0.55rem 0 0;
+    font-size: 0.85rem;
+    color: var(--muted);
 }
 
 .upload-zone {

@@ -47,6 +47,41 @@
       preview.hidden = false;
       if (label) label.textContent = file.name;
     });
+
+    /* Icing colour: presets + native color picker */
+    const colorRoot = builder.querySelector('[data-icing-colors]');
+    const colorHexField = builder.querySelector('[data-color-hex-field]');
+    const colorPicker = builder.querySelector('[data-color-picker]');
+    const customRadio = builder.querySelector('[data-color-custom-radio]');
+    const customPreview = builder.querySelector('[data-color-custom-preview]');
+    const customSwatch = customRadio?.closest('.color-swatch--custom');
+
+    const setIcingHex = (hex, { custom = false } = {}) => {
+      if (colorHexField) colorHexField.value = hex;
+      if (customPreview) customPreview.style.setProperty('--swatch', hex);
+      customSwatch?.classList.toggle('is-active', custom);
+    };
+
+    colorRoot?.addEventListener('change', (event) => {
+      const target = event.target;
+      if (!(target instanceof HTMLInputElement)) return;
+
+      if (target.matches('input[name="color"]') && target.value !== 'custom') {
+        setIcingHex(target.dataset.colorHex || '#f7f1e8', { custom: false });
+        return;
+      }
+
+      if (target === customRadio || target === colorPicker) {
+        const hex = colorPicker?.value || '#c45c6a';
+        if (customRadio) customRadio.checked = true;
+        setIcingHex(hex, { custom: true });
+      }
+    });
+
+    colorPicker?.addEventListener('input', () => {
+      if (customRadio) customRadio.checked = true;
+      setIcingHex(colorPicker.value, { custom: true });
+    });
   }
 
   /* ---------- Product gallery ---------- */

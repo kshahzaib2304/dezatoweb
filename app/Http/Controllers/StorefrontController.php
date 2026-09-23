@@ -42,10 +42,7 @@ class StorefrontController extends Controller
 
         $query = $request->string('q')->trim()->toString();
         $sort = $request->string('sort')->toString() ?: 'featured';
-        $minPrice = $request->integer('min_price', 0);
-        $maxPrice = $request->integer('max_price', 0);
         $weight = $request->string('weight')->toString();
-        $occasion = $request->string('occasion')->toString();
 
         $products = Catalog::products()
             ->when($category !== 'all', fn ($items) => $items->where('category', $category))
@@ -58,11 +55,7 @@ class StorefrontController extends Controller
                     return str_contains($haystack, $needle);
                 });
             })
-            ->when($minPrice > 0, fn ($items) => $items->filter(fn (array $p): bool => (float) $p['price'] >= $minPrice))
-            ->when($maxPrice > 0, fn ($items) => $items->filter(fn (array $p): bool => (float) $p['price'] <= $maxPrice))
             ->when($weight !== '', fn ($items) => $items->filter(fn (array $p): bool => ($p['weight'] ?? '') === $weight))
-            ->when($occasion === 'bestsellers', fn ($items) => $items->filter(fn (array $p): bool => in_array($p['badge'] ?? null, ['Bestseller', 'Popular', 'Guest favorite', 'Signature'], true)))
-            ->when($occasion === 'new', fn ($items) => $items->filter(fn (array $p): bool => ($p['badge'] ?? null) === 'New'))
             ->values();
 
         $products = match ($sort) {
@@ -86,10 +79,7 @@ class StorefrontController extends Controller
             'filters' => [
                 'q' => $query,
                 'sort' => $sort,
-                'min_price' => $minPrice ?: '',
-                'max_price' => $maxPrice ?: '',
                 'weight' => $weight,
-                'occasion' => $occasion,
             ],
         ]);
     }

@@ -115,15 +115,35 @@
                             <input id="message" class="field-input" type="text" name="message" maxlength="60" placeholder="Happy Birthday Ayaan">
                         </div>
                         <div class="form-row form-row--full">
-                            <p class="field-label">Icing colour</p>
-                            <div class="color-row" role="radiogroup" aria-label="Icing colour">
+                            <p class="field-label" id="icing-colour-label">Icing colour</p>
+                            <div class="color-row" role="radiogroup" aria-labelledby="icing-colour-label" data-icing-colors>
                                 @foreach ($b['colors'] as $color)
                                     <label class="color-swatch" title="{{ $color['label'] }}">
-                                        <input type="radio" name="color" value="{{ $color['id'] }}" @checked($loop->first)>
+                                        <input
+                                            type="radio"
+                                            name="color"
+                                            value="{{ $color['id'] }}"
+                                            data-color-hex="{{ $color['hex'] }}"
+                                            @checked($loop->first)
+                                        >
                                         <span style="--swatch: {{ $color['hex'] }}"></span>
                                     </label>
                                 @endforeach
+                                <label class="color-swatch color-swatch--custom" title="Custom colour">
+                                    <input type="radio" name="color" value="custom" data-color-custom-radio>
+                                    <span class="color-swatch__custom" data-color-custom-preview style="--swatch: #c45c6a">
+                                        <input
+                                            type="color"
+                                            name="color_custom"
+                                            value="#c45c6a"
+                                            data-color-picker
+                                            aria-label="Pick a custom icing colour"
+                                        >
+                                    </span>
+                                </label>
                             </div>
+                            <input type="hidden" name="color_hex" value="{{ $b['colors'][0]['hex'] ?? '#f7f1e8' }}" data-color-hex-field>
+                            <p class="color-hint">Choose a preset or tap the + swatch to pick any colour.</p>
                         </div>
                     </div>
                 </section>
