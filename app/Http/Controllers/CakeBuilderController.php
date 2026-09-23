@@ -21,6 +21,7 @@ class CakeBuilderController extends Controller
             'title' => 'Custom Cake Builder | Dezato Cake House',
             'metaDescription' => 'Design a custom cake - upload a reference, choose size, shape, flavour, and add-ons. Prices in PKR.',
             'builder' => CakeBuilder::config(),
+            'guidelines' => CakeBuilder::guidelines(),
             'referenceGuide' => config('dezato_admin.media.reference'),
         ]);
     }
@@ -37,7 +38,9 @@ class CakeBuilderController extends Controller
             'diets' => ['nullable', 'array'],
             'diets.*' => ['string', 'max:40'],
             'addons' => ['nullable', 'array'],
-            'addons.*' => ['string', 'max:40'],
+            'addons.*' => ['string', 'max:80'],
+            'addon_qty' => ['nullable', 'array'],
+            'addon_qty.*' => ['nullable', 'integer', 'min:0', 'max:50'],
             'color' => ['required', 'string', 'max:40'],
             'color_hex' => ['nullable', 'string', 'max:7'],
             'color_custom' => ['nullable', 'string', 'max:7'],

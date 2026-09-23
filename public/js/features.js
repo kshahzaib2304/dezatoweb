@@ -27,12 +27,23 @@
         extras += Number(input.dataset.price || 0);
       });
 
+      builder.querySelectorAll('input[data-builder-qty]').forEach((input) => {
+        const qty = Math.max(0, Number(input.value) || 0);
+        const unit = Number(input.dataset.price || 0);
+        extras += qty * unit;
+      });
+
       if (baseEl) baseEl.textContent = formatPkr(base);
       if (extrasEl) extrasEl.textContent = formatPkr(extras);
       if (totalEl) totalEl.textContent = formatPkr(base + extras);
     };
 
     builder.addEventListener('change', calc);
+    builder.addEventListener('input', (event) => {
+      if (event.target.matches('input[data-builder-qty]')) {
+        calc();
+      }
+    });
     calc();
 
     const upload = builder.querySelector('[data-builder-upload]');

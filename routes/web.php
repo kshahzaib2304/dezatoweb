@@ -143,6 +143,13 @@ Route::middleware(['auth', EnsureUserIsAdmin::class])->prefix('admin')->name('ad
 
     Route::get('/cake-builder', [AdminCakeBuilderController::class, 'edit'])->name('cake-builder.edit');
     Route::put('/cake-builder', [AdminCakeBuilderController::class, 'update'])->name('cake-builder.update');
+    Route::post('/cake-builder/guidelines', [AdminCakeBuilderController::class, 'storeGuideline'])->name('cake-builder.guidelines.store');
+    Route::delete('/cake-builder/guidelines/{index}', [AdminCakeBuilderController::class, 'destroyGuideline'])->name('cake-builder.guidelines.destroy');
+    Route::post('/cake-builder/addons', [AdminCakeBuilderController::class, 'storeAddon'])->name('cake-builder.addons.store');
+    Route::delete('/cake-builder/addons/{item}', [AdminCakeBuilderController::class, 'destroyAddon'])->name('cake-builder.addons.destroy');
+    Route::post('/cake-builder/sizes', [AdminCakeBuilderController::class, 'storeSize'])->name('cake-builder.sizes.store');
+    Route::delete('/cake-builder/sizes/{item}', [AdminCakeBuilderController::class, 'destroySize'])->name('cake-builder.sizes.destroy');
+    Route::post('/cake-builder/reset', [AdminCakeBuilderController::class, 'resetDefaults'])->name('cake-builder.reset');
 
     Route::get('/promos', [AdminPromoController::class, 'index'])->name('promos.index');
     Route::post('/promos', [AdminPromoController::class, 'store'])->name('promos.store');

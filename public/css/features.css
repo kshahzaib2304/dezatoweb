@@ -491,6 +491,90 @@
     cursor: pointer;
 }
 
+.check-tile--block {
+    margin-bottom: 0.65rem;
+}
+
+.check-tile--block span {
+    display: grid;
+    gap: 0.25rem;
+}
+
+.check-tile--block strong {
+    font-weight: 600;
+}
+
+.check-tile--block small {
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.builder-guidelines {
+    margin: 0 0 1.5rem;
+    padding: 1.1rem 1.25rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    background: var(--cream-deep, #f3ebe4);
+}
+
+.builder-guidelines h2 {
+    font-family: var(--font-brand);
+    font-size: 1.2rem;
+    margin: 0 0 0.65rem;
+}
+
+.builder-guidelines ul,
+.builder-guidelines--page {
+    margin: 0;
+    padding-left: 1.15rem;
+    display: grid;
+    gap: 0.45rem;
+    color: var(--ink);
+}
+
+.builder-guidelines--page {
+    max-width: 42rem;
+}
+
+.addon-list {
+    display: grid;
+    gap: 0.65rem;
+}
+
+.addon-qty {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.85rem 0.9rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+}
+
+.addon-qty__copy {
+    display: grid;
+    gap: 0.15rem;
+}
+
+.addon-qty__copy span {
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.addon-qty__copy small {
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
+.addon-qty__field input {
+    width: 4.5rem;
+    padding: 0.55rem 0.5rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    font: inherit;
+    text-align: center;
+}
+
 .option-tile input,
 .check-tile input {
     position: absolute;

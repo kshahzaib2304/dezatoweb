@@ -15,6 +15,17 @@
             <p class="flash" role="status">{{ session('status') }}</p>
         @endif
 
+        @if (! empty($guidelines))
+            <aside class="builder-guidelines" data-reveal>
+                <h2>Before you design</h2>
+                <ul>
+                    @foreach ($guidelines as $line)
+                        <li>{{ $line }}</li>
+                    @endforeach
+                </ul>
+            </aside>
+        @endif
+
         <form
             class="builder-layout"
             method="post"
@@ -109,17 +120,19 @@
                     </div>
                 </section>
 
-                <section class="builder-block">
-                    <h2>5. Dietary</h2>
-                    <div class="check-grid">
-                        @foreach ($b['diets'] as $diet)
-                            <label class="check-tile">
-                                <input type="checkbox" name="diets[]" value="{{ $diet['id'] }}" data-price="{{ $diet['price'] }}" data-builder-price>
-                                <span>{{ $diet['label'] }} <em>+{{ pkr($diet['price']) }}</em></span>
-                            </label>
-                        @endforeach
-                    </div>
-                </section>
+                @if (! empty($b['diets']))
+                    <section class="builder-block">
+                        <h2>5. Dietary</h2>
+                        <div class="check-grid">
+                            @foreach ($b['diets'] as $diet)
+                                <label class="check-tile">
+                                    <input type="checkbox" name="diets[]" value="{{ $diet['id'] }}" data-price="{{ $diet['price'] }}" data-builder-price>
+                                    <span>{{ $diet['label'] }} <em>+{{ pkr($diet['price']) }}</em></span>
+                                </label>
+                            @endforeach
+                        </div>
+                    </section>
+                @endif
 
                 <section class="builder-block">
                     <h2>6. Message &amp; colour</h2>
@@ -163,13 +176,47 @@
                 </section>
 
                 <section class="builder-block">
-                    <h2>7. Add-ons</h2>
-                    <div class="check-grid">
+                    <h2>7. Add-ons &amp; décor</h2>
+                    <div class="addon-list">
                         @foreach ($b['addons'] as $addon)
-                            <label class="check-tile">
-                                <input type="checkbox" name="addons[]" value="{{ $addon['id'] }}" data-price="{{ $addon['price'] }}" data-builder-price>
-                                <span>{{ $addon['label'] }} <em>+{{ pkr($addon['price']) }}</em></span>
-                            </label>
+                            @php
+                                $isPerUnit = ($addon['billing'] ?? 'flat') === 'per_unit';
+                                $unit = $addon['unit_label'] ?? 'item';
+                            @endphp
+                            @if ($isPerUnit)
+                                <div class="addon-qty" data-addon-qty>
+                                    <div class="addon-qty__copy">
+                                        <strong>{{ $addon['label'] }}</strong>
+                                        <span>{{ pkr($addon['price']) }} / {{ $unit ?: 'item' }}</span>
+                                        @if (! empty($addon['hint']))
+                                            <small>{{ $addon['hint'] }}</small>
+                                        @endif
+                                    </div>
+                                    <label class="addon-qty__field">
+                                        <span class="sr-only">Quantity for {{ $addon['label'] }}</span>
+                                        <input
+                                            type="number"
+                                            name="addon_qty[{{ $addon['id'] }}]"
+                                            value="0"
+                                            min="0"
+                                            max="{{ $addon['max_qty'] ?? 12 }}"
+                                            data-price="{{ $addon['price'] }}"
+                                            data-builder-qty
+                                        >
+                                    </label>
+                                </div>
+                            @else
+                                <label class="check-tile check-tile--block">
+                                    <input type="checkbox" name="addons[]" value="{{ $addon['id'] }}" data-price="{{ $addon['price'] }}" data-builder-price>
+                                    <span>
+                                        <strong>{{ $addon['label'] }}</strong>
+                                        <em>+{{ pkr($addon['price']) }}</em>
+                                        @if (! empty($addon['hint']))
+                                            <small>{{ $addon['hint'] }}</small>
+                                        @endif
+                                    </span>
+                                </label>
+                            @endif
                         @endforeach
                     </div>
                 </section>

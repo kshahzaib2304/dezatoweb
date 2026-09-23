@@ -29,6 +29,25 @@
         </div>
     </section>
 
+    @if (! empty($guidelines))
+        <section class="section-block section-block--tint">
+            <div class="container">
+                <div class="section-head">
+                    <h2>Bakery guidelines</h2>
+                    <p>Size and décor rules from Dezato - also shown in the cake builder.</p>
+                </div>
+                <ul class="builder-guidelines builder-guidelines--page">
+                    @foreach ($guidelines as $line)
+                        <li>{{ $line }}</li>
+                    @endforeach
+                </ul>
+                <p style="margin-top:1.25rem">
+                    <a class="btn btn--primary" href="{{ route('builder.show') }}">Open cake builder</a>
+                </p>
+            </div>
+        </section>
+    @endif
+
     <section class="section-block section-block--tint" id="customize">
         <div class="container inquiry">
             <div class="inquiry__copy" data-reveal>

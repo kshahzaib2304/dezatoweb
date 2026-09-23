@@ -26,7 +26,8 @@
                 <li><strong>Website pages</strong> - About intro, timeline, Services packages, Cake Customization cards, Order choice cards (Pickup / Courier / Catering), Privacy / Terms / FAQ. Use the <em>Add</em> buttons for new rows.</li>
                 <li><strong>Contact &amp; store</strong> - Brand name (“Dezato Cake House”), top menu labels/order, phone, WhatsApp, emails, courier fee, and admin password.</li>
                 <li><strong>Email, logins &amp; links</strong> - SMTP, Google/Facebook login, footer links, online payment API keys.</li>
-                <li><strong>Custom cake prices / Promo codes</strong> - All editable without a developer.</li>
+                <li><strong>Custom cake prices</strong> - Sizes, flavours, bakery rules (fondant / heart / letter cakes), and décor add-ons (flowers, toppers, macarons). Use Add for new rows; Restore bakery defaults if needed.</li>
+                <li><strong>Promo codes</strong> - Discount codes customers enter at checkout.</li>
                 <li><strong>Reports</strong> - Snapshot plus CSV export (7 / 30 / 90 days).</li>
             </ul>
         </section>
@@ -37,6 +38,7 @@
                 <div><dt>Bakery name in header / footer</dt><dd>Contact &amp; store → Brand name</dd></div>
                 <div><dt>Top links (Home / About / Services…)</dt><dd>Contact &amp; store → Top website menu</dd></div>
                 <div><dt>Cake Customization blurbs</dt><dd>Website pages → Cake Customization cards</dd></div>
+                <div><dt>Fondant / heart / flower prices</dt><dd>Custom cake prices → Bakery rules &amp; Add-ons</dd></div>
                 <div><dt>Order page Pickup / Courier / Catering</dt><dd>Website pages → Order page choice cards</dd></div>
                 <div><dt>Mobile menu cake categories</dt><dd>Categories (left menu) - they sync from your product categories</dd></div>
             </dl>

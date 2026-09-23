@@ -136,6 +136,7 @@ class StorefrontController extends Controller
             'title' => 'Cake Customization | Dezato Cake House',
             'metaDescription' => 'Custom celebration cakes in Karachi - flavours, sizes, inscriptions, and finishes from Dezato Cake House.',
             'options' => \App\Support\StorefrontCards::customizationOptions(),
+            'guidelines' => \App\Support\CakeBuilder::guidelines(),
         ]);
     }
 
