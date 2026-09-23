@@ -8,11 +8,19 @@
         <p class="flash" role="status">{{ session('status') }}</p>
     @endif
 
-    <form class="auth-form" method="post" action="{{ route('auth.stub') }}">
+    @if ($errors->any())
+        <div class="flash flash--error" role="alert">
+            @foreach ($errors->all() as $error)
+                <p>{{ $error }}</p>
+            @endforeach
+        </div>
+    @endif
+
+    <form class="auth-form" method="post" action="{{ route('password.email') }}">
         @csrf
         <div class="form-row">
             <label class="field-label" for="email">Email</label>
-            <input id="email" class="field-input" type="email" name="email" autocomplete="email" required>
+            <input id="email" class="field-input" type="email" name="email" value="{{ old('email') }}" autocomplete="email" required>
         </div>
         <button class="btn btn--primary btn--block" type="submit">Send reset link</button>
     </form>

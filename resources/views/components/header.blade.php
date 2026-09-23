@@ -2,7 +2,7 @@
     $currentRoute = $currentRoute ?? null;
     $cartCount = $cartCount ?? 0;
     $hasFulfillment = $hasFulfillment ?? false;
-    $announcement = config('dezato.home.announcement');
+    $announcement = $announcement ?? config('dezato.home.announcement');
 @endphp
 
 @if ($announcement)

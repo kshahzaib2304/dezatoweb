@@ -23,23 +23,40 @@
                 @foreach ($nav as $item)
                     <a
                         href="{{ route($item['route']) }}"
-                        class="{{ $active === $item['id'] ? 'is-active' : '' }}"
-                        @if ($active === $item['id']) aria-current="page" @endif
+                        class="{{ ($active ?? '') === $item['id'] ? 'is-active' : '' }}"
+                        @if (($active ?? '') === $item['id']) aria-current="page" @endif
                     >
                         {{ $item['label'] }}
                     </a>
                 @endforeach
             </nav>
-            <a class="admin-sidebar__store" href="{{ route('home') }}">View storefront</a>
+            <a class="admin-sidebar__store" href="{{ route('home') }}" target="_blank" rel="noopener">View website</a>
+            <form class="admin-sidebar__logout" method="post" action="{{ route('logout') }}">
+                @csrf
+                <button type="submit">Sign out</button>
+            </form>
         </aside>
         <div class="admin-content">
             <header class="admin-top">
                 <h1>{{ $heading }}</h1>
-                <p class="admin-top__note">UI preview · data is mock until backend is wired</p>
+                <p class="admin-top__note">Simple tools to manage your bakery — no tech skills needed.</p>
             </header>
+
             @if (session('status'))
-                <p class="flash" role="status">{{ session('status') }}</p>
+                <p class="flash flash--success" role="status">{{ session('status') }}</p>
             @endif
+
+            @if (isset($errors) && $errors->any())
+                <div class="flash flash--error" role="alert">
+                    <p><strong>Please fix the following:</strong></p>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             @yield('content')
         </div>
     </div>

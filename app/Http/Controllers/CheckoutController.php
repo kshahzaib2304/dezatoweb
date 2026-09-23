@@ -47,6 +47,8 @@ class CheckoutController extends Controller
                 'phone' => $request->string('phone')->trim()->toString(),
                 'notes' => $request->string('notes')->trim()->toString() ?: null,
                 'payment_method' => $request->string('payment_method')->toString(),
+                'delivery_date' => $request->input('delivery_date'),
+                'delivery_slot' => $request->string('delivery_slot')->trim()->toString() ?: null,
             ]);
         } catch (RuntimeException $exception) {
             return redirect()

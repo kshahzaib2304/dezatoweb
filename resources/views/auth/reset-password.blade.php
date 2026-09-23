@@ -4,15 +4,20 @@
     <h1>Reset password</h1>
     <p class="auth-lead">Choose a new password for your account.</p>
 
-    @if (session('status'))
-        <p class="flash" role="status">{{ session('status') }}</p>
+    @if ($errors->any())
+        <div class="flash flash--error" role="alert">
+            @foreach ($errors->all() as $error)
+                <p>{{ $error }}</p>
+            @endforeach
+        </div>
     @endif
 
-    <form class="auth-form" method="post" action="{{ route('auth.stub') }}">
+    <form class="auth-form" method="post" action="{{ route('password.update') }}">
         @csrf
+        <input type="hidden" name="token" value="{{ $token }}">
         <div class="form-row">
             <label class="field-label" for="email">Email</label>
-            <input id="email" class="field-input" type="email" name="email" autocomplete="email" required>
+            <input id="email" class="field-input" type="email" name="email" value="{{ old('email', $email) }}" autocomplete="email" required>
         </div>
         <div class="form-row">
             <label class="field-label" for="password">New password</label>

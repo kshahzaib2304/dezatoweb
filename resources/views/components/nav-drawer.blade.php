@@ -49,8 +49,19 @@
         </div>
 
         <a class="nav-link" href="{{ route('locations') }}">Locations</a>
-        <a class="nav-link" href="{{ route('account.profile') }}">My account</a>
-        <a class="nav-link" href="{{ route('login') }}">Sign in</a>
+        @auth
+            @if (auth()->user()->isAdmin())
+                <a class="nav-link" href="{{ route('admin.dashboard') }}">Admin dashboard</a>
+            @endif
+            <a class="nav-link" href="{{ route('account.profile') }}">My account</a>
+            <form method="post" action="{{ route('logout') }}">
+                @csrf
+                <button class="nav-link" type="submit">Sign out</button>
+            </form>
+        @else
+            <a class="nav-link" href="{{ route('login') }}">Sign in</a>
+            <a class="nav-link" href="{{ route('register') }}">Create account</a>
+        @endauth
         <button class="nav-link" type="button" data-fulfillment-open data-fulfillment-method="shipping" data-nav-close>Pakistan Courier</button>
     </div>
 

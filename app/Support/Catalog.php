@@ -2,20 +2,58 @@
 
 namespace App\Support;
 
+use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Support\Collection;
 
 final class Catalog
 {
     public static function products(): Collection
     {
+        if (Product::query()->exists()) {
+            return Product::query()
+                ->with('category')
+                ->active()
+                ->orderBy('sort_order')
+                ->orderBy('name')
+                ->get()
+                ->map(fn (Product $product): array => $product->toCatalogArray())
+                ->values();
+        }
+
         return collect(config('dezato.menu.products', []));
     }
 
     public static function findProduct(string $id): ?array
     {
-        $product = self::products()->firstWhere('id', $id);
+        $product = Product::query()->with('category')->where('slug', $id)->active()->first();
 
-        return is_array($product) ? $product : null;
+        if ($product) {
+            return $product->toCatalogArray();
+        }
+
+        $fallback = collect(config('dezato.menu.products', []))->firstWhere('id', $id);
+
+        return is_array($fallback) ? $fallback : null;
+    }
+
+    public static function categories(): Collection
+    {
+        if (Category::query()->exists()) {
+            $items = Category::query()
+                ->where('is_active', true)
+                ->orderBy('sort_order')
+                ->get()
+                ->map(fn (Category $category): array => [
+                    'id' => $category->slug,
+                    'label' => $category->label,
+                ])
+                ->values();
+
+            return collect([['id' => 'all', 'label' => 'All']])->merge($items);
+        }
+
+        return collect(config('dezato.menu.categories', []));
     }
 
     public static function locations(): Collection
@@ -37,7 +75,7 @@ final class Catalog
 
     public static function categoryLabel(string $categoryId): string
     {
-        return collect(config('dezato.menu.categories', []))
-            ->firstWhere('id', $categoryId)['label'] ?? ucfirst($categoryId);
+        return self::categories()->firstWhere('id', $categoryId)['label']
+            ?? ucfirst($categoryId);
     }
 }

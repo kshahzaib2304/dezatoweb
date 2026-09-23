@@ -21,7 +21,9 @@ final class PlaceOrder
      *     email: string,
      *     phone: string,
      *     notes?: string|null,
-     *     payment_method: string
+     *     payment_method: string,
+     *     delivery_date?: string|null,
+     *     delivery_slot?: string|null
      * }  $customer
      */
     public function handle(array $customer): Order
@@ -43,6 +45,7 @@ final class PlaceOrder
 
         return DB::transaction(function () use ($customer, $fulfillment, $lines, $subtotal, $fee, $total): Order {
             $order = Order::query()->create([
+                'user_id' => auth()->id(),
                 'number' => $this->generateNumber(),
                 'status' => Order::STATUS_PLACED,
                 'method' => $fulfillment['method'],
@@ -56,6 +59,8 @@ final class PlaceOrder
                 'region' => $fulfillment['region'] ?? null,
                 'postal_code' => $fulfillment['postal_code'] ?? null,
                 'notes' => $customer['notes'] ?? null,
+                'delivery_date' => $customer['delivery_date'] ?? null,
+                'delivery_slot' => $customer['delivery_slot'] ?? null,
                 'payment_method' => $customer['payment_method'],
                 'subtotal' => $subtotal,
                 'fee' => $fee,

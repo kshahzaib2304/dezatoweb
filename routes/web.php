@@ -1,8 +1,14 @@
 <?php
 
 use App\Http\Controllers\AccountController;
-use App\Http\Controllers\Admin\AdminPageController;
-use App\Http\Controllers\AuthPageController;
+use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
+use App\Http\Controllers\Admin\ContentController as AdminContentController;
+use App\Http\Controllers\Admin\CustomerController as AdminCustomerController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\HelpController as AdminHelpController;
+use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CakeBuilderController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
@@ -11,6 +17,7 @@ use App\Http\Controllers\InquiryController;
 use App\Http\Controllers\StorefrontController;
 use App\Http\Middleware\EnsureCartNotEmpty;
 use App\Http\Middleware\EnsureFulfillmentSelected;
+use App\Http\Middleware\EnsureUserIsAdmin;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [StorefrontController::class, 'home'])->name('home');
@@ -28,33 +35,54 @@ Route::redirect('/catering', '/our-services', 301);
 
 Route::post('/inquiries', [InquiryController::class, 'store'])->name('inquiries.store');
 
-/* Auth UI */
-Route::get('/login', [AuthPageController::class, 'login'])->name('login');
-Route::get('/register', [AuthPageController::class, 'register'])->name('register');
-Route::get('/forgot-password', [AuthPageController::class, 'forgot'])->name('password.request');
-Route::get('/reset-password', [AuthPageController::class, 'reset'])->name('password.reset');
-Route::post('/auth/ui', [AuthPageController::class, 'stub'])->name('auth.stub');
-
-/* Account UI */
-Route::prefix('account')->name('account.')->group(function (): void {
-    Route::get('/', fn () => redirect()->route('account.profile'));
-    Route::get('/profile', [AccountController::class, 'profile'])->name('profile');
-    Route::get('/addresses', [AccountController::class, 'addresses'])->name('addresses');
-    Route::get('/orders', [AccountController::class, 'orders'])->name('orders');
-    Route::get('/orders/{number}', [AccountController::class, 'track'])->name('track');
-    Route::post('/ui', [AccountController::class, 'stub'])->name('stub');
+Route::middleware('guest')->group(function (): void {
+    Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::get('/forgot-password', [AuthController::class, 'showForgot'])->name('password.request');
+    Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
+    Route::get('/reset-password/{token}', [AuthController::class, 'showReset'])->name('password.reset');
+    Route::post('/reset-password', [AuthController::class, 'reset'])->name('password.update');
 });
 
-/* Admin UI shell */
-Route::prefix('admin')->name('admin.')->group(function (): void {
-    Route::get('/', [AdminPageController::class, 'dashboard'])->name('dashboard');
-    Route::get('/products', [AdminPageController::class, 'products'])->name('products');
-    Route::get('/orders', [AdminPageController::class, 'orders'])->name('orders');
-    Route::get('/customers', [AdminPageController::class, 'customers'])->name('customers');
-    Route::get('/promotions', [AdminPageController::class, 'promotions'])->name('promotions');
-    Route::get('/content', [AdminPageController::class, 'content'])->name('content');
-    Route::get('/reports', [AdminPageController::class, 'reports'])->name('reports');
-    Route::post('/ui', [AdminPageController::class, 'stub'])->name('stub');
+Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
+
+Route::middleware('auth')->prefix('account')->name('account.')->group(function (): void {
+    Route::get('/', fn () => redirect()->route('account.profile'));
+    Route::get('/profile', [AccountController::class, 'profile'])->name('profile');
+    Route::post('/profile', [AccountController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/addresses', [AccountController::class, 'addresses'])->name('addresses');
+    Route::post('/addresses', [AccountController::class, 'storeAddress'])->name('addresses.store');
+    Route::delete('/addresses/{address}', [AccountController::class, 'destroyAddress'])->name('addresses.destroy');
+    Route::get('/orders', [AccountController::class, 'orders'])->name('orders');
+    Route::get('/orders/{number}', [AccountController::class, 'track'])->name('track');
+});
+
+Route::middleware(['auth', EnsureUserIsAdmin::class])->prefix('admin')->name('admin.')->group(function (): void {
+    Route::get('/', AdminDashboardController::class)->name('dashboard');
+    Route::get('/help', AdminHelpController::class)->name('help');
+
+    Route::get('/products', [AdminProductController::class, 'index'])->name('products.index');
+    Route::get('/products/create', [AdminProductController::class, 'create'])->name('products.create');
+    Route::post('/products', [AdminProductController::class, 'store'])->name('products.store');
+    Route::get('/products/{product}/edit', [AdminProductController::class, 'edit'])->name('products.edit');
+    Route::put('/products/{product}', [AdminProductController::class, 'update'])->name('products.update');
+    Route::delete('/products/{product}', [AdminProductController::class, 'destroy'])->name('products.destroy');
+
+    Route::get('/categories', [AdminCategoryController::class, 'index'])->name('categories.index');
+    Route::post('/categories', [AdminCategoryController::class, 'store'])->name('categories.store');
+    Route::put('/categories/{category}', [AdminCategoryController::class, 'update'])->name('categories.update');
+    Route::delete('/categories/{category}', [AdminCategoryController::class, 'destroy'])->name('categories.destroy');
+
+    Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
+    Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.status');
+
+    Route::get('/customers', [AdminCustomerController::class, 'index'])->name('customers.index');
+
+    Route::get('/content', [AdminContentController::class, 'edit'])->name('content.edit');
+    Route::put('/content', [AdminContentController::class, 'update'])->name('content.update');
 });
 
 Route::get('/order', [StorefrontController::class, 'order'])->name('order');

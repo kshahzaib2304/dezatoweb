@@ -16,7 +16,10 @@
                     </a>
                 @endforeach
             </nav>
-            <a class="account-nav__out" href="{{ route('login') }}">Sign out (UI)</a>
+            <form method="post" action="{{ route('logout') }}">
+                @csrf
+                <button class="account-nav__out" type="submit">Sign out</button>
+            </form>
         </aside>
         <div class="account-main">
             @if (session('status'))

@@ -33,7 +33,7 @@ class StorefrontController extends Controller
     public function menu(Request $request): View
     {
         $category = $request->string('category')->toString() ?: 'all';
-        $categories = config('dezato.menu.categories', []);
+        $categories = Catalog::categories()->all();
         $validIds = collect($categories)->pluck('id')->all();
 
         if (! in_array($category, $validIds, true)) {
