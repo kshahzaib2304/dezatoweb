@@ -8,9 +8,9 @@
             <h2>Details</h2>
             <dl class="admin-detail">
                 <div><dt>Type</dt><dd>{{ $inquiry->typeLabel() }}</dd></div>
-                <div><dt>Name</dt><dd>{{ $inquiry->name ?: '—' }}</dd></div>
+                <div><dt>Name</dt><dd>{{ $inquiry->name ?: '-' }}</dd></div>
                 <div><dt>Email</dt><dd><a href="mailto:{{ $inquiry->email }}">{{ $inquiry->email }}</a></dd></div>
-                <div><dt>Phone</dt><dd>@if($inquiry->phone)<a href="tel:{{ $inquiry->phone }}">{{ $inquiry->phone }}</a>@else — @endif</dd></div>
+                <div><dt>Phone</dt><dd>@if($inquiry->phone)<a href="tel:{{ $inquiry->phone }}">{{ $inquiry->phone }}</a>@else - @endif</dd></div>
                 @if ($inquiry->event_date)
                     <div><dt>Event date</dt><dd>{{ $inquiry->event_date->format('d M Y') }}</dd></div>
                 @endif

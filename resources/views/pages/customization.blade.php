@@ -14,7 +14,7 @@
         <div class="container">
             <div class="section-head">
                 <h2>How customization works</h2>
-                <p>Use the full builder for uploads and live pricing — or leave a quick request below.</p>
+                <p>Use the full builder for uploads and live pricing - or leave a quick request below.</p>
             </div>
             <div class="package-grid">
                 @foreach ($options as $option)

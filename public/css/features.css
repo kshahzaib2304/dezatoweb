@@ -1,5 +1,5 @@
 /* =========================================================
-   Dezato feature screens — auth, account, builder, admin, browse
+   Dezato feature screens - auth, account, builder, admin, browse
    ========================================================= */
 
 /* Auth */
@@ -54,6 +54,15 @@
     margin-bottom: 1rem;
 }
 
+.auth-social__btn--google {
+    border-color: #dadce0;
+}
+
+.auth-social__btn--facebook {
+    border-color: #1877f2;
+    color: #1877f2;
+}
+
 .auth-divider {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
@@ -71,6 +80,22 @@
     content: "";
     height: 1px;
     background: var(--line);
+}
+
+.admin-details {
+    margin-top: 0.75rem;
+    padding-top: 0.65rem;
+    border-top: 1px dashed var(--line);
+}
+
+.admin-details summary {
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--plum-600, #5a2d45);
+}
+
+.admin-details .admin-steps {
+    margin-top: 0.65rem;
 }
 
 .auth-form {
@@ -544,8 +569,13 @@
 .color-swatch--custom > span {
     position: relative;
     overflow: hidden;
-    background:
-        linear-gradient(135deg, #f7f1e8 0%, #e8d0dc 35%, #c45c6a 70%, #4a3428 100%);
+    background: linear-gradient(
+        135deg,
+        #f7f1e8 0%,
+        #e8d0dc 35%,
+        #c45c6a 70%,
+        #4a3428 100%
+    );
 }
 
 .color-swatch--custom.is-active > span {
@@ -777,6 +807,18 @@
     border: 1px solid var(--line);
     border-radius: var(--radius-md);
     padding: 1rem;
+}
+
+.admin-panel--spaced {
+    margin-top: 1rem;
+}
+
+.admin-form__actions--spaced {
+    margin-top: 1rem;
+}
+
+.form-grid--spaced {
+    margin-top: 0.75rem;
 }
 
 .admin-stats p {
@@ -1292,4 +1334,26 @@
 
 .pay-instructions--confirm {
     margin: 1rem 0;
+}
+
+.legal-page {
+    max-width: 42rem;
+    margin-inline: auto;
+}
+
+.legal-prose {
+    display: grid;
+    gap: 0.85rem;
+}
+
+.legal-prose p {
+    margin: 0;
+    line-height: 1.7;
+    color: var(--ink, #2a1f24);
+}
+
+.legal-prose p strong {
+    display: block;
+    margin-bottom: 0.2rem;
+    color: var(--plum-700, #5a2d45);
 }

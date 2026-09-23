@@ -8,7 +8,9 @@ use App\Http\Controllers\Admin\CustomerController as AdminCustomerController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\HelpController as AdminHelpController;
 use App\Http\Controllers\Admin\InquiryController as AdminInquiryController;
+use App\Http\Controllers\Admin\IntegrationsController as AdminIntegrationsController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\PagesController as AdminPagesController;
 use App\Http\Controllers\Admin\PaymentSettingsController as AdminPaymentSettingsController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
 use App\Http\Controllers\Admin\PromoController as AdminPromoController;
@@ -21,6 +23,8 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\FulfillmentController;
 use App\Http\Controllers\InquiryController;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\SocialAuthController;
 use App\Http\Controllers\StorefrontController;
 use App\Http\Middleware\EnsureCartNotEmpty;
 use App\Http\Middleware\EnsureFulfillmentSelected;
@@ -40,6 +44,10 @@ Route::post('/custom-cake', [CakeBuilderController::class, 'store'])->name('buil
 Route::redirect('/our-story', '/about-us', 301);
 Route::redirect('/catering', '/our-services', 301);
 
+Route::get('/privacy-policy', fn () => app(PageController::class)->show('privacy'))->name('pages.privacy');
+Route::get('/terms', fn () => app(PageController::class)->show('terms'))->name('pages.terms');
+Route::get('/faq', fn () => app(PageController::class)->show('faq'))->name('pages.faq');
+
 Route::post('/inquiries', [InquiryController::class, 'store'])->name('inquiries.store');
 
 Route::middleware('guest')->group(function (): void {
@@ -51,6 +59,13 @@ Route::middleware('guest')->group(function (): void {
     Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
     Route::get('/reset-password/{token}', [AuthController::class, 'showReset'])->name('password.reset');
     Route::post('/reset-password', [AuthController::class, 'reset'])->name('password.update');
+
+    Route::get('/auth/{provider}/redirect', [SocialAuthController::class, 'redirect'])
+        ->whereIn('provider', ['google', 'facebook'])
+        ->name('auth.social.redirect');
+    Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'callback'])
+        ->whereIn('provider', ['google', 'facebook'])
+        ->name('auth.social.callback');
 });
 
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
@@ -103,6 +118,9 @@ Route::middleware(['auth', EnsureUserIsAdmin::class])->prefix('admin')->name('ad
     Route::put('/content/slides/{slide}', [AdminContentController::class, 'updateSlide'])->name('content.slides.update');
     Route::delete('/content/slides/{slide}', [AdminContentController::class, 'destroySlide'])->name('content.slides.destroy');
 
+    Route::get('/pages', [AdminPagesController::class, 'edit'])->name('pages.edit');
+    Route::put('/pages', [AdminPagesController::class, 'update'])->name('pages.update');
+
     Route::get('/cake-builder', [AdminCakeBuilderController::class, 'edit'])->name('cake-builder.edit');
     Route::put('/cake-builder', [AdminCakeBuilderController::class, 'update'])->name('cake-builder.update');
 
@@ -120,6 +138,9 @@ Route::middleware(['auth', EnsureUserIsAdmin::class])->prefix('admin')->name('ad
 
     Route::get('/settings', [AdminSettingsController::class, 'edit'])->name('settings.edit');
     Route::put('/settings', [AdminSettingsController::class, 'update'])->name('settings.update');
+
+    Route::get('/integrations', [AdminIntegrationsController::class, 'edit'])->name('integrations.edit');
+    Route::put('/integrations', [AdminIntegrationsController::class, 'update'])->name('integrations.update');
 });
 
 Route::get('/order', [StorefrontController::class, 'order'])->name('order');

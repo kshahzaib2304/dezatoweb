@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Support\BakeryProfile;
 use App\Support\PaymentMethods;
+use App\Support\SiteContent;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,6 +14,8 @@ use Illuminate\Validation\Rule;
 
 class OrderController extends Controller
 {
+    public function __construct(private readonly \App\Support\Notifier $notifier) {}
+
     public function index(Request $request): View
     {
         $status = $request->string('status')->toString();
@@ -58,11 +61,16 @@ class OrderController extends Controller
             'status' => ['required', Rule::in(array_keys(Order::STATUSES))],
         ]);
 
+        $previous = $order->status;
         $order->update(['status' => $data['status']]);
+        $order = $order->fresh();
+
+        $this->notifier->orderStatusUpdated($order, $previous);
 
         return back()->with(
             'status',
-            'Order status updated to “'.$order->fresh()->statusLabel().'”. The customer can see this on Track order.'
+            'Order status updated to “'.$order->statusLabel().'”. Customer can see this under Track order'
+            .(SiteContent::statusEmailsEnabled() ? ', and an update email was queued.' : '.')
         );
     }
 
@@ -70,7 +78,7 @@ class OrderController extends Controller
     {
         $order->update(['payment_status' => Order::PAYMENT_PAID]);
 
-        return back()->with('status', 'Marked as paid. Great — you can start preparing the order.');
+        return back()->with('status', 'Marked as paid. Great - you can start preparing the order.');
     }
 
     public function invoice(Order $order): View

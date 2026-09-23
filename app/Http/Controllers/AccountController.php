@@ -154,14 +154,14 @@ class AccountController extends Controller
         if ($added === 0) {
             return back()->withErrors([
                 'reorder' => $skippedCustom > 0
-                    ? 'Custom cakes can’t be reordered in one click — please use the Custom Cake builder again.'
+                    ? 'Custom cakes can’t be reordered in one click - please use the Custom Cake builder again.'
                     : 'Those items are no longer on the menu.',
             ]);
         }
 
         $message = $added.' item(s) added to your cart.';
         if ($skippedCustom > 0) {
-            $message .= ' Custom cake designs were skipped — recreate them in Custom Cake if needed.';
+            $message .= ' Custom cake designs were skipped - recreate them in Custom Cake if needed.';
         }
 
         return redirect()

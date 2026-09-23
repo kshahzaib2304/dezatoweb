@@ -15,7 +15,7 @@
 
     <section class="admin-panel">
         <p class="admin-lead">
-            Open an order to see details. Update the status as you bake and deliver — the customer sees the same status on Track order.
+            Open an order to see details. Update the status as you bake and deliver - the customer sees the same status on Track order.
         </p>
 
         @if ($orders->isEmpty())

@@ -19,7 +19,7 @@ class CakeBuilderController extends Controller
     {
         return view('builder.show', [
             'title' => 'Custom Cake Builder | Dezato Cake House',
-            'metaDescription' => 'Design a custom cake — upload a reference, choose size, shape, flavour, and add-ons. Prices in PKR.',
+            'metaDescription' => 'Design a custom cake - upload a reference, choose size, shape, flavour, and add-ons. Prices in PKR.',
             'builder' => CakeBuilder::config(),
             'referenceGuide' => config('dezato_admin.media.reference'),
         ]);

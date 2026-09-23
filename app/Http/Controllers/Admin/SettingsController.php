@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Support\BakeryProfile;
 use App\Models\SiteSetting;
+use App\Support\BakeryProfile;
+use App\Support\SiteContent;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -21,6 +22,7 @@ class SettingsController extends Controller
             'notifyEmail' => BakeryProfile::notifyEmail(),
             'phone' => BakeryProfile::phone(),
             'whatsapp' => SiteSetting::getValue('whatsapp') ?: BakeryProfile::phone(),
+            'statusEmails' => SiteContent::statusEmailsEnabled(),
         ]);
     }
 
@@ -30,6 +32,7 @@ class SettingsController extends Controller
             'notify_email' => ['required', 'email', 'max:180'],
             'public_phone' => ['required', 'string', 'max:40'],
             'whatsapp' => ['nullable', 'string', 'max:40'],
+            'notify_status_emails' => ['nullable', 'boolean'],
         ], [
             'notify_email.required' => 'Enter the email where new orders and messages should arrive.',
             'public_phone.required' => 'Enter the bakery phone number customers can call.',
@@ -38,6 +41,7 @@ class SettingsController extends Controller
         SiteSetting::putValue('notify_email', $data['notify_email']);
         SiteSetting::putValue('public_phone', $data['public_phone']);
         SiteSetting::putValue('whatsapp', trim((string) ($data['whatsapp'] ?? '')) ?: null);
+        SiteContent::setStatusEmailsEnabled($request->boolean('notify_status_emails'));
 
         return back()->with(
             'status',

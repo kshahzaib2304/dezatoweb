@@ -5,6 +5,7 @@ namespace App\Support;
 use App\Mail\InquiryReceivedMail;
 use App\Mail\OrderPlacedAdminMail;
 use App\Mail\OrderPlacedCustomerMail;
+use App\Mail\OrderStatusUpdatedMail;
 use App\Models\Inquiry;
 use App\Models\Order;
 use Illuminate\Support\Facades\Log;
@@ -29,6 +30,26 @@ final class Notifier
         $this->safeSend(
             fn () => Mail::to(BakeryProfile::notifyEmail())->send(new OrderPlacedAdminMail($order)),
             'admin order alert',
+            $order->number
+        );
+    }
+
+    public function orderStatusUpdated(Order $order, string $previousStatus): void
+    {
+        if (! SiteContent::statusEmailsEnabled()) {
+            return;
+        }
+
+        if ($previousStatus === $order->status) {
+            return;
+        }
+
+        $previousLabel = Order::STATUSES[$previousStatus]
+            ?? ucfirst(str_replace('_', ' ', $previousStatus));
+
+        $this->safeSend(
+            fn () => Mail::to($order->email)->send(new OrderStatusUpdatedMail($order, $previousLabel)),
+            'customer status update',
             $order->number
         );
     }

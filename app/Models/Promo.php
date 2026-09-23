@@ -78,7 +78,7 @@ class Promo extends Model
         if ($this->min_subtotal !== null && $subtotal < $this->min_subtotal) {
             return [
                 'ok' => false,
-                'message' => 'Add more items — this code needs a subtotal of at least '.pkr($this->min_subtotal).'.',
+                'message' => 'Add more items - this code needs a subtotal of at least '.pkr($this->min_subtotal).'.',
                 'discount' => 0.0,
             ];
         }

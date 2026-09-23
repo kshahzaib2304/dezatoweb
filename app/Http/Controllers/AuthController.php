@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Support\SocialAuth;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
@@ -20,6 +21,7 @@ class AuthController extends Controller
         return view('auth.login', [
             'title' => 'Sign in | Dezato Cake House',
             'metaDescription' => 'Sign in to your Dezato Cake House account.',
+            'socialProviders' => SocialAuth::enabledForLogin(),
         ]);
     }
 
@@ -52,6 +54,7 @@ class AuthController extends Controller
         return view('auth.register', [
             'title' => 'Create account | Dezato Cake House',
             'metaDescription' => 'Create a Dezato Cake House account.',
+            'socialProviders' => SocialAuth::enabledForLogin(),
         ]);
     }
 
@@ -77,7 +80,7 @@ class AuthController extends Controller
 
         return redirect()
             ->route('account.profile')
-            ->with('status', 'Welcome to Dezato — your account is ready.');
+            ->with('status', 'Welcome to Dezato - your account is ready.');
     }
 
     public function logout(Request $request): RedirectResponse

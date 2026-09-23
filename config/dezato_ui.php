@@ -134,10 +134,10 @@ return [
         ],
         'payment_methods' => [
             ['id' => 'cod', 'label' => 'Cash on delivery / pickup', 'hint' => 'Pay in PKR when your order arrives'],
-            ['id' => 'card', 'label' => 'Credit / Debit card', 'hint' => 'Visa, Mastercard — gateway coming next'],
+            ['id' => 'card', 'label' => 'Credit / Debit card', 'hint' => 'Visa, Mastercard - gateway coming next'],
             ['id' => 'jazzcash', 'label' => 'JazzCash', 'hint' => 'Mobile wallet'],
             ['id' => 'easypaisa', 'label' => 'Easypaisa', 'hint' => 'Mobile wallet'],
-            ['id' => 'bnpl', 'label' => 'Buy now, pay later', 'hint' => 'Split payments — coming next'],
+            ['id' => 'bnpl', 'label' => 'Buy now, pay later', 'hint' => 'Split payments - coming next'],
         ],
     ],
 

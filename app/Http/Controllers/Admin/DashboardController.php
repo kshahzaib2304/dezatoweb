@@ -38,9 +38,9 @@ class DashboardController extends Controller
             ],
             'recentOrders' => Order::query()->latest('placed_at')->limit(8)->get(),
             'tips' => [
-                'Homepage hero slides: 1600×1000 px each — manage under Homepage & text.',
+                'Homepage hero slides: 1600×1000 px each - manage under Homepage & text.',
                 'Upload product photos at 1200×1200 pixels (square) for best results.',
-                'New website messages appear under Messages — reply by email, call, or WhatsApp.',
+                'After go-live: paste SMTP, Google/Facebook login keys, and footer Instagram link under Email, logins & links.',
                 'Set your alert email under Contact & alerts so you know when orders arrive.',
             ],
             'storageReady' => Storage::disk('public')->exists('.') || true,

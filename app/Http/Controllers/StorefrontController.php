@@ -101,6 +101,10 @@ class StorefrontController extends Controller
         return view('pages.services', [
             'title' => 'Our Services | Dezato Cake House',
             'metaDescription' => 'Catering, dessert tables, office sweet boxes, and corporate gifting from Dezato Cake House Karachi.',
+            'intro' => \App\Support\SiteContent::section(
+                'services_intro',
+                'From office boxes to full dessert tables - custom selections of Dezato’s best for every occasion.'
+            ),
             'packages' => config('dezato.services.packages', []),
         ]);
     }
@@ -110,7 +114,10 @@ class StorefrontController extends Controller
         return view('pages.about', [
             'title' => 'About Us | Dezato Cake House',
             'metaDescription' => 'Learn how Dezato Cake House has baked celebration cakes and desserts for Karachi since 2018.',
-            'intro' => (string) config('dezato.about.intro', ''),
+            'intro' => \App\Support\SiteContent::section(
+                'about_intro',
+                (string) config('dezato.about.intro', '')
+            ),
             'milestones' => config('dezato.about.milestones', []),
         ]);
     }
@@ -182,6 +189,9 @@ class StorefrontController extends Controller
             ['loc' => route('customization'), 'changefreq' => 'monthly', 'priority' => '0.8'],
             ['loc' => route('locations'), 'changefreq' => 'monthly', 'priority' => '0.8'],
             ['loc' => route('order'), 'changefreq' => 'weekly', 'priority' => '0.6'],
+            ['loc' => route('pages.privacy'), 'changefreq' => 'yearly', 'priority' => '0.3'],
+            ['loc' => route('pages.terms'), 'changefreq' => 'yearly', 'priority' => '0.3'],
+            ['loc' => route('pages.faq'), 'changefreq' => 'monthly', 'priority' => '0.5'],
         ];
 
         foreach (Catalog::products() as $product) {

@@ -1,5 +1,5 @@
 /* =========================================================
-   Dezato Cake House — design system (static CSS, no build)
+   Dezato Cake House - design system (static CSS, no build)
    ========================================================= */
 
 :root {
@@ -63,16 +63,24 @@ html {
 }
 
 body {
-  margin: 0;
-  font-family: var(--font);
-  color: var(--ink);
-  background:
-    radial-gradient(1200px 500px at 10% -10%, rgba(232, 208, 220, 0.35), transparent 55%),
-    radial-gradient(900px 420px at 100% 0%, rgba(232, 201, 154, 0.12), transparent 45%),
-    var(--cream);
-  line-height: 1.55;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
+    margin: 0;
+    font-family: var(--font);
+    color: var(--ink);
+    background:
+        radial-gradient(
+            1200px 500px at 10% -10%,
+            rgba(232, 208, 220, 0.35),
+            transparent 55%
+        ),
+        radial-gradient(
+            900px 420px at 100% 0%,
+            rgba(232, 201, 154, 0.12),
+            transparent 45%
+        ),
+        var(--cream);
+    line-height: 1.55;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
 }
 
 body.nav-locked,

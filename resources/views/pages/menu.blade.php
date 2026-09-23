@@ -4,7 +4,7 @@
     <x-page-hero
         eyebrow="Menu"
         title="What we’re baking"
-        text="Cakes, cupcakes, cheesecakes, eclairs & more — priced in PKR."
+        text="Cakes, cupcakes, cheesecakes, eclairs & more - priced in PKR."
         image="images/home/promo-workshop.jpg"
     />
 

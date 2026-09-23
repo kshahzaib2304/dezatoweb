@@ -43,7 +43,7 @@
                     <li>
                         <strong>{{ $item->product_name }}</strong>
                         × {{ $item->quantity }}
-                        — {{ pkr($item->line_total) }}
+                        - {{ pkr($item->line_total) }}
                         @if ($item->isCustom())
                             <div class="admin-muted">{{ $item->optionsSummary() }}</div>
                             @if (! empty($item->options['notes']))

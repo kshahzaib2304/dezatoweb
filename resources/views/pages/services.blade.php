@@ -4,7 +4,7 @@
     <x-page-hero
         eyebrow="Our Services"
         title="Catering, gifting &amp; events"
-        text="From office boxes to full dessert tables - custom selections of Dezato’s best for every occasion."
+        text="{{ $intro }}"
         image="images/home/promo-catering.png"
     >
         <a class="btn btn--primary" href="#inquiry">Get a quote</a>

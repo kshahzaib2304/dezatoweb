@@ -16,6 +16,8 @@
         </div>
     @endif
 
+    <x-social-login :social-providers="$socialProviders ?? []" />
+
     <form class="auth-form" method="post" action="{{ route('login') }}">
         @csrf
         <div class="form-row">

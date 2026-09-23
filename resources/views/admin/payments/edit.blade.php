@@ -2,12 +2,13 @@
 
 @section('content')
     <aside class="admin-media-guide">
-        <strong>Payment options — keep it simple</strong>
+        <strong>Payment options - keep it simple</strong>
         <ol class="admin-steps">
             <li>Tick the methods customers may choose at checkout.</li>
-            <li>For Bank / JazzCash / Easypaisa, fill in your account details below — customers will see them when they order.</li>
+            <li>For Bank / JazzCash / Easypaisa, fill in your account details below - customers will see them when they order.</li>
             <li>When someone pays by transfer, open the order and tap <strong>Mark as paid</strong>.</li>
-            <li>Card online payments need a payment partner later — leave unticked for now.</li>
+            <li>Card / online JazzCash API keys (for later) live under <strong>Email, logins &amp; links</strong> - not here.</li>
+            <li>Card online payments need a payment partner later - leave unticked for now.</li>
         </ol>
     </aside>
 

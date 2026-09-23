@@ -5,7 +5,7 @@
         <strong>How to add a product photo</strong>
         <ol class="admin-steps">
             <li>Take or choose a clear photo of the cake.</li>
-            <li>Crop it to a <strong>square</strong> — recommended size <strong>{{ $mediaGuide['size'] }}</strong>.</li>
+            <li>Crop it to a <strong>square</strong> - recommended size <strong>{{ $mediaGuide['size'] }}</strong>.</li>
             <li>Save as {{ $mediaGuide['formats'] }}, under {{ $mediaGuide['max'] }}.</li>
             <li>Upload it in the Photo field below.</li>
         </ol>
@@ -46,7 +46,7 @@
                 <div class="form-row">
                     <label class="field-label" for="price">Price (PKR) *</label>
                     <input id="price" class="field-input" type="number" name="price" value="{{ old('price', $product->price) }}" required min="1" step="1" placeholder="1850">
-                    <p class="field-hint">Numbers only — e.g. 1850 (not Rs. 1,850).</p>
+                    <p class="field-hint">Numbers only - e.g. 1850 (not Rs. 1,850).</p>
                 </div>
 
                 <div class="form-row form-row--full">
@@ -81,7 +81,7 @@
                     @if ($product->exists && $product->image)
                         <div class="admin-current-photo">
                             <img src="{{ asset($product->publicImagePath()) }}" alt="Current photo" width="96" height="96">
-                            <span>Current photo — upload a new one only if you want to replace it.</span>
+                            <span>Current photo - upload a new one only if you want to replace it.</span>
                         </div>
                     @endif
                     <input id="image" class="field-input" type="file" name="image" accept="image/jpeg,image/webp,image/png">

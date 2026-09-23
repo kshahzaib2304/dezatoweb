@@ -29,6 +29,13 @@
                     <input id="whatsapp" class="field-input" type="tel" name="whatsapp" value="{{ old('whatsapp', $whatsapp) }}" placeholder="+92 300 1234567">
                     <p class="field-hint">Used for “WhatsApp” reply buttons in Admin. Leave blank to use the phone number.</p>
                 </div>
+                <div class="form-row form-row--full">
+                    <label class="check-inline">
+                        <input type="checkbox" name="notify_status_emails" value="1" @checked(old('notify_status_emails', $statusEmails))>
+                        <span>Email customers when I change an order’s status (Baking, Out for delivery, etc.)</span>
+                    </label>
+                    <p class="field-hint">Turn this off if you prefer to call/WhatsApp customers yourself.</p>
+                </div>
             </div>
             <div class="admin-form__actions">
                 <button class="btn btn--primary" type="submit">Save contact &amp; alerts</button>

@@ -25,7 +25,7 @@
                             <tr>
                                 <td>{{ $customer->name }}</td>
                                 <td>{{ $customer->email }}</td>
-                                <td>{{ $customer->phone ?: '—' }}</td>
+                                <td>{{ $customer->phone ?: '-' }}</td>
                                 <td>{{ $customer->orders_count }}</td>
                                 <td>{{ optional($customer->created_at)->format('d M Y') }}</td>
                             </tr>

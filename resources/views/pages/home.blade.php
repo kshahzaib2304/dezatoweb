@@ -177,7 +177,7 @@
         <div class="home-story__copy">
             <p class="home-kicker">About Dezato</p>
             <h2>Karachi-baked. Celebration-ready.</h2>
-            <p>Since 2018 we’ve baked cakes and desserts for Karachi — from Lotus and Ferrero classics to custom birthday finishes.</p>
+            <p>Since 2018 we’ve baked cakes and desserts for Karachi - from Lotus and Ferrero classics to custom birthday finishes.</p>
             <a class="btn btn--outline" href="{{ route('about') }}">About us</a>
         </div>
         <div class="home-story__media">
@@ -190,7 +190,7 @@
     <div class="container home-cater__inner">
         <div>
             <h2>Services &amp; catering</h2>
-            <p>Office boxes, dessert tables, and corporate gifting — built around your guest list.</p>
+            <p>Office boxes, dessert tables, and corporate gifting - built around your guest list.</p>
         </div>
         <a class="btn btn--primary" href="{{ route('services') }}">Our services</a>
     </div>
@@ -199,7 +199,7 @@
 <section class="home-news" id="newsletter" data-reveal>
     <div class="container home-news__inner">
         <h2>Stay in the know</h2>
-        <p>Seasonal flavours and bakery news — no spam.</p>
+        <p>Seasonal flavours and bakery news - no spam.</p>
         @if (session('status'))
             <p class="flash" role="status">{{ session('status') }}</p>
         @endif

@@ -49,7 +49,7 @@ class ContentController extends Controller
             'announcement' => ['nullable', 'string', 'max:240'],
             'interval_ms' => ['required', 'integer', 'in:4000,4500,5000'],
         ], [
-            'announcement.max' => 'Keep the top banner short — max 240 characters.',
+            'announcement.max' => 'Keep the top banner short - max 240 characters.',
             'interval_ms.in' => 'Choose 4, 4.5, or 5 seconds between slides.',
         ]);
 

@@ -8,7 +8,7 @@
         <header class="builder-head" data-reveal>
             <p class="home-kicker">Custom cake</p>
             <h1>Design your cake</h1>
-            <p>Upload a reference, choose size and flavours — price updates live in PKR.</p>
+            <p>Upload a reference, choose size and flavours - price updates live in PKR.</p>
         </header>
 
         @if (session('status'))

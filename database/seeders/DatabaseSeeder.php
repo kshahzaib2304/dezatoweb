@@ -67,7 +67,7 @@ class DatabaseSeeder extends Seeder
         Promo::query()->updateOrCreate(
             ['code' => 'DEZATO10'],
             [
-                'label' => 'Welcome — 10% off',
+                'label' => 'Welcome - 10% off',
                 'type' => Promo::TYPE_PERCENT,
                 'value' => 10,
                 'min_subtotal' => 2000,

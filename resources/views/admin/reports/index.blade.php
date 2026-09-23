@@ -1,7 +1,7 @@
 @extends('layouts.admin')
 
 @section('content')
-    <p class="admin-lead">A simple snapshot of how the bakery is doing — no spreadsheets needed.</p>
+    <p class="admin-lead">A simple snapshot of how the bakery is doing - no spreadsheets needed.</p>
 
     <section class="admin-stats" aria-label="Report summary">
         @foreach ($stats as $stat)

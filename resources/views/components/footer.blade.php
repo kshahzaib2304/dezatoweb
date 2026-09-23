@@ -30,12 +30,25 @@
                 <button type="button" data-fulfillment-open data-fulfillment-method="shipping">Courier</button>
             </div>
         </div>
+
+        @if (! empty($socialLinks))
+            <nav class="footer-brand__social" aria-label="Social media">
+                @foreach ($socialLinks as $link)
+                    <a href="{{ $link['url'] }}" target="_blank" rel="noopener noreferrer">{{ $link['label'] }}</a>
+                @endforeach
+            </nav>
+        @endif
     </div>
 
     <div class="footer-brand__legal">
         <div class="container footer-brand__legal-inner">
             <p>&copy; {{ date('Y') }} Dezato Cake House, Karachi</p>
-            <a href="{{ route('home') }}#newsletter">Newsletter</a>
+            <nav class="footer-brand__legal-links" aria-label="Legal">
+                <a href="{{ route('pages.privacy') }}">Privacy</a>
+                <a href="{{ route('pages.terms') }}">Terms</a>
+                <a href="{{ route('pages.faq') }}">FAQ</a>
+                <a href="{{ route('home') }}#newsletter">Newsletter</a>
+            </nav>
         </div>
     </div>
 </footer>

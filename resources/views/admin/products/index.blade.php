@@ -50,7 +50,7 @@
                                         <span class="admin-badge admin-badge--soft">Featured</span>
                                     @endif
                                 </td>
-                                <td>{{ $product->category?->label ?? '—' }}</td>
+                                <td>{{ $product->category?->label ?? '-' }}</td>
                                 <td>{{ pkr($product->price) }}</td>
                                 <td>
                                     @if ($product->is_active)

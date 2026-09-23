@@ -27,7 +27,7 @@ final class PaymentMethods
             [
                 'id' => 'pay_later',
                 'label' => 'Pay at bakery',
-                'hint' => 'Confirm the order now — payment when they collect',
+                'hint' => 'Confirm the order now - payment when they collect',
                 'enabled_by_default' => true,
                 'live' => true,
                 'type' => 'cash',
@@ -59,7 +59,7 @@ final class PaymentMethods
             [
                 'id' => 'card',
                 'label' => 'Credit / Debit card',
-                'hint' => 'Online card gateway — needs a payment partner to connect later',
+                'hint' => 'Online card gateway - needs a payment partner to connect later',
                 'enabled_by_default' => false,
                 'live' => false,
                 'type' => 'gateway',

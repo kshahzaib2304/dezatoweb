@@ -39,7 +39,7 @@
         <div class="admin-content">
             <header class="admin-top">
                 <h1>{{ $heading }}</h1>
-                <p class="admin-top__note">Simple tools to manage your bakery — no tech skills needed.</p>
+                <p class="admin-top__note">Simple tools to manage your bakery - no tech skills needed.</p>
             </header>
 
             @if (session('status'))

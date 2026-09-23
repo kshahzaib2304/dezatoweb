@@ -23,7 +23,7 @@ final class FulfillmentSchedule
                 '8:00 PM – 10:00 PM',
             ]),
             'min_hours' => 4,
-            'note' => 'Same-day slots may not always be available — we will confirm by phone if needed.',
+            'note' => 'Same-day slots may not always be available - we will confirm by phone if needed.',
         ];
 
         $stored = SiteSetting::getJson(self::SETTING_KEY);

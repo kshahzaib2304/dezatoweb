@@ -5,11 +5,15 @@ namespace App\Providers;
 use App\Support\Cart;
 use App\Support\Catalog;
 use App\Support\Fulfillment;
+use App\Support\MailSettings;
+use App\Support\SocialAuth;
+use App\Support\SocialLinks;
 use App\Models\SiteSetting;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Throwable;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,6 +26,13 @@ class AppServiceProvider extends ServiceProvider
     {
         Paginator::defaultView('pagination.simple');
         Paginator::defaultSimpleView('pagination.simple');
+
+        try {
+            MailSettings::apply();
+            SocialAuth::apply();
+        } catch (Throwable) {
+            // Database may be unavailable during early install / migrate.
+        }
 
         View::composer('*', function ($view): void {
             $cart = app(Cart::class);
@@ -47,6 +58,14 @@ class AppServiceProvider extends ServiceProvider
                 'announcement',
                 SiteSetting::getValue('announcement', $default) ?: null
             );
+        });
+
+        View::composer('components.footer', function ($view): void {
+            try {
+                $view->with('socialLinks', SocialLinks::forFooter());
+            } catch (Throwable) {
+                $view->with('socialLinks', []);
+            }
         });
     }
 }

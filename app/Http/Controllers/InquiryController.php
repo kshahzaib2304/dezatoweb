@@ -33,7 +33,7 @@ class InquiryController extends Controller
 
         return back()->with(
             'status',
-            'Thanks — we received your message and will contact you shortly.'
+            'Thanks - we received your message and will contact you shortly.'
         );
     }
 }

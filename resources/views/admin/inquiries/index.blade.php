@@ -35,7 +35,7 @@
                                     @endunless
                                 </td>
                                 <td>
-                                    {{ $inquiry->name ?: '—' }}
+                                    {{ $inquiry->name ?: '-' }}
                                     <div class="admin-muted">{{ $inquiry->email }}</div>
                                 </td>
                                 <td>{{ $inquiry->summary() }}</td>

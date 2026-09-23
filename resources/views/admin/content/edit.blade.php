@@ -2,14 +2,14 @@
 
 @section('content')
     <aside class="admin-media-guide" aria-label="Hero photo guide">
-        <strong>{{ $mediaGuide['label'] }} — for every slide</strong>
+        <strong>{{ $mediaGuide['label'] }} - for every slide</strong>
         <span>{{ $mediaGuide['size'] }} · {{ $mediaGuide['ratio'] }} · {{ $mediaGuide['formats'] }} · max {{ $mediaGuide['max'] }}</span>
         <p>{{ $mediaGuide['tip'] }}</p>
         <ol class="admin-steps">
             <li>Crop a <strong>wide</strong> photo (cakes look best).</li>
             <li>Resize to about <strong>1600 × 1000</strong> pixels.</li>
             <li>Save as JPG or WebP under 3 MB.</li>
-            <li>Add up to <strong>{{ $maxSlides }}</strong> slides — the homepage rotates them automatically.</li>
+            <li>Add up to <strong>{{ $maxSlides }}</strong> slides - the homepage rotates them automatically.</li>
         </ol>
     </aside>
 
