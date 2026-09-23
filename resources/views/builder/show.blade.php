@@ -18,20 +18,34 @@
         <form
             class="builder-layout"
             method="post"
-            action="{{ route('builder.stub') }}"
+            action="{{ route('builder.store') }}"
             enctype="multipart/form-data"
             data-cake-builder
             data-reveal
         >
             @csrf
 
+            @if ($errors->any())
+                <div class="form-errors" role="alert" style="grid-column:1/-1">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <div class="builder-main">
                 <section class="builder-block">
                     <h2>1. Reference image</h2>
                     <label class="upload-zone" for="ref-image">
-                        <input id="ref-image" type="file" name="reference_image" accept="image/*" data-builder-upload>
+                        <input id="ref-image" type="file" name="reference_image" accept="image/jpeg,image/png,image/webp" data-builder-upload>
                         <span data-upload-label>Upload a cake photo or screenshot</span>
                     </label>
+                    <p class="field-hint">
+                        Optional · {{ $referenceGuide['formats'] ?? 'JPG/PNG/WebP' }}, max {{ $referenceGuide['max'] ?? '3 MB' }}.
+                        Clear photos work best{{ isset($referenceGuide['size']) ? ' (about '.$referenceGuide['size'].')' : '' }}.
+                    </p>
                     <div class="upload-preview" data-upload-preview hidden>
                         <img src="" alt="Reference preview">
                     </div>

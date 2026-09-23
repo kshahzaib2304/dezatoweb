@@ -25,13 +25,32 @@
                             {{ $order->address }}, {{ $order->city }}, {{ $order->region }} {{ $order->postal_code }}
                         </p>
                     @endif
-                    <p><span>Payment</span> {{ $order->payment_method === 'pay_later' ? 'Pay later with fulfillment' : $order->payment_method }}</p>
+                    <p><span>Payment</span> {{ $paymentLabel ?? \App\Support\PaymentMethods::label($order->payment_method) }} ({{ ucfirst($order->payment_status ?? 'unpaid') }})</p>
                 </div>
+
+                @if (! empty($paymentInstructions))
+                    <div class="pay-instructions pay-instructions--confirm">
+                        <p><strong>How to pay</strong></p>
+                        <ul>
+                            @foreach ($paymentInstructions as $label => $value)
+                                @if ($value !== '')
+                                    <li><span>{{ str_replace('_', ' ', ucfirst($label)) }}:</span> {{ $value }}</li>
+                                @endif
+                            @endforeach
+                        </ul>
+                        <p class="field-hint">Use order number <strong>{{ $order->number }}</strong> as the payment reference.</p>
+                    </div>
+                @endif
 
                 <ul class="checkout-lines">
                     @foreach ($order->items as $item)
                         <li>
-                            <span>{{ $item->quantity }} × {{ $item->product_name }}</span>
+                            <span>
+                                {{ $item->quantity }} × {{ $item->product_name }}
+                                @if ($item->isCustom())
+                                    <small style="display:block;color:var(--muted)">{{ $item->optionsSummary() }}</small>
+                                @endif
+                            </span>
                             <span>{{ pkr($item->line_total) }}</span>
                         </li>
                     @endforeach
@@ -46,6 +65,12 @@
                         <div>
                             <dt>{{ $order->method === 'shipping' ? 'Courier' : 'Delivery' }}</dt>
                             <dd>{{ pkr($order->fee) }}</dd>
+                        </div>
+                    @endif
+                    @if ((float) $order->discount > 0)
+                        <div>
+                            <dt>Promo ({{ $order->promo_code }})</dt>
+                            <dd>−{{ pkr($order->discount) }}</dd>
                         </div>
                     @endif
                     <div class="cart-totals__total">

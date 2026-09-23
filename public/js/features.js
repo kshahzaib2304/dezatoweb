@@ -98,4 +98,86 @@
       });
     });
   });
+  /* ---------- Checkout payment instructions ---------- */
+  const payRoot = document.querySelector('[data-checkout-payment]');
+  if (payRoot) {
+    const syncPayPanels = () => {
+      const selected = payRoot.querySelector('input[name="payment_method"]:checked');
+      const id = selected?.value || '';
+      payRoot.querySelectorAll('[data-pay-panel]').forEach((panel) => {
+        panel.hidden = panel.getAttribute('data-pay-panel') !== id;
+      });
+    };
+    payRoot.addEventListener('change', syncPayPanels);
+    syncPayPanels();
+  }
+
+  /* ---------- Homepage hero slider ---------- */
+  const hero = document.querySelector('[data-hero-slider]');
+  if (hero) {
+    const slides = Array.from(hero.querySelectorAll('[data-hero-slide]'));
+    const dots = Array.from(hero.querySelectorAll('[data-hero-dot]'));
+    const prev = hero.querySelector('[data-hero-prev]');
+    const next = hero.querySelector('[data-hero-next]');
+    const intervalMs = Math.max(4000, Number(hero.getAttribute('data-hero-interval') || 4500));
+    let index = 0;
+    let timer = null;
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const show = (nextIndex) => {
+      if (slides.length < 2) return;
+      index = (nextIndex + slides.length) % slides.length;
+      slides.forEach((slide, i) => {
+        const active = i === index;
+        slide.classList.toggle('is-active', active);
+        slide.setAttribute('aria-hidden', active ? 'false' : 'true');
+      });
+      dots.forEach((dot, i) => {
+        const active = i === index;
+        dot.classList.toggle('is-active', active);
+        if (active) dot.setAttribute('aria-current', 'true');
+        else dot.removeAttribute('aria-current');
+      });
+    };
+
+    const stop = () => {
+      if (timer) {
+        window.clearInterval(timer);
+        timer = null;
+      }
+    };
+
+    const start = () => {
+      if (reduceMotion || slides.length < 2) return;
+      stop();
+      timer = window.setInterval(() => show(index + 1), intervalMs);
+    };
+
+    prev?.addEventListener('click', () => {
+      show(index - 1);
+      start();
+    });
+    next?.addEventListener('click', () => {
+      show(index + 1);
+      start();
+    });
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        show(Number(dot.getAttribute('data-hero-dot') || 0));
+        start();
+      });
+    });
+
+    hero.addEventListener('mouseenter', stop);
+    hero.addEventListener('mouseleave', start);
+    hero.addEventListener('focusin', stop);
+    hero.addEventListener('focusout', start);
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.hidden) stop();
+      else start();
+    });
+
+    start();
+  }
 })();

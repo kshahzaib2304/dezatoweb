@@ -6,7 +6,10 @@ use App\Http\Requests\PlaceOrderRequest;
 use App\Models\Order;
 use App\Support\Cart;
 use App\Support\Fulfillment;
+use App\Support\FulfillmentSchedule;
+use App\Support\PaymentMethods;
 use App\Support\PlaceOrder;
+use App\Support\PromoCodes;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use RuntimeException;
@@ -23,6 +26,9 @@ class CheckoutController extends Controller
     {
         $subtotal = $this->cart->subtotal();
         $fee = $this->fulfillment->fee();
+        $promoCode = old('promo');
+        $promoResult = PromoCodes::apply(is_string($promoCode) ? $promoCode : null, $subtotal);
+        $discount = $promoResult['ok'] ? (float) $promoResult['discount'] : 0.0;
 
         return view('pages.checkout', [
             'title' => 'Checkout | Dezato Cake House',
@@ -30,11 +36,17 @@ class CheckoutController extends Controller
             'lines' => $this->cart->lines(),
             'subtotal' => $subtotal,
             'fee' => $fee,
-            'total' => round($subtotal + $fee, 2),
+            'discount' => $discount,
+            'total' => round(max(0, $subtotal + $fee - $discount), 2),
             'fulfillment' => $this->fulfillment->get(),
             'fulfillmentSummary' => $this->fulfillment->summary(),
             'feeLabel' => $this->fulfillment->feeLabel(),
             'paymentHint' => $this->fulfillment->paymentHint(),
+            'paymentMethods' => PaymentMethods::forCheckout(),
+            'timeSlots' => FulfillmentSchedule::slots(),
+            'earliestDate' => FulfillmentSchedule::earliestDate(),
+            'scheduleNote' => FulfillmentSchedule::note(),
+            'promoMessage' => $promoResult['ok'] && $discount > 0 ? $promoResult['message'] : null,
         ]);
     }
 
@@ -49,11 +61,13 @@ class CheckoutController extends Controller
                 'payment_method' => $request->string('payment_method')->toString(),
                 'delivery_date' => $request->input('delivery_date'),
                 'delivery_slot' => $request->string('delivery_slot')->trim()->toString() ?: null,
+                'promo' => $request->string('promo')->trim()->toString() ?: null,
             ]);
         } catch (RuntimeException $exception) {
             return redirect()
-                ->route('cart.show')
-                ->withErrors(['cart' => $exception->getMessage()]);
+                ->route('checkout.show')
+                ->withInput()
+                ->withErrors(['promo' => $exception->getMessage()]);
         }
 
         return redirect()
@@ -69,6 +83,10 @@ class CheckoutController extends Controller
             'title' => 'Order '.$order->number.' | Dezato Cake House',
             'metaDescription' => 'Your Dezato Cake House order confirmation.',
             'order' => $order,
+            'paymentInstructions' => PaymentMethods::isTransfer($order->payment_method)
+                ? PaymentMethods::instructionsFor($order->payment_method)
+                : null,
+            'paymentLabel' => PaymentMethods::label($order->payment_method),
         ]);
     }
 }

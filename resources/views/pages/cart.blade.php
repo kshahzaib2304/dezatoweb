@@ -25,23 +25,42 @@
                 <div class="cart-lines" data-reveal>
                     @foreach ($lines as $line)
                         <article class="cart-line">
-                            <a class="cart-line__media" href="{{ route('products.show', $line['product_id']) }}">
-                                <img
-                                    src="{{ asset($line['product']['image']) }}"
-                                    alt="{{ $line['product']['name'] }}"
-                                    width="160"
-                                    height="160"
-                                    loading="lazy"
-                                >
-                            </a>
+                            @if ($line['is_custom'])
+                                <div class="cart-line__media">
+                                    <img
+                                        src="{{ asset($line['product']['image']) }}"
+                                        alt="{{ $line['product']['name'] }}"
+                                        width="160"
+                                        height="160"
+                                        loading="lazy"
+                                    >
+                                </div>
+                            @else
+                                <a class="cart-line__media" href="{{ route('products.show', $line['product_id']) }}">
+                                    <img
+                                        src="{{ asset($line['product']['image']) }}"
+                                        alt="{{ $line['product']['name'] }}"
+                                        width="160"
+                                        height="160"
+                                        loading="lazy"
+                                    >
+                                </a>
+                            @endif
                             <div class="cart-line__body">
                                 <div class="cart-line__top">
                                     <h2>
-                                        <a href="{{ route('products.show', $line['product_id']) }}">{{ $line['product']['name'] }}</a>
+                                        @if ($line['is_custom'])
+                                            {{ $line['product']['name'] }}
+                                        @else
+                                            <a href="{{ route('products.show', $line['product_id']) }}">{{ $line['product']['name'] }}</a>
+                                        @endif
                                     </h2>
                                     <p class="cart-line__price">{{ pkr($line['line_total']) }}</p>
                                 </div>
                                 <p>{{ pkr($line['product']['price']) }} each</p>
+                                @if ($line['is_custom'] && ($line['product']['description'] ?? '') !== '')
+                                    <p class="field-hint">{{ $line['product']['description'] }}</p>
+                                @endif
 
                                 <div class="cart-line__actions">
                                     <form method="post" action="{{ route('cart.items.update', $line['product_id']) }}">

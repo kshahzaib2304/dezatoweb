@@ -29,15 +29,15 @@
                     <div class="form-grid">
                         <div class="form-row form-row--full">
                             <label class="field-label" for="customer_name">Full name</label>
-                            <input id="customer_name" class="field-input" type="text" name="customer_name" value="{{ old('customer_name') }}" autocomplete="name" required>
+                            <input id="customer_name" class="field-input" type="text" name="customer_name" value="{{ old('customer_name', auth()->user()->name ?? '') }}" autocomplete="name" required>
                         </div>
                         <div class="form-row">
                             <label class="field-label" for="email">Email</label>
-                            <input id="email" class="field-input" type="email" name="email" value="{{ old('email') }}" autocomplete="email" required>
+                            <input id="email" class="field-input" type="email" name="email" value="{{ old('email', auth()->user()->email ?? '') }}" autocomplete="email" required>
                         </div>
                         <div class="form-row">
                             <label class="field-label" for="phone">Phone</label>
-                            <input id="phone" class="field-input" type="tel" name="phone" value="{{ old('phone') }}" autocomplete="tel" required>
+                            <input id="phone" class="field-input" type="tel" name="phone" value="{{ old('phone', auth()->user()->phone ?? '') }}" autocomplete="tel" required>
                         </div>
                         <div class="form-row form-row--full">
                             <label class="field-label" for="notes">Order notes <span class="field-optional">(optional)</span></label>
@@ -66,64 +66,79 @@
 
                 <div class="checkout-form__section">
                     <h2>Delivery timing</h2>
-                    <div class="checkout-extras">
-                        <div class="form-grid">
-                            <div class="form-row">
-                                <label class="field-label" for="delivery_date">Date</label>
-                                <input id="delivery_date" class="field-input" type="date" name="delivery_date" value="{{ old('delivery_date') }}">
-                            </div>
-                            <div class="form-row">
-                                <label class="field-label" for="delivery_slot">Time slot</label>
-                                <select id="delivery_slot" class="field-input" name="delivery_slot">
-                                    <option value="">Select a window</option>
-                                    @foreach (config('dezato_ui.checkout.time_slots', []) as $slot)
-                                        <option value="{{ $slot }}" @selected(old('delivery_slot') === $slot)>{{ $slot }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="form-row form-row--full">
-                                <label class="check-inline">
-                                    <input type="checkbox" name="express" value="1" @checked(old('express'))>
-                                    <span>Express / same-day delivery (availability confirmed at checkout)</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="checkout-form__section">
-                    <h2>Promo &amp; rewards</h2>
+                    @if ($scheduleNote)
+                        <p class="field-hint">{{ $scheduleNote }}</p>
+                    @endif
                     <div class="form-grid">
                         <div class="form-row">
-                            <label class="field-label" for="promo">Promo code</label>
-                            <input id="promo" class="field-input" type="text" name="promo" value="{{ old('promo') }}" placeholder="DEZATO10">
+                            <label class="field-label" for="delivery_date">Date</label>
+                            <input id="delivery_date" class="field-input" type="date" name="delivery_date" value="{{ old('delivery_date') }}" min="{{ $earliestDate }}">
                         </div>
                         <div class="form-row">
-                            <label class="field-label" for="gift_card">Gift card</label>
-                            <input id="gift_card" class="field-input" type="text" name="gift_card" value="{{ old('gift_card') }}" placeholder="Optional">
+                            <label class="field-label" for="delivery_slot">Time slot</label>
+                            <select id="delivery_slot" class="field-input" name="delivery_slot">
+                                <option value="">Select a window</option>
+                                @foreach ($timeSlots as $slot)
+                                    <option value="{{ $slot }}" @selected(old('delivery_slot') === $slot)>{{ $slot }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="form-row form-row--full">
-                            <label class="field-label" for="points">Reward points</label>
-                            <input id="points" class="field-input" type="number" name="points" min="0" value="{{ old('points', 0) }}" placeholder="0">
+                            <label class="check-inline">
+                                <input type="checkbox" name="express" value="1" @checked(old('express'))>
+                                <span>Express / same-day (we’ll confirm availability)</span>
+                            </label>
                         </div>
                     </div>
                 </div>
 
                 <div class="checkout-form__section">
+                    <h2>Promo code</h2>
+                    <div class="form-row">
+                        <label class="field-label" for="promo">Have a code?</label>
+                        <input id="promo" class="field-input" type="text" name="promo" value="{{ old('promo') }}" placeholder="e.g. DEZATO10" style="text-transform:uppercase">
+                        @if ($promoMessage)
+                            <p class="field-hint" style="color:#1b5e20">{{ $promoMessage }}</p>
+                        @endif
+                    </div>
+                </div>
+
+                <div class="checkout-form__section" data-checkout-payment>
                     <h2>Payment</h2>
-                    @foreach (config('dezato_ui.checkout.payment_methods', []) as $i => $method)
+                    @forelse ($paymentMethods as $i => $method)
                         <label class="pay-option">
-                            <input type="radio" name="payment_method" value="{{ $method['id'] }}" @checked(old('payment_method', 'cod') === $method['id'] || ($i === 0 && ! old('payment_method')))>
+                            <input
+                                type="radio"
+                                name="payment_method"
+                                value="{{ $method['id'] }}"
+                                data-pay-type="{{ $method['type'] }}"
+                                @checked(old('payment_method', 'cod') === $method['id'] || ($i === 0 && ! old('payment_method')))
+                            >
                             <span>
                                 <strong>{{ $method['label'] }}</strong>
                                 <small>{{ $method['hint'] }}</small>
                             </span>
                         </label>
-                    @endforeach
-                    <label class="check-inline" style="margin-top:0.75rem">
-                        <input type="checkbox" name="save_card" value="1">
-                        <span>Save card for 1-click checkout (UI — connects with gateway later)</span>
-                    </label>
+                        @if ($method['type'] === 'transfer' && is_array($method['instructions']))
+                            <div
+                                class="pay-instructions"
+                                data-pay-panel="{{ $method['id'] }}"
+                                hidden
+                            >
+                                <p><strong>Send payment to:</strong></p>
+                                <ul>
+                                    @foreach ($method['instructions'] as $label => $value)
+                                        @if ($value !== '')
+                                            <li><span>{{ str_replace('_', ' ', ucfirst($label)) }}:</span> {{ $value }}</li>
+                                        @endif
+                                    @endforeach
+                                </ul>
+                                <p class="field-hint">Use order number as reference after placing the order. We’ll confirm once payment is received.</p>
+                            </div>
+                        @endif
+                    @empty
+                        <p class="field-hint">Payment options are being set up. Please contact the bakery.</p>
+                    @endforelse
                     <label class="agree-row">
                         <input type="checkbox" name="agree" value="1" @checked(old('agree')) required>
                         <span>I confirm my order details are correct.</span>
@@ -138,7 +153,12 @@
                 <ul class="checkout-lines">
                     @foreach ($lines as $line)
                         <li>
-                            <span>{{ $line['quantity'] }} × {{ $line['product']['name'] }}</span>
+                            <span>
+                                {{ $line['quantity'] }} × {{ $line['product']['name'] }}
+                                @if ($line['is_custom'] && ($line['product']['description'] ?? '') !== '')
+                                    <small style="display:block;color:var(--muted)">{{ $line['product']['description'] }}</small>
+                                @endif
+                            </span>
                             <span>{{ pkr($line['line_total']) }}</span>
                         </li>
                     @endforeach
@@ -154,6 +174,12 @@
                             <dd>{{ pkr($fee) }}</dd>
                         </div>
                     @endif
+                    @if ($discount > 0)
+                        <div>
+                            <dt>Promo discount</dt>
+                            <dd>−{{ pkr($discount) }}</dd>
+                        </div>
+                    @endif
                     <div class="cart-totals__total">
                         <dt>Total</dt>
                         <dd>{{ pkr($total) }}</dd>
@@ -164,3 +190,7 @@
         </div>
     </section>
 @endsection
+
+@push('scripts')
+<script src="{{ asset('js/features.js') }}" defer></script>
+@endpush

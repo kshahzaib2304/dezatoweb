@@ -4,9 +4,9 @@ namespace Database\Seeders;
 
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Promo;
 use App\Models\User;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Str;
 
 class DatabaseSeeder extends Seeder
 {
@@ -63,5 +63,17 @@ class DatabaseSeeder extends Seeder
                 ]
             );
         }
+
+        Promo::query()->updateOrCreate(
+            ['code' => 'DEZATO10'],
+            [
+                'label' => 'Welcome — 10% off',
+                'type' => Promo::TYPE_PERCENT,
+                'value' => 10,
+                'min_subtotal' => 2000,
+                'max_uses' => null,
+                'is_active' => true,
+            ]
+        );
     }
 }

@@ -12,7 +12,7 @@ final class Cart
     public function __construct(private readonly Session $session) {}
 
     /**
-     * @return array<string, array{product_id: string, quantity: int}>
+     * @return array<string, array<string, mixed>>
      */
     public function items(): array
     {
@@ -31,16 +31,49 @@ final class Cart
         $quantity = max(1, min(99, $quantity));
         $items = $this->items();
 
-        if (isset($items[$productId])) {
-            $items[$productId]['quantity'] = min(99, $items[$productId]['quantity'] + $quantity);
+        if (isset($items[$productId]) && ($items[$productId]['type'] ?? 'catalog') === 'catalog') {
+            $items[$productId]['quantity'] = min(99, (int) $items[$productId]['quantity'] + $quantity);
         } else {
             $items[$productId] = [
+                'type' => 'catalog',
                 'product_id' => $productId,
                 'quantity' => $quantity,
             ];
         }
 
         $this->session->put(self::SESSION_KEY, $items);
+    }
+
+    /**
+     * @param  array{
+     *     key: string,
+     *     name: string,
+     *     unit_price: int|float,
+     *     summary?: string|null,
+     *     options?: array<string, mixed>,
+     *     image?: string|null
+     * }  $custom
+     */
+    public function addCustom(array $custom, int $quantity = 1): string
+    {
+        $key = $custom['key'];
+        $quantity = max(1, min(99, $quantity));
+        $items = $this->items();
+
+        $items[$key] = [
+            'type' => 'custom',
+            'product_id' => $key,
+            'quantity' => $quantity,
+            'name' => $custom['name'],
+            'unit_price' => (float) $custom['unit_price'],
+            'summary' => $custom['summary'] ?? null,
+            'options' => $custom['options'] ?? [],
+            'image' => $custom['image'] ?? null,
+        ];
+
+        $this->session->put(self::SESSION_KEY, $items);
+
+        return $key;
     }
 
     public function update(string $productId, int $quantity): void
@@ -76,25 +109,58 @@ final class Cart
      * @return Collection<int, array{
      *     product_id: string,
      *     quantity: int,
-     *     product: array,
-     *     line_total: float
+     *     product: array<string, mixed>,
+     *     line_total: float,
+     *     type: string,
+     *     options: ?array,
+     *     is_custom: bool
      * }>
      */
     public function lines(): Collection
     {
         return collect($this->items())
             ->map(function (array $item): ?array {
-                $product = Catalog::findProduct($item['product_id']);
+                $quantity = max(1, (int) ($item['quantity'] ?? 1));
+                $type = (string) ($item['type'] ?? 'catalog');
+
+                if ($type === 'custom') {
+                    $unitPrice = (float) ($item['unit_price'] ?? 0);
+                    $image = $item['image'] ?? null;
+                    $publicImage = $image && ! str_starts_with((string) $image, 'http')
+                        ? (str_starts_with((string) $image, 'storage/') ? $image : 'storage/'.$image)
+                        : 'images/home/hero.jpg';
+
+                    return [
+                        'product_id' => (string) $item['product_id'],
+                        'quantity' => $quantity,
+                        'type' => 'custom',
+                        'is_custom' => true,
+                        'options' => is_array($item['options'] ?? null) ? $item['options'] : [],
+                        'image_path' => $item['image'] ?? null,
+                        'product' => [
+                            'id' => (string) $item['product_id'],
+                            'name' => (string) ($item['name'] ?? 'Custom Cake'),
+                            'price' => $unitPrice,
+                            'image' => $publicImage,
+                            'description' => (string) ($item['summary'] ?? ''),
+                        ],
+                        'line_total' => round($unitPrice * $quantity, 2),
+                    ];
+                }
+
+                $product = Catalog::findProduct((string) $item['product_id']);
 
                 if ($product === null) {
                     return null;
                 }
 
-                $quantity = (int) $item['quantity'];
-
                 return [
-                    'product_id' => $item['product_id'],
+                    'product_id' => (string) $item['product_id'],
                     'quantity' => $quantity,
+                    'type' => 'catalog',
+                    'is_custom' => false,
+                    'options' => null,
+                    'image_path' => null,
                     'product' => $product,
                     'line_total' => round((float) $product['price'] * $quantity, 2),
                 ];

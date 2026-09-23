@@ -7,30 +7,64 @@
     $favorites = $favorites ?? array_slice(config('dezato.menu.products', []), 0, 4);
 @endphp
 
-<section class="home-hero">
-    <div class="home-hero__media" aria-hidden="true">
-        <img
-            src="{{ asset('images/home/hero.jpg') }}"
-            alt=""
-            width="1600"
-            height="1000"
-            fetchpriority="high"
-        >
+<section
+    class="home-hero"
+    data-hero-slider
+    data-hero-interval="{{ (int) ($heroIntervalMs ?? 4500) }}"
+    aria-roledescription="carousel"
+    aria-label="Homepage highlights"
+>
+    <div class="home-hero__slides">
+        @foreach ($heroSlides as $index => $slide)
+            <div
+                class="home-hero__slide{{ $index === 0 ? ' is-active' : '' }}"
+                data-hero-slide
+                @if ($index !== 0) aria-hidden="true" @endif
+            >
+                <div class="home-hero__media" aria-hidden="true">
+                    <img
+                        src="{{ asset($slide['image']) }}"
+                        alt=""
+                        width="1600"
+                        height="1000"
+                        @if ($index === 0) fetchpriority="high" @else loading="lazy" @endif
+                    >
+                </div>
+                <div class="home-hero__veil"></div>
+                <div class="container home-hero__content">
+                    <p class="home-hero__brand">Dezato</p>
+                    <h1>{{ $slide['headline'] }}</h1>
+                    <p class="home-hero__lede">{{ $slide['lede'] }}</p>
+                    <div class="home-hero__actions">
+                        @if ($hasFulfillment ?? false)
+                            <a class="btn btn--primary" href="{{ route('menu') }}">Shop the menu</a>
+                        @else
+                            <button class="btn btn--primary" type="button" data-fulfillment-open>Start an order</button>
+                        @endif
+                        <a class="btn btn--ghost-light" href="{{ route('locations') }}">Visit us</a>
+                    </div>
+                </div>
+            </div>
+        @endforeach
     </div>
-    <div class="home-hero__veil"></div>
-    <div class="container home-hero__content">
-        <p class="home-hero__brand">Dezato</p>
-        <h1>Cakes for Karachi celebrations.</h1>
-        <p class="home-hero__lede">Handcrafted desserts, baked fresh for pickup or delivery.</p>
-        <div class="home-hero__actions">
-            @if ($hasFulfillment ?? false)
-                <a class="btn btn--primary" href="{{ route('menu') }}">Shop the menu</a>
-            @else
-                <button class="btn btn--primary" type="button" data-fulfillment-open>Start an order</button>
-            @endif
-            <a class="btn btn--ghost-light" href="{{ route('locations') }}">Visit us</a>
+
+    @if (count($heroSlides) > 1)
+        <div class="home-hero__controls" data-hero-controls>
+            <button type="button" class="home-hero__nav" data-hero-prev aria-label="Previous slide">‹</button>
+            <div class="home-hero__dots" role="tablist" aria-label="Choose slide">
+                @foreach ($heroSlides as $index => $slide)
+                    <button
+                        type="button"
+                        class="home-hero__dot{{ $index === 0 ? ' is-active' : '' }}"
+                        data-hero-dot="{{ $index }}"
+                        aria-label="Show slide {{ $index + 1 }}"
+                        @if ($index === 0) aria-current="true" @endif
+                    ></button>
+                @endforeach
+            </div>
+            <button type="button" class="home-hero__nav" data-hero-next aria-label="Next slide">›</button>
         </div>
-    </div>
+    @endif
 </section>
 
 <div class="home-marquee" aria-hidden="true">
@@ -179,3 +213,7 @@
     </div>
 </section>
 @endsection
+
+@push('scripts')
+<script src="{{ asset('js/features.js') }}" defer></script>
+@endpush

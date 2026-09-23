@@ -20,6 +20,12 @@ class Order extends Model
 
     public const STATUS_CANCELLED = 'cancelled';
 
+    public const PAYMENT_UNPAID = 'unpaid';
+
+    public const PAYMENT_PENDING = 'pending';
+
+    public const PAYMENT_PAID = 'paid';
+
     public const STATUSES = [
         self::STATUS_PLACED => 'Placed',
         self::STATUS_BAKING => 'Baking',
@@ -47,8 +53,11 @@ class Order extends Model
         'delivery_date',
         'delivery_slot',
         'payment_method',
+        'payment_status',
         'subtotal',
         'fee',
+        'discount',
+        'promo_code',
         'total',
         'placed_at',
     ];
@@ -58,6 +67,7 @@ class Order extends Model
         return [
             'subtotal' => 'decimal:2',
             'fee' => 'decimal:2',
+            'discount' => 'decimal:2',
             'total' => 'decimal:2',
             'placed_at' => 'datetime',
             'delivery_date' => 'date',

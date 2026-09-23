@@ -22,6 +22,12 @@
                         <p class="order-row__total">{{ pkr($order['total']) }}</p>
                         <div class="order-row__actions">
                             <a href="{{ route('account.track', $order['number']) }}">Track</a>
+                            @if ($order['can_reorder'])
+                                <form method="post" action="{{ route('account.reorder', $order['number']) }}">
+                                    @csrf
+                                    <button type="submit">Reorder</button>
+                                </form>
+                            @endif
                         </div>
                     </div>
                 </li>

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Support\BakeryProfile;
+use App\Support\PaymentMethods;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -44,6 +46,9 @@ class OrderController extends Controller
             'nav' => config('dezato_admin.nav'),
             'order' => $order,
             'statuses' => Order::STATUSES,
+            'paymentInstructions' => PaymentMethods::isTransfer($order->payment_method)
+                ? PaymentMethods::instructionsFor($order->payment_method)
+                : null,
         ]);
     }
 
@@ -59,5 +64,26 @@ class OrderController extends Controller
             'status',
             'Order status updated to “'.$order->fresh()->statusLabel().'”. The customer can see this on Track order.'
         );
+    }
+
+    public function markPaid(Order $order): RedirectResponse
+    {
+        $order->update(['payment_status' => Order::PAYMENT_PAID]);
+
+        return back()->with('status', 'Marked as paid. Great — you can start preparing the order.');
+    }
+
+    public function invoice(Order $order): View
+    {
+        $order->load('items');
+
+        return view('admin.orders.invoice', [
+            'order' => $order,
+            'bakery' => [
+                'name' => config('dezato.brand.name', 'Dezato Cake House'),
+                'phone' => BakeryProfile::phone(),
+                'email' => BakeryProfile::notifyEmail(),
+            ],
+        ]);
     }
 }

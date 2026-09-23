@@ -1,13 +1,20 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\Admin\CakeBuilderController as AdminCakeBuilderController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\ContentController as AdminContentController;
 use App\Http\Controllers\Admin\CustomerController as AdminCustomerController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\HelpController as AdminHelpController;
+use App\Http\Controllers\Admin\InquiryController as AdminInquiryController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
+use App\Http\Controllers\Admin\PaymentSettingsController as AdminPaymentSettingsController;
 use App\Http\Controllers\Admin\ProductController as AdminProductController;
+use App\Http\Controllers\Admin\PromoController as AdminPromoController;
+use App\Http\Controllers\Admin\ReportController as AdminReportController;
+use App\Http\Controllers\Admin\ScheduleController as AdminScheduleController;
+use App\Http\Controllers\Admin\SettingsController as AdminSettingsController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CakeBuilderController;
 use App\Http\Controllers\CartController;
@@ -28,7 +35,7 @@ Route::get('/about-us', [StorefrontController::class, 'about'])->name('about');
 Route::get('/our-services', [StorefrontController::class, 'services'])->name('services');
 Route::get('/cake-customization', [StorefrontController::class, 'customization'])->name('customization');
 Route::get('/custom-cake', [CakeBuilderController::class, 'show'])->name('builder.show');
-Route::post('/custom-cake', [CakeBuilderController::class, 'stub'])->name('builder.stub');
+Route::post('/custom-cake', [CakeBuilderController::class, 'store'])->name('builder.store');
 
 Route::redirect('/our-story', '/about-us', 301);
 Route::redirect('/catering', '/our-services', 301);
@@ -56,12 +63,15 @@ Route::middleware('auth')->prefix('account')->name('account.')->group(function (
     Route::post('/addresses', [AccountController::class, 'storeAddress'])->name('addresses.store');
     Route::delete('/addresses/{address}', [AccountController::class, 'destroyAddress'])->name('addresses.destroy');
     Route::get('/orders', [AccountController::class, 'orders'])->name('orders');
+    Route::post('/orders/{number}/reorder', [AccountController::class, 'reorder'])->name('reorder');
+    Route::post('/orders/{number}/cancel', [AccountController::class, 'cancel'])->name('cancel');
     Route::get('/orders/{number}', [AccountController::class, 'track'])->name('track');
 });
 
 Route::middleware(['auth', EnsureUserIsAdmin::class])->prefix('admin')->name('admin.')->group(function (): void {
     Route::get('/', AdminDashboardController::class)->name('dashboard');
     Route::get('/help', AdminHelpController::class)->name('help');
+    Route::get('/reports', AdminReportController::class)->name('reports');
 
     Route::get('/products', [AdminProductController::class, 'index'])->name('products.index');
     Route::get('/products/create', [AdminProductController::class, 'create'])->name('products.create');
@@ -77,12 +87,39 @@ Route::middleware(['auth', EnsureUserIsAdmin::class])->prefix('admin')->name('ad
 
     Route::get('/orders', [AdminOrderController::class, 'index'])->name('orders.index');
     Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('orders.show');
+    Route::get('/orders/{order}/invoice', [AdminOrderController::class, 'invoice'])->name('orders.invoice');
     Route::patch('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('orders.status');
+    Route::patch('/orders/{order}/paid', [AdminOrderController::class, 'markPaid'])->name('orders.paid');
+
+    Route::get('/inquiries', [AdminInquiryController::class, 'index'])->name('inquiries.index');
+    Route::get('/inquiries/{inquiry}', [AdminInquiryController::class, 'show'])->name('inquiries.show');
+    Route::delete('/inquiries/{inquiry}', [AdminInquiryController::class, 'destroy'])->name('inquiries.destroy');
 
     Route::get('/customers', [AdminCustomerController::class, 'index'])->name('customers.index');
 
     Route::get('/content', [AdminContentController::class, 'edit'])->name('content.edit');
     Route::put('/content', [AdminContentController::class, 'update'])->name('content.update');
+    Route::post('/content/slides', [AdminContentController::class, 'storeSlide'])->name('content.slides.store');
+    Route::put('/content/slides/{slide}', [AdminContentController::class, 'updateSlide'])->name('content.slides.update');
+    Route::delete('/content/slides/{slide}', [AdminContentController::class, 'destroySlide'])->name('content.slides.destroy');
+
+    Route::get('/cake-builder', [AdminCakeBuilderController::class, 'edit'])->name('cake-builder.edit');
+    Route::put('/cake-builder', [AdminCakeBuilderController::class, 'update'])->name('cake-builder.update');
+
+    Route::get('/promos', [AdminPromoController::class, 'index'])->name('promos.index');
+    Route::post('/promos', [AdminPromoController::class, 'store'])->name('promos.store');
+    Route::put('/promos/{promo}', [AdminPromoController::class, 'update'])->name('promos.update');
+    Route::patch('/promos/{promo}/toggle', [AdminPromoController::class, 'toggle'])->name('promos.toggle');
+    Route::delete('/promos/{promo}', [AdminPromoController::class, 'destroy'])->name('promos.destroy');
+
+    Route::get('/payments', [AdminPaymentSettingsController::class, 'edit'])->name('payments.edit');
+    Route::put('/payments', [AdminPaymentSettingsController::class, 'update'])->name('payments.update');
+
+    Route::get('/schedule', [AdminScheduleController::class, 'edit'])->name('schedule.edit');
+    Route::put('/schedule', [AdminScheduleController::class, 'update'])->name('schedule.update');
+
+    Route::get('/settings', [AdminSettingsController::class, 'edit'])->name('settings.edit');
+    Route::put('/settings', [AdminSettingsController::class, 'update'])->name('settings.update');
 });
 
 Route::get('/order', [StorefrontController::class, 'order'])->name('order');

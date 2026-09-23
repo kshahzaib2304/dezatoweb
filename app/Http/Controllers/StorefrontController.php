@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Support\Catalog;
 use App\Support\Fulfillment;
+use App\Support\HeroSlider;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -27,6 +28,8 @@ class StorefrontController extends Controller
             'title' => 'Dezato Cake House | Cakes & Desserts in Karachi',
             'metaDescription' => 'Order cakes, cupcakes, eclairs, brownies, cheesecakes, tarts, mini pies and sundaes from Dezato Cake House in Karachi. Pickup & delivery in PKR.',
             'favorites' => $favorites->all(),
+            'heroSlides' => HeroSlider::activeSlides(),
+            'heroIntervalMs' => HeroSlider::intervalMs(),
         ]);
     }
 

@@ -266,6 +266,29 @@ body.is-baking {
     overflow: hidden;
 }
 
+.home-hero__slides {
+    position: absolute;
+    inset: 0;
+}
+
+.home-hero__slide {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    align-items: end;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.7s ease, visibility 0.7s ease;
+    pointer-events: none;
+}
+
+.home-hero__slide.is-active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    z-index: 1;
+}
+
 .home-hero__media,
 .home-hero__veil {
     position: absolute;
@@ -278,6 +301,9 @@ body.is-baking {
     object-fit: cover;
     object-position: center 35%;
     transform: scale(1.04);
+}
+
+.home-hero__slide.is-active .home-hero__media img {
     animation: hero-drift 18s var(--ease-out) infinite alternate;
 }
 
@@ -293,7 +319,7 @@ body.is-baking {
 .home-hero__content {
     position: relative;
     z-index: 1;
-    padding-block: 4rem 4.5rem;
+    padding-block: 4rem 5.5rem;
     max-width: 38rem;
 }
 
@@ -339,6 +365,56 @@ body.is-baking {
     color: var(--dz-plum-deep);
 }
 
+.home-hero__controls {
+    position: absolute;
+    z-index: 2;
+    left: 0;
+    right: 0;
+    bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.85rem;
+    padding-inline: 1rem;
+}
+
+.home-hero__dots {
+    display: flex;
+    gap: 0.45rem;
+    align-items: center;
+}
+
+.home-hero__dot {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 999px;
+    border: 0;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.45);
+    cursor: pointer;
+}
+
+.home-hero__dot.is-active {
+    width: 1.35rem;
+    background: #f3e4ec;
+}
+
+.home-hero__nav {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    background: rgba(36, 24, 32, 0.35);
+    color: #fff;
+    font-size: 1.35rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.home-hero__nav:hover {
+    background: rgba(36, 24, 32, 0.55);
+}
+
 @keyframes hero-drift {
     from {
         transform: scale(1.04) translate3d(0, 0, 0);
@@ -349,7 +425,11 @@ body.is-baking {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .home-hero__media img {
+    .home-hero__slide {
+        transition: none;
+    }
+
+    .home-hero__slide.is-active .home-hero__media img {
         animation: none;
         transform: none;
     }

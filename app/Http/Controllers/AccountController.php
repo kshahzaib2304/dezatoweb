@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Address;
 use App\Models\Order;
+use App\Support\Cart;
+use App\Support\Catalog;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -11,6 +13,8 @@ use Illuminate\Support\Facades\Auth;
 
 class AccountController extends Controller
 {
+    public function __construct(private readonly Cart $cart) {}
+
     public function profile(): View
     {
         $user = Auth::user();
@@ -108,6 +112,7 @@ class AccountController extends Controller
                 'total' => (float) $order->total,
                 'method' => $order->methodLabel().($order->location_name ? ' · '.$order->location_name : ''),
                 'items' => $order->items->map(fn ($item) => $item->product_name.($item->quantity > 1 ? ' × '.$item->quantity : ''))->all(),
+                'can_reorder' => $order->items->contains(fn ($item) => ! $item->isCustom() && Catalog::findProduct($item->product_id) !== null),
             ]);
 
         return view('account.orders', $this->shell([
@@ -116,6 +121,52 @@ class AccountController extends Controller
             'active' => 'orders',
             'orders' => $orders,
         ]));
+    }
+
+    public function reorder(string $number): RedirectResponse
+    {
+        $order = Order::query()
+            ->with('items')
+            ->where('number', $number)
+            ->where(function ($query): void {
+                $query->where('user_id', Auth::id())
+                    ->orWhere('email', Auth::user()->email);
+            })
+            ->firstOrFail();
+
+        $added = 0;
+        $skippedCustom = 0;
+
+        foreach ($order->items as $item) {
+            if ($item->isCustom()) {
+                $skippedCustom++;
+                continue;
+            }
+
+            if (Catalog::findProduct($item->product_id) === null) {
+                continue;
+            }
+
+            $this->cart->add($item->product_id, (int) $item->quantity);
+            $added++;
+        }
+
+        if ($added === 0) {
+            return back()->withErrors([
+                'reorder' => $skippedCustom > 0
+                    ? 'Custom cakes can’t be reordered in one click — please use the Custom Cake builder again.'
+                    : 'Those items are no longer on the menu.',
+            ]);
+        }
+
+        $message = $added.' item(s) added to your cart.';
+        if ($skippedCustom > 0) {
+            $message .= ' Custom cake designs were skipped — recreate them in Custom Cake if needed.';
+        }
+
+        return redirect()
+            ->route('cart.show')
+            ->with('status', $message);
     }
 
     public function track(string $number): View
@@ -138,6 +189,7 @@ class AccountController extends Controller
                 'status' => $order->status,
                 'status_label' => $order->statusLabel(),
                 'total' => (float) $order->total,
+                'can_cancel' => $order->status === Order::STATUS_PLACED,
             ],
             'steps' => collect($order->trackingSteps())->map(fn (array $step): array => [
                 'key' => $step['key'],
@@ -145,6 +197,29 @@ class AccountController extends Controller
                 'state' => $step['state'],
             ])->all(),
         ]));
+    }
+
+    public function cancel(string $number): RedirectResponse
+    {
+        $order = Order::query()
+            ->where('number', $number)
+            ->where(function ($query): void {
+                $query->where('user_id', Auth::id())
+                    ->orWhere('email', Auth::user()->email);
+            })
+            ->firstOrFail();
+
+        if ($order->status !== Order::STATUS_PLACED) {
+            return back()->withErrors([
+                'cancel' => 'This order can no longer be cancelled online. Please call the bakery.',
+            ]);
+        }
+
+        $order->update(['status' => Order::STATUS_CANCELLED]);
+
+        return redirect()
+            ->route('account.orders')
+            ->with('status', 'Order '.$order->number.' was cancelled.');
     }
 
     /**
