@@ -17,6 +17,7 @@ class ProductController extends Controller
     public function index(Request $request): View
     {
         $q = $request->string('q')->trim()->toString();
+        $needsPhoto = $request->boolean('needs_photo');
 
         $products = Product::query()
             ->with('category')
@@ -26,10 +27,25 @@ class ProductController extends Controller
                         ->orWhere('slug', 'like', "%{$q}%");
                 });
             })
+            ->when($needsPhoto, function ($query): void {
+                $query->where(function ($inner): void {
+                    $inner->whereNull('image')
+                        ->orWhere('image', '')
+                        ->orWhere('image', 'like', 'images/home/%');
+                });
+            })
             ->orderBy('sort_order')
             ->orderBy('name')
             ->paginate(20)
             ->withQueryString();
+
+        $placeholderCount = Product::query()
+            ->where(function ($inner): void {
+                $inner->whereNull('image')
+                    ->orWhere('image', '')
+                    ->orWhere('image', 'like', 'images/home/%');
+            })
+            ->count();
 
         return view('admin.products.index', [
             'title' => 'Products | Dezato Admin',
@@ -38,6 +54,8 @@ class ProductController extends Controller
             'nav' => config('dezato_admin.nav'),
             'products' => $products,
             'q' => $q,
+            'needsPhoto' => $needsPhoto,
+            'placeholderCount' => $placeholderCount,
             'mediaGuide' => config('dezato_admin.media.product'),
         ]);
     }

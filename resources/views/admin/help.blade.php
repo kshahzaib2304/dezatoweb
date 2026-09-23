@@ -15,17 +15,18 @@
         <section class="admin-panel">
             <h2>Everyday tasks</h2>
             <ul class="admin-tips">
-                <li><strong>Products</strong> - Add, edit, hide items and upload photos.</li>
-                <li><strong>Payment options</strong> - Tick COD / bank / JazzCash / Easypaisa and fill account numbers customers should pay to.</li>
-                <li><strong>Delivery times</strong> - Edit the pickup/delivery time windows shown at checkout.</li>
-                <li><strong>Orders</strong> - Update status, mark transfer payments as paid, and print an invoice / packing slip.</li>
-                <li><strong>Messages</strong> - Read contact-form requests; reply by email, call, or WhatsApp.</li>
-                <li><strong>Homepage &amp; text</strong> - Edit the top announcement and manage hero <strong>slider slides</strong> (photo + headline each). Slides auto-change every 4–5 seconds.</li>
-                <li><strong>Website pages</strong> - Edit About / Services intros, Privacy Policy, Terms, and FAQ in plain language. No coding.</li>
-                <li><strong>Contact &amp; alerts</strong> - Set the email for new-order alerts, and turn on/off emails when you change an order’s status.</li>
-                <li><strong>Email, logins &amp; links</strong> - After go-live, paste SMTP email settings, Google/Facebook login keys, Instagram/Facebook footer links, and payment gateway API keys here (no developer / .env needed).</li>
-                <li><strong>Custom cake prices / Promo codes</strong> - All editable without a developer.</li>
-                <li><strong>Reports</strong> - See today’s orders and top sellers at a glance.</li>
+                <li><strong>Products</strong> — Add, edit, hide items and upload photos. Use “Needs real photo” to replace homepage placeholders (1200 × 1200).</li>
+                <li><strong>Payment options</strong> — Tick COD / bank / JazzCash / Easypaisa and fill account numbers customers should pay to.</li>
+                <li><strong>Delivery times</strong> — Edit the pickup/delivery time windows shown at checkout.</li>
+                <li><strong>Orders</strong> — Update status, mark transfer payments as paid, and print an invoice / packing slip.</li>
+                <li><strong>Messages</strong> — Read contact-form requests; reply by email, call, or WhatsApp.</li>
+                <li><strong>Store locations</strong> — Addresses, hours, Maps links, delivery fees, and shop photos.</li>
+                <li><strong>Homepage &amp; text</strong> — Announcement, hero slides, category shortcuts, and occasion tiles.</li>
+                <li><strong>Website pages</strong> — About intro, milestones, Services packages, Privacy / Terms / FAQ.</li>
+                <li><strong>Contact &amp; store</strong> — Phone, WhatsApp, emails, live website URL, courier fee/ETA, and change admin password.</li>
+                <li><strong>Email, logins &amp; links</strong> — SMTP, Google/Facebook login, footer links, online payment API keys.</li>
+                <li><strong>Custom cake prices / Promo codes</strong> — All editable without a developer.</li>
+                <li><strong>Reports</strong> — Snapshot plus CSV export (7 / 30 / 90 days).</li>
             </ul>
         </section>
 

@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\HelpController as AdminHelpController;
 use App\Http\Controllers\Admin\InquiryController as AdminInquiryController;
 use App\Http\Controllers\Admin\IntegrationsController as AdminIntegrationsController;
+use App\Http\Controllers\Admin\LocationController as AdminLocationController;
 use App\Http\Controllers\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Admin\PagesController as AdminPagesController;
 use App\Http\Controllers\Admin\PaymentSettingsController as AdminPaymentSettingsController;
@@ -24,6 +25,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\FulfillmentController;
 use App\Http\Controllers\InquiryController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\SocialAuthController;
 use App\Http\Controllers\StorefrontController;
 use App\Http\Middleware\EnsureCartNotEmpty;
@@ -114,9 +116,13 @@ Route::middleware(['auth', EnsureUserIsAdmin::class])->prefix('admin')->name('ad
 
     Route::get('/content', [AdminContentController::class, 'edit'])->name('content.edit');
     Route::put('/content', [AdminContentController::class, 'update'])->name('content.update');
+    Route::put('/content/showcase', [AdminContentController::class, 'updateShowcase'])->name('content.showcase');
     Route::post('/content/slides', [AdminContentController::class, 'storeSlide'])->name('content.slides.store');
     Route::put('/content/slides/{slide}', [AdminContentController::class, 'updateSlide'])->name('content.slides.update');
     Route::delete('/content/slides/{slide}', [AdminContentController::class, 'destroySlide'])->name('content.slides.destroy');
+
+    Route::get('/locations', [AdminLocationController::class, 'edit'])->name('locations.edit');
+    Route::put('/locations', [AdminLocationController::class, 'update'])->name('locations.update');
 
     Route::get('/pages', [AdminPagesController::class, 'edit'])->name('pages.edit');
     Route::put('/pages', [AdminPagesController::class, 'update'])->name('pages.update');
@@ -141,7 +147,14 @@ Route::middleware(['auth', EnsureUserIsAdmin::class])->prefix('admin')->name('ad
 
     Route::get('/integrations', [AdminIntegrationsController::class, 'edit'])->name('integrations.edit');
     Route::put('/integrations', [AdminIntegrationsController::class, 'update'])->name('integrations.update');
+
+    Route::get('/reports/export', [AdminReportController::class, 'export'])->name('reports.export');
 });
+
+Route::get('/pay/{order}', [PaymentController::class, 'start'])->name('payments.start');
+Route::match(['get', 'post'], '/pay/{order}/callback/{provider}', [PaymentController::class, 'callback'])
+    ->whereIn('provider', ['jazzcash', 'easypaisa', 'card'])
+    ->name('payments.callback');
 
 Route::get('/order', [StorefrontController::class, 'order'])->name('order');
 Route::get('/order/start', [FulfillmentController::class, 'start'])->name('order.start');

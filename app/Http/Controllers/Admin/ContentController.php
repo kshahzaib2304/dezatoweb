@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\SiteSetting;
 use App\Support\HeroSlider;
+use App\Support\HomeShowcase;
+use App\Support\MediaPaths;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -26,6 +28,8 @@ class ContentController extends Controller
             ];
         })->all();
 
+        $showcase = HomeShowcase::config();
+
         return view('admin.content.edit', [
             'title' => 'Homepage & text | Dezato Admin',
             'heading' => 'Homepage & website text',
@@ -40,6 +44,17 @@ class ContentController extends Controller
             'canAddSlide' => count($slides) < HeroSlider::MAX_SLIDES,
             'maxSlides' => HeroSlider::MAX_SLIDES,
             'mediaGuide' => config('dezato_admin.media.hero'),
+            'tileGuide' => config('dezato_admin.media.tile'),
+            'categories' => collect($showcase['categories'])->map(function (array $row): array {
+                $row['image_url'] = asset(MediaPaths::public($row['image'] ?? null));
+
+                return $row;
+            })->all(),
+            'occasions' => collect($showcase['occasions'])->map(function (array $row): array {
+                $row['image_url'] = asset(MediaPaths::public($row['image'] ?? null));
+
+                return $row;
+            })->all(),
         ]);
     }
 
@@ -134,6 +149,63 @@ class ContentController extends Controller
         HeroSlider::save($config);
 
         return back()->with('status', 'Slide removed from the homepage.');
+    }
+
+    public function updateShowcase(Request $request): RedirectResponse
+    {
+        $data = $request->validate([
+            'categories' => ['required', 'array', 'min:1'],
+            'categories.*.id' => ['nullable', 'string', 'max:80'],
+            'categories.*.label' => ['required', 'string', 'max:80'],
+            'categories.*.href' => ['required', 'string', 'max:255'],
+            'categories.*.tone' => ['nullable', 'string', 'max:40'],
+            'categories.*.existing_image' => ['nullable', 'string', 'max:255'],
+            'categories.*.image' => ['nullable', 'image', 'max:2048'],
+            'occasions' => ['required', 'array', 'min:1'],
+            'occasions.*.id' => ['nullable', 'string', 'max:80'],
+            'occasions.*.label' => ['required', 'string', 'max:80'],
+            'occasions.*.href' => ['required', 'string', 'max:255'],
+            'occasions.*.existing_image' => ['nullable', 'string', 'max:255'],
+            'occasions.*.image' => ['nullable', 'image', 'max:2048'],
+        ]);
+
+        $categories = [];
+        foreach ($data['categories'] as $index => $row) {
+            $image = (string) ($row['existing_image'] ?? '');
+            if ($request->hasFile("categories.$index.image")) {
+                MediaPaths::deleteIfOwned($image);
+                $image = $request->file("categories.$index.image")->store('home-tiles', 'public');
+            }
+            $categories[] = [
+                'id' => $row['id'] ?? null,
+                'label' => $row['label'],
+                'href' => $row['href'],
+                'tone' => $row['tone'] ?? 'cream',
+                'image' => $image,
+            ];
+        }
+
+        $occasions = [];
+        foreach ($data['occasions'] as $index => $row) {
+            $image = (string) ($row['existing_image'] ?? '');
+            if ($request->hasFile("occasions.$index.image")) {
+                MediaPaths::deleteIfOwned($image);
+                $image = $request->file("occasions.$index.image")->store('home-tiles', 'public');
+            }
+            $occasions[] = [
+                'id' => $row['id'] ?? null,
+                'label' => $row['label'],
+                'href' => $row['href'],
+                'image' => $image,
+            ];
+        }
+
+        HomeShowcase::save([
+            'categories' => $categories,
+            'occasions' => $occasions,
+        ]);
+
+        return back()->with('status', 'Homepage category shortcuts and occasion tiles saved.');
     }
 
     /**

@@ -148,6 +148,18 @@
                     <h3>{{ $gateway['label'] }}</h3>
                     <p class="field-hint">{{ $gateway['hint'] }}</p>
                     <div class="form-grid">
+                        <div class="form-row form-row--full">
+                            <label class="check-inline">
+                                <input type="checkbox" name="gateway_flags[{{ $group }}][online_enabled]" value="1" @checked(old('gateway_flags.'.$group.'.online_enabled', $gateway['online_enabled']))>
+                                <span>Turn on online checkout for this method</span>
+                            </label>
+                        </div>
+                        <div class="form-row form-row--full">
+                            <label class="check-inline">
+                                <input type="checkbox" name="gateway_flags[{{ $group }}][sandbox]" value="1" @checked(old('gateway_flags.'.$group.'.sandbox', $gateway['sandbox']))>
+                                <span>Use sandbox / test mode (recommended until go-live)</span>
+                            </label>
+                        </div>
                         @foreach ($gateway['fields'] as $field => $meta)
                             <div class="form-row">
                                 <label class="field-label" for="gw-{{ $group }}-{{ $field }}">{{ $meta['label'] }}</label>
@@ -161,7 +173,7 @@
                                     @if ($meta['secret']) placeholder="••••••••" @endif
                                 >
                                 @if ($meta['secret'])
-                                    <p class="field-hint">{{ $meta['set'] ? 'Saved - leave blank to keep.' : 'Not set yet.' }}</p>
+                                    <p class="field-hint">{{ $meta['set'] ? 'Saved — leave blank to keep.' : 'Not set yet.' }}</p>
                                 @endif
                             </div>
                         @endforeach

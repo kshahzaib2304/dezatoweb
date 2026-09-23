@@ -26,12 +26,12 @@ class FulfillmentController extends Controller
             $this->fulfillment->put([
                 'method' => Fulfillment::METHOD_SHIPPING,
                 'location_id' => null,
-                'location_name' => (string) config('dezato.shipping.label', 'Pakistan Courier'),
+                'location_name' => \App\Support\ShippingSettings::label(),
                 'address' => $request->string('address')->trim()->toString(),
                 'city' => $request->string('city')->trim()->toString(),
                 'region' => $request->string('region')->trim()->toString(),
                 'postal_code' => $request->string('postal_code')->trim()->toString(),
-                'fee' => (float) config('dezato.shipping.fee', 0),
+                'fee' => \App\Support\ShippingSettings::fee(),
             ]);
 
             return redirect()

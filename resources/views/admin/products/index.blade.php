@@ -7,13 +7,24 @@
             <input id="q" class="field-input" type="search" name="q" value="{{ $q }}" placeholder="Search by name…">
             <button class="btn btn--outline" type="submit">Search</button>
         </form>
-        <a class="btn btn--primary" href="{{ route('admin.products.create') }}">Add product</a>
+        <div class="admin-toolbar__actions">
+            @if ($placeholderCount > 0)
+                <a class="btn btn--outline" href="{{ route('admin.products.index', ['needs_photo' => 1]) }}">
+                    Needs real photo ({{ $placeholderCount }})
+                </a>
+            @endif
+            @if ($needsPhoto)
+                <a class="btn btn--ghost" href="{{ route('admin.products.index') }}">Show all</a>
+            @endif
+            <a class="btn btn--primary" href="{{ route('admin.products.create') }}">Add product</a>
+        </div>
     </div>
 
     <aside class="admin-media-guide" aria-label="Photo size guide">
         <strong>{{ $mediaGuide['label'] }}</strong>
         <span>{{ $mediaGuide['size'] }} · {{ $mediaGuide['ratio'] }} · {{ $mediaGuide['formats'] }} · max {{ $mediaGuide['max'] }}</span>
         <p>{{ $mediaGuide['tip'] }}</p>
+        <p class="admin-muted">Many items still reuse homepage placeholders. Open each product and upload a real cake photo (1200 × 1200).</p>
     </aside>
 
     <section class="admin-panel">

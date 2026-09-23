@@ -2,9 +2,9 @@
 
 @section('content')
 @php
-    $categories = config('dezato.home.products', []);
-    $occasions = config('dezato.home.occasions', []);
-    $favorites = $favorites ?? array_slice(config('dezato.menu.products', []), 0, 4);
+    $categories = $homeCategories ?? [];
+    $occasions = $homeOccasions ?? [];
+    $favorites = $favorites ?? [];
 @endphp
 
 <section

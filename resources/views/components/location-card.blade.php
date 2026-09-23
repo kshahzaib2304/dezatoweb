@@ -20,6 +20,11 @@
         <p class="location-card__phone">
             <a href="tel:{{ preg_replace('/\D+/', '', $location['phone']) }}">{{ $location['phone'] }}</a>
         </p>
+        @if (! empty($location['map_url']))
+            <p class="location-card__map">
+                <a href="{{ $location['map_url'] }}" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>
+            </p>
+        @endif
         @if (! empty($location['services']))
             <ul class="location-card__tags">
                 @foreach ($location['services'] as $service)

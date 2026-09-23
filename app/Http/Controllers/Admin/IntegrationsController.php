@@ -89,7 +89,10 @@ class IntegrationsController extends Controller
 
         SocialLinks::save(is_array($data['links'] ?? null) ? $data['links'] : []);
 
-        GatewayCredentials::save(is_array($request->input('gateway')) ? $request->input('gateway') : []);
+        GatewayCredentials::save(
+            is_array($request->input('gateway')) ? $request->input('gateway') : [],
+            is_array($request->input('gateway_flags')) ? $request->input('gateway_flags') : []
+        );
 
         MailSettings::apply();
 

@@ -3,15 +3,23 @@
 namespace App\Support;
 
 use App\Models\SiteSetting;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\URL;
 
 /**
- * Bakery contact + homepage settings (editable from Admin).
+ * Bakery contact + site URL + homepage settings (editable from Admin).
  */
 final class BakeryProfile
 {
     public static function notifyEmail(): string
     {
         return (string) (SiteSetting::getValue('notify_email')
+            ?: config('dezato.brand.email', 'hello@dezato.pk'));
+    }
+
+    public static function publicEmail(): string
+    {
+        return (string) (SiteSetting::getValue('public_email')
             ?: config('dezato.brand.email', 'hello@dezato.pk'));
     }
 
@@ -24,6 +32,17 @@ final class BakeryProfile
     public static function whatsapp(): string
     {
         return (string) (SiteSetting::getValue('whatsapp') ?: self::phone());
+    }
+
+    public static function siteUrl(): string
+    {
+        $stored = SiteSetting::getValue('site_url');
+
+        if ($stored) {
+            return rtrim($stored, '/');
+        }
+
+        return rtrim((string) config('app.url'), '/');
     }
 
     /**
@@ -49,6 +68,22 @@ final class BakeryProfile
         }
 
         return $url;
+    }
+
+    public static function applySiteUrl(): void
+    {
+        $url = self::siteUrl();
+
+        if ($url === '') {
+            return;
+        }
+
+        Config::set('app.url', $url);
+        URL::forceRootUrl($url);
+
+        if (str_starts_with($url, 'https://')) {
+            URL::forceScheme('https');
+        }
     }
 
     /**

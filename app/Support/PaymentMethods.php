@@ -43,7 +43,7 @@ final class PaymentMethods
             [
                 'id' => 'jazzcash',
                 'label' => 'JazzCash',
-                'hint' => 'Customer sends payment to your JazzCash number',
+                'hint' => 'Pay online via JazzCash (when merchant keys are on) or transfer to your JazzCash number',
                 'enabled_by_default' => false,
                 'live' => true,
                 'type' => 'transfer',
@@ -51,7 +51,7 @@ final class PaymentMethods
             [
                 'id' => 'easypaisa',
                 'label' => 'Easypaisa',
-                'hint' => 'Customer sends payment to your Easypaisa number',
+                'hint' => 'Pay online via Easypaisa (when merchant keys are on) or transfer to your Easypaisa number',
                 'enabled_by_default' => false,
                 'live' => true,
                 'type' => 'transfer',
@@ -59,9 +59,9 @@ final class PaymentMethods
             [
                 'id' => 'card',
                 'label' => 'Credit / Debit card',
-                'hint' => 'Online card gateway - needs a payment partner to connect later',
+                'hint' => 'Online card checkout (Stripe) — turn on under Email, logins & links when keys are ready',
                 'enabled_by_default' => false,
-                'live' => false,
+                'live' => true,
                 'type' => 'gateway',
             ],
         ];
@@ -191,14 +191,23 @@ final class PaymentMethods
 
         return collect(self::catalog())
             ->filter(fn (array $method): bool => in_array($method['id'], $enabled, true))
-            ->map(fn (array $method): array => [
-                'id' => $method['id'],
-                'label' => $method['label'],
-                'hint' => $method['hint'],
-                'live' => $method['live'],
-                'type' => $method['type'],
-                'instructions' => self::isTransfer($method['id']) ? self::instructionsFor($method['id']) : null,
-            ])
+            ->map(function (array $method): array {
+                $online = OnlineCheckout::usesOnlineGateway($method['id']);
+
+                return [
+                    'id' => $method['id'],
+                    'label' => $method['label'],
+                    'hint' => $online
+                        ? 'Secure online payment after you place the order'
+                        : $method['hint'],
+                    'live' => $method['live'],
+                    'type' => $online ? 'online' : $method['type'],
+                    'online' => $online,
+                    'instructions' => (! $online && self::isTransfer($method['id']))
+                        ? self::instructionsFor($method['id'])
+                        : null,
+                ];
+            })
             ->values()
             ->all();
     }
@@ -216,6 +225,10 @@ final class PaymentMethods
 
     public static function paymentStatusFor(string $id): string
     {
+        if (OnlineCheckout::usesOnlineGateway($id)) {
+            return \App\Models\Order::PAYMENT_PENDING;
+        }
+
         if (self::isTransfer($id)) {
             return \App\Models\Order::PAYMENT_PENDING;
         }

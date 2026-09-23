@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Support\Catalog;
 use App\Support\Fulfillment;
 use App\Support\HeroSlider;
+use App\Support\HomeShowcase;
+use App\Support\SiteContent;
+use App\Support\StoryBlocks;
+use App\Support\StoreLocations;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -30,6 +34,8 @@ class StorefrontController extends Controller
             'favorites' => $favorites->all(),
             'heroSlides' => HeroSlider::activeSlides(),
             'heroIntervalMs' => HeroSlider::intervalMs(),
+            'homeCategories' => HomeShowcase::categories(),
+            'homeOccasions' => HomeShowcase::occasions(),
         ]);
     }
 
@@ -89,10 +95,12 @@ class StorefrontController extends Controller
 
     public function locations(): View
     {
+        $locations = StoreLocations::forStorefront();
+
         return view('pages.locations', [
             'title' => 'Locations | Dezato Cake House Karachi',
-            'metaDescription' => 'Visit Dezato Cake House in DHA Phase 6 and Gizri, Karachi - hours, addresses, and delivery.',
-            'locations' => config('dezato.locations', []),
+            'metaDescription' => 'Visit Dezato Cake House in Karachi — hours, addresses, and delivery.',
+            'locations' => $locations,
         ]);
     }
 
@@ -101,11 +109,11 @@ class StorefrontController extends Controller
         return view('pages.services', [
             'title' => 'Our Services | Dezato Cake House',
             'metaDescription' => 'Catering, dessert tables, office sweet boxes, and corporate gifting from Dezato Cake House Karachi.',
-            'intro' => \App\Support\SiteContent::section(
+            'intro' => SiteContent::section(
                 'services_intro',
-                'From office boxes to full dessert tables - custom selections of Dezato’s best for every occasion.'
+                'From office boxes to full dessert tables — custom selections of Dezato’s best for every occasion.'
             ),
-            'packages' => config('dezato.services.packages', []),
+            'packages' => StoryBlocks::packagesForStorefront(),
         ]);
     }
 
@@ -114,11 +122,11 @@ class StorefrontController extends Controller
         return view('pages.about', [
             'title' => 'About Us | Dezato Cake House',
             'metaDescription' => 'Learn how Dezato Cake House has baked celebration cakes and desserts for Karachi since 2018.',
-            'intro' => \App\Support\SiteContent::section(
+            'intro' => SiteContent::section(
                 'about_intro',
                 (string) config('dezato.about.intro', '')
             ),
-            'milestones' => config('dezato.about.milestones', []),
+            'milestones' => StoryBlocks::milestones(),
         ]);
     }
 

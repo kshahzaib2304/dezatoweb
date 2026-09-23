@@ -129,6 +129,74 @@
             </form>
         </section>
     @else
-        <p class="admin-muted" style="margin-top:1rem">Maximum of {{ $maxSlides }} slides reached. Delete one to add another.</p>
+        <p class="admin-muted admin-panel--spaced">Maximum of {{ $maxSlides }} slides reached. Delete one to add another.</p>
     @endif
+
+    <form class="admin-form admin-panel--spaced" method="post" action="{{ route('admin.content.showcase') }}" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+        <section class="admin-panel">
+            <h2>Menu category shortcuts</h2>
+            <p class="admin-lead">Tiles under the homepage hero. Link example: <code>/menu?category=cakes</code>. Photo ≈ {{ $tileGuide['size'] }}.</p>
+            @foreach ($categories as $index => $tile)
+                <article class="admin-slide-card">
+                    <input type="hidden" name="categories[{{ $index }}][id]" value="{{ $tile['id'] }}">
+                    <input type="hidden" name="categories[{{ $index }}][existing_image]" value="{{ $tile['image'] ?? '' }}">
+                    <div class="form-grid">
+                        <div class="form-row">
+                            <label class="field-label">Label *</label>
+                            <input class="field-input" type="text" name="categories[{{ $index }}][label]" value="{{ old('categories.'.$index.'.label', $tile['label']) }}" required>
+                        </div>
+                        <div class="form-row">
+                            <label class="field-label">Link *</label>
+                            <input class="field-input" type="text" name="categories[{{ $index }}][href]" value="{{ old('categories.'.$index.'.href', $tile['href']) }}" required>
+                        </div>
+                        <div class="form-row">
+                            <label class="field-label">Colour tone</label>
+                            <input class="field-input" type="text" name="categories[{{ $index }}][tone]" value="{{ old('categories.'.$index.'.tone', $tile['tone'] ?? 'cream') }}">
+                        </div>
+                        <div class="form-row form-row--full">
+                            <label class="field-label">Photo</label>
+                            <div class="admin-slide-card__preview">
+                                <img src="{{ $tile['image_url'] }}" alt="" width="120" height="75">
+                                <input class="field-input" type="file" name="categories[{{ $index }}][image]" accept="image/jpeg,image/png,image/webp">
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            @endforeach
+        </section>
+
+        <section class="admin-panel admin-panel--spaced">
+            <h2>Occasion tiles</h2>
+            <p class="admin-lead">“Birthdays”, “Gifting”, etc. Same photo size as category tiles.</p>
+            @foreach ($occasions as $index => $tile)
+                <article class="admin-slide-card">
+                    <input type="hidden" name="occasions[{{ $index }}][id]" value="{{ $tile['id'] }}">
+                    <input type="hidden" name="occasions[{{ $index }}][existing_image]" value="{{ $tile['image'] ?? '' }}">
+                    <div class="form-grid">
+                        <div class="form-row">
+                            <label class="field-label">Label *</label>
+                            <input class="field-input" type="text" name="occasions[{{ $index }}][label]" value="{{ old('occasions.'.$index.'.label', $tile['label']) }}" required>
+                        </div>
+                        <div class="form-row">
+                            <label class="field-label">Link *</label>
+                            <input class="field-input" type="text" name="occasions[{{ $index }}][href]" value="{{ old('occasions.'.$index.'.href', $tile['href']) }}" required>
+                        </div>
+                        <div class="form-row form-row--full">
+                            <label class="field-label">Photo</label>
+                            <div class="admin-slide-card__preview">
+                                <img src="{{ $tile['image_url'] }}" alt="" width="120" height="75">
+                                <input class="field-input" type="file" name="occasions[{{ $index }}][image]" accept="image/jpeg,image/png,image/webp">
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            @endforeach
+        </section>
+
+        <div class="admin-form__actions admin-form__actions--spaced">
+            <button class="btn btn--primary" type="submit">Save homepage tiles</button>
+        </div>
+    </form>
 @endsection

@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Support\BakeryProfile;
 use App\Support\Cart;
 use App\Support\Catalog;
 use App\Support\Fulfillment;
 use App\Support\MailSettings;
+use App\Support\ShippingSettings;
 use App\Support\SocialAuth;
 use App\Support\SocialLinks;
 use App\Models\SiteSetting;
@@ -30,6 +32,8 @@ class AppServiceProvider extends ServiceProvider
         try {
             MailSettings::apply();
             SocialAuth::apply();
+            ShippingSettings::apply();
+            BakeryProfile::applySiteUrl();
         } catch (Throwable) {
             // Database may be unavailable during early install / migrate.
         }
@@ -47,8 +51,8 @@ class AppServiceProvider extends ServiceProvider
                 'welcomeSeen' => $fulfillment->welcomeSeen(),
                 'currentFulfillment' => $fulfillment->get(),
                 'fulfillmentLocations' => Catalog::locations()->all(),
-                'shippingFee' => (float) config('dezato.shipping.fee', 0),
-                'shippingEta' => (string) config('dezato.shipping.eta', ''),
+                'shippingFee' => \App\Support\ShippingSettings::fee(),
+                'shippingEta' => \App\Support\ShippingSettings::eta(),
             ]);
         });
 

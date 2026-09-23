@@ -42,6 +42,12 @@
                     </div>
                 @endif
 
+                @if (($order->payment_status ?? '') === 'pending' && \App\Support\OnlineCheckout::usesOnlineGateway($order->payment_method))
+                    <p class="confirmation__pay">
+                        <a class="btn btn--primary" href="{{ route('payments.start', $order) }}">Complete online payment</a>
+                    </p>
+                @endif
+
                 <ul class="checkout-lines">
                     @foreach ($order->items as $item)
                         <li>

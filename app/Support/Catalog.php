@@ -58,7 +58,7 @@ final class Catalog
 
     public static function locations(): Collection
     {
-        return collect(config('dezato.locations', []));
+        return collect(StoreLocations::forStorefront());
     }
 
     public static function findLocation(string $id): ?array

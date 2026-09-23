@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Support\MediaPaths;
 use App\Support\SiteContent;
+use App\Support\StoryBlocks;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -25,6 +27,12 @@ class PagesController extends Controller
             ];
         }
 
+        $packages = collect(StoryBlocks::packages())->map(function (array $row): array {
+            $row['image_url'] = asset(MediaPaths::public($row['image'] ?? null, 'images/home/promo-catering.png'));
+
+            return $row;
+        })->all();
+
         return view('admin.pages.edit', [
             'title' => 'Website pages | Dezato Admin',
             'heading' => 'Website pages',
@@ -37,8 +45,11 @@ class PagesController extends Controller
             ),
             'servicesIntro' => SiteContent::section(
                 'services_intro',
-                'Catering, dessert tables, office sweet boxes, and thoughtful corporate gifting - baked fresh in Karachi.'
+                'Catering, dessert tables, office sweet boxes, and thoughtful corporate gifting — baked fresh in Karachi.'
             ),
+            'milestones' => StoryBlocks::milestones(),
+            'packages' => $packages,
+            'packageGuide' => config('dezato_admin.media.package'),
         ]);
     }
 
@@ -47,6 +58,19 @@ class PagesController extends Controller
         $rules = [
             'about_intro' => ['required', 'string', 'max:2000'],
             'services_intro' => ['required', 'string', 'max:1000'],
+            'milestones' => ['required', 'array', 'min:1'],
+            'milestones.*.id' => ['nullable', 'string', 'max:80'],
+            'milestones.*.year' => ['required', 'string', 'max:20'],
+            'milestones.*.title' => ['required', 'string', 'max:120'],
+            'milestones.*.text' => ['required', 'string', 'max:500'],
+            'packages' => ['required', 'array', 'min:1'],
+            'packages.*.id' => ['nullable', 'string', 'max:80'],
+            'packages.*.title' => ['required', 'string', 'max:120'],
+            'packages.*.serves' => ['nullable', 'string', 'max:80'],
+            'packages.*.price' => ['nullable', 'string', 'max:80'],
+            'packages.*.blurb' => ['nullable', 'string', 'max:400'],
+            'packages.*.existing_image' => ['nullable', 'string', 'max:255'],
+            'packages.*.image' => ['nullable', 'image', 'max:3072'],
         ];
 
         foreach (array_keys(SiteContent::PAGES) as $key) {
@@ -70,6 +94,26 @@ class PagesController extends Controller
             );
         }
 
-        return back()->with('status', 'Website pages saved. Customers will see the updated text right away.');
+        StoryBlocks::saveMilestones($data['milestones']);
+
+        $packages = [];
+        foreach ($data['packages'] as $index => $row) {
+            $image = (string) ($row['existing_image'] ?? '');
+            if ($request->hasFile("packages.$index.image")) {
+                MediaPaths::deleteIfOwned($image);
+                $image = $request->file("packages.$index.image")->store('packages', 'public');
+            }
+            $packages[] = [
+                'id' => $row['id'] ?? null,
+                'title' => $row['title'],
+                'serves' => $row['serves'] ?? '',
+                'price' => $row['price'] ?? '',
+                'blurb' => $row['blurb'] ?? '',
+                'image' => $image,
+            ];
+        }
+        StoryBlocks::savePackages($packages);
+
+        return back()->with('status', 'Website pages, milestones, and packages saved.');
     }
 }

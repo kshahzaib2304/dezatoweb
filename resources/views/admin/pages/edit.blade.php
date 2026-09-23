@@ -11,7 +11,7 @@
         <p class="admin-muted">No coding needed. Changes appear on the website after you save.</p>
     </aside>
 
-    <form class="admin-form" method="post" action="{{ route('admin.pages.update') }}">
+    <form class="admin-form" method="post" action="{{ route('admin.pages.update') }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -31,6 +31,66 @@
                     <p class="field-hint">Short line under the Services title. <a href="{{ route('services') }}" target="_blank" rel="noopener">View Services page</a></p>
                 </div>
             </div>
+        </section>
+
+        <section class="admin-panel admin-panel--spaced">
+            <h2>About timeline (milestones)</h2>
+            <p class="admin-lead">Shown on the About Us page under “Our journey”.</p>
+            @foreach ($milestones as $index => $item)
+                <article class="admin-slide-card">
+                    <input type="hidden" name="milestones[{{ $index }}][id]" value="{{ $item['id'] }}">
+                    <div class="form-grid">
+                        <div class="form-row">
+                            <label class="field-label">Year *</label>
+                            <input class="field-input" type="text" name="milestones[{{ $index }}][year]" value="{{ old('milestones.'.$index.'.year', $item['year']) }}" required>
+                        </div>
+                        <div class="form-row">
+                            <label class="field-label">Title *</label>
+                            <input class="field-input" type="text" name="milestones[{{ $index }}][title]" value="{{ old('milestones.'.$index.'.title', $item['title']) }}" required>
+                        </div>
+                        <div class="form-row form-row--full">
+                            <label class="field-label">Short story *</label>
+                            <textarea class="field-input" name="milestones[{{ $index }}][text]" rows="2" required>{{ old('milestones.'.$index.'.text', $item['text']) }}</textarea>
+                        </div>
+                    </div>
+                </article>
+            @endforeach
+        </section>
+
+        <section class="admin-panel admin-panel--spaced">
+            <h2>Services packages</h2>
+            <p class="admin-lead">Photo ≈ {{ $packageGuide['size'] }} ({{ $packageGuide['ratio'] }}), max {{ $packageGuide['max'] }}.</p>
+            @foreach ($packages as $index => $package)
+                <article class="admin-slide-card">
+                    <input type="hidden" name="packages[{{ $index }}][id]" value="{{ $package['id'] }}">
+                    <input type="hidden" name="packages[{{ $index }}][existing_image]" value="{{ $package['image'] ?? '' }}">
+                    <div class="form-grid">
+                        <div class="form-row">
+                            <label class="field-label">Title *</label>
+                            <input class="field-input" type="text" name="packages[{{ $index }}][title]" value="{{ old('packages.'.$index.'.title', $package['title']) }}" required>
+                        </div>
+                        <div class="form-row">
+                            <label class="field-label">Serves</label>
+                            <input class="field-input" type="text" name="packages[{{ $index }}][serves]" value="{{ old('packages.'.$index.'.serves', $package['serves']) }}">
+                        </div>
+                        <div class="form-row">
+                            <label class="field-label">Price label</label>
+                            <input class="field-input" type="text" name="packages[{{ $index }}][price]" value="{{ old('packages.'.$index.'.price', $package['price']) }}" placeholder="From ₨ 7,500">
+                        </div>
+                        <div class="form-row form-row--full">
+                            <label class="field-label">Description</label>
+                            <textarea class="field-input" name="packages[{{ $index }}][blurb]" rows="2">{{ old('packages.'.$index.'.blurb', $package['blurb']) }}</textarea>
+                        </div>
+                        <div class="form-row form-row--full">
+                            <label class="field-label">Photo</label>
+                            <div class="admin-slide-card__preview">
+                                <img src="{{ $package['image_url'] }}" alt="" width="120" height="75">
+                                <input class="field-input" type="file" name="packages[{{ $index }}][image]" accept="image/jpeg,image/png,image/webp">
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            @endforeach
         </section>
 
         @foreach ($pages as $page)

@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Support\Cart;
 use App\Support\Fulfillment;
 use App\Support\FulfillmentSchedule;
+use App\Support\OnlineCheckout;
 use App\Support\PaymentMethods;
 use App\Support\PlaceOrder;
 use App\Support\PromoCodes;
@@ -68,6 +69,10 @@ class CheckoutController extends Controller
                 ->route('checkout.show')
                 ->withInput()
                 ->withErrors(['promo' => $exception->getMessage()]);
+        }
+
+        if (OnlineCheckout::usesOnlineGateway($order->payment_method)) {
+            return redirect()->route('payments.start', $order);
         }
 
         return redirect()
