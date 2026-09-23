@@ -65,6 +65,14 @@ return [
             'max' => '3 MB',
             'tip' => 'Show a styled dessert table or boxed treats.',
         ],
+        'order_card' => [
+            'label' => 'Order page choice card photo',
+            'size' => '1200 × 900 px',
+            'ratio' => 'Landscape (4:3)',
+            'formats' => 'JPG or WebP',
+            'max' => '3 MB',
+            'tip' => 'Pickup counter, delivery box, or catering table — one clear photo per card.',
+        ],
         'reference' => [
             'label' => 'Custom cake reference photo',
             'size' => '1200 × 1200 px (or clear phone photo)',

@@ -117,15 +117,29 @@ Route::middleware(['auth', EnsureUserIsAdmin::class])->prefix('admin')->name('ad
     Route::get('/content', [AdminContentController::class, 'edit'])->name('content.edit');
     Route::put('/content', [AdminContentController::class, 'update'])->name('content.update');
     Route::put('/content/showcase', [AdminContentController::class, 'updateShowcase'])->name('content.showcase');
+    Route::post('/content/categories', [AdminContentController::class, 'storeCategory'])->name('content.categories.store');
+    Route::delete('/content/categories/{tile}', [AdminContentController::class, 'destroyCategory'])->name('content.categories.destroy');
+    Route::post('/content/occasions', [AdminContentController::class, 'storeOccasion'])->name('content.occasions.store');
+    Route::delete('/content/occasions/{tile}', [AdminContentController::class, 'destroyOccasion'])->name('content.occasions.destroy');
     Route::post('/content/slides', [AdminContentController::class, 'storeSlide'])->name('content.slides.store');
     Route::put('/content/slides/{slide}', [AdminContentController::class, 'updateSlide'])->name('content.slides.update');
     Route::delete('/content/slides/{slide}', [AdminContentController::class, 'destroySlide'])->name('content.slides.destroy');
 
     Route::get('/locations', [AdminLocationController::class, 'edit'])->name('locations.edit');
     Route::put('/locations', [AdminLocationController::class, 'update'])->name('locations.update');
+    Route::post('/locations', [AdminLocationController::class, 'store'])->name('locations.store');
+    Route::delete('/locations/{location}', [AdminLocationController::class, 'destroy'])->name('locations.destroy');
 
     Route::get('/pages', [AdminPagesController::class, 'edit'])->name('pages.edit');
     Route::put('/pages', [AdminPagesController::class, 'update'])->name('pages.update');
+    Route::post('/pages/milestones', [AdminPagesController::class, 'storeMilestone'])->name('pages.milestones.store');
+    Route::delete('/pages/milestones/{item}', [AdminPagesController::class, 'destroyMilestone'])->name('pages.milestones.destroy');
+    Route::post('/pages/packages', [AdminPagesController::class, 'storePackage'])->name('pages.packages.store');
+    Route::delete('/pages/packages/{item}', [AdminPagesController::class, 'destroyPackage'])->name('pages.packages.destroy');
+    Route::post('/pages/customization', [AdminPagesController::class, 'storeCustomization'])->name('pages.customization.store');
+    Route::delete('/pages/customization/{item}', [AdminPagesController::class, 'destroyCustomization'])->name('pages.customization.destroy');
+    Route::post('/pages/order-cards', [AdminPagesController::class, 'storeOrderCard'])->name('pages.order-cards.store');
+    Route::delete('/pages/order-cards/{item}', [AdminPagesController::class, 'destroyOrderCard'])->name('pages.order-cards.destroy');
 
     Route::get('/cake-builder', [AdminCakeBuilderController::class, 'edit'])->name('cake-builder.edit');
     Route::put('/cake-builder', [AdminCakeBuilderController::class, 'update'])->name('cake-builder.update');
@@ -144,6 +158,7 @@ Route::middleware(['auth', EnsureUserIsAdmin::class])->prefix('admin')->name('ad
 
     Route::get('/settings', [AdminSettingsController::class, 'edit'])->name('settings.edit');
     Route::put('/settings', [AdminSettingsController::class, 'update'])->name('settings.update');
+    Route::post('/settings/nav/{index}/move', [AdminSettingsController::class, 'moveNav'])->name('settings.nav.move');
 
     Route::get('/integrations', [AdminIntegrationsController::class, 'edit'])->name('integrations.edit');
     Route::put('/integrations', [AdminIntegrationsController::class, 'update'])->name('integrations.update');

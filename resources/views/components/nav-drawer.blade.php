@@ -1,7 +1,8 @@
 @php
-    $menuCategories = config('dezato.menu.categories', []);
+    $menuCategories = $menuCategories ?? [];
     $currentRoute = $currentRoute ?? null;
     $hasFulfillment = $hasFulfillment ?? false;
+    $brandShortName = $brandShortName ?? 'Dezato';
 @endphp
 
 <div class="nav-overlay" id="nav-overlay" data-nav-close></div>
@@ -17,7 +18,7 @@
     <div class="nav-drawer__top">
         <div class="nav-drawer__brand">
             <img src="{{ asset('images/brand/logo-icon.jpg') }}" width="40" height="40" alt="">
-            <span>DEZATO</span>
+            <span>{{ strtoupper($brandShortName) }}</span>
         </div>
         <button class="icon-btn" type="button" data-nav-close aria-label="Close menu">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
@@ -42,7 +43,7 @@
             </button>
             <div class="nav-acc__panel">
                 @foreach ($menuCategories as $category)
-                    @continue($category['id'] === 'all')
+                    @continue(($category['id'] ?? '') === 'all')
                     <a href="{{ route('menu', ['category' => $category['id']]) }}">{{ $category['label'] }}</a>
                 @endforeach
             </div>

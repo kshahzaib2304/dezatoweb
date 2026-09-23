@@ -104,4 +104,18 @@ class LocationController extends Controller
 
         return back()->with('status', 'Locations saved. Customers will see the updated addresses and hours.');
     }
+
+    public function store(): RedirectResponse
+    {
+        StoreLocations::appendBlank();
+
+        return back()->with('status', 'New location added. Fill in the address and hours, then Save locations.');
+    }
+
+    public function destroy(string $location): RedirectResponse
+    {
+        return StoreLocations::remove($location)
+            ? back()->with('status', 'Location removed.')
+            : back()->withErrors(['locations' => 'Keep at least one bakery location.']);
+    }
 }

@@ -3,8 +3,8 @@
         <div class="footer-brand__intro">
             <img src="{{ asset('images/brand/logo-mark.svg') }}" width="48" height="48" alt="">
             <div>
-                <strong>Dezato Cake House</strong>
-                <p>Cakes, cupcakes, eclairs &amp; more - baked fresh in Karachi.</p>
+                <strong>{{ $brandName ?? 'Dezato Cake House' }}</strong>
+                <p>{{ $brandTagline ?? 'Cakes, cupcakes, eclairs & more - baked fresh in Karachi.' }}</p>
             </div>
         </div>
 
@@ -42,7 +42,7 @@
 
     <div class="footer-brand__legal">
         <div class="container footer-brand__legal-inner">
-            <p>&copy; {{ date('Y') }} Dezato Cake House, Karachi</p>
+            <p>&copy; {{ date('Y') }} {{ $brandName ?? 'Dezato Cake House' }}, Karachi</p>
             <nav class="footer-brand__legal-links" aria-label="Legal">
                 <a href="{{ route('pages.privacy') }}">Privacy</a>
                 <a href="{{ route('pages.terms') }}">Terms</a>

@@ -6,10 +6,18 @@
         <ol class="admin-steps">
             <li>Edit each bakery address, hours, phone, and delivery fee.</li>
             <li>Paste a Google Maps link so customers can open directions.</li>
-            <li>Photo size: <strong>{{ $mediaGuide['size'] }}</strong> ({{ $mediaGuide['ratio'] }}), {{ $mediaGuide['formats'] }}, max {{ $mediaGuide['max'] }}.</li>
+            <li>Use <strong>Add location</strong> for a new shop. Photo: <strong>{{ $mediaGuide['size'] }}</strong>.</li>
         </ol>
         <p class="admin-muted">{{ $mediaGuide['tip'] }}</p>
     </aside>
+
+    <div class="admin-toolbar">
+        <p class="admin-lead" style="margin:0">Shown on the Locations page and in the order chooser.</p>
+        <form method="post" action="{{ route('admin.locations.store') }}">
+            @csrf
+            <button class="btn btn--primary" type="submit">Add location</button>
+        </form>
+    </div>
 
     <form class="admin-form" method="post" action="{{ route('admin.locations.update') }}" enctype="multipart/form-data">
         @csrf
@@ -19,10 +27,20 @@
             <section class="admin-panel admin-panel--spaced">
                 <div class="admin-panel__head">
                     <h2>{{ $location['name'] !== '' ? $location['name'] : 'Location '.($index + 1) }}</h2>
-                    <label class="check-inline">
-                        <input type="checkbox" name="locations[{{ $index }}][active]" value="1" @checked(old('locations.'.$index.'.active', $location['active'] ?? true))>
-                        <span>Show on website</span>
-                    </label>
+                    <div class="admin-toolbar__actions">
+                        <label class="check-inline">
+                            <input type="checkbox" name="locations[{{ $index }}][active]" value="1" @checked(old('locations.'.$index.'.active', $location['active'] ?? true))>
+                            <span>Show on website</span>
+                        </label>
+                        @if (count($locations) > 1)
+                            <button
+                                class="btn btn--ghost btn--sm"
+                                type="submit"
+                                form="delete-location-{{ $location['id'] }}"
+                                onclick="return confirm('Remove this location?')"
+                            >Remove</button>
+                        @endif
+                    </div>
                 </div>
                 <input type="hidden" name="locations[{{ $index }}][id]" value="{{ $location['id'] }}">
                 <input type="hidden" name="locations[{{ $index }}][existing_image]" value="{{ $location['image'] ?? '' }}">
@@ -85,4 +103,13 @@
             <button class="btn btn--primary" type="submit">Save locations</button>
         </div>
     </form>
+
+    @foreach ($locations as $location)
+        @if (count($locations) > 1)
+            <form id="delete-location-{{ $location['id'] }}" method="post" action="{{ route('admin.locations.destroy', $location['id']) }}" class="sr-only">
+                @csrf
+                @method('DELETE')
+            </form>
+        @endif
+    @endforeach
 @endsection

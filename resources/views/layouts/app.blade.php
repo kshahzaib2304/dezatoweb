@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="theme-color" content="#FAF6F2">
     @php
-        $pageTitle = $title ?? 'Dezato Cake House';
-        $pageDescription = $metaDescription ?? 'Dezato Cake House - cakes, cupcakes, eclairs, brownies, cheesecakes, tarts, mini pies and sundaes in Karachi. Order in PKR.';
+        $brandName = $brandName ?? \App\Support\SiteBrand::name();
+        $pageTitle = $title ?? $brandName;
+        $pageDescription = $metaDescription ?? $brandName.' — cakes, cupcakes, eclairs, brownies, cheesecakes, tarts, mini pies and sundaes in Karachi. Order in PKR.';
         $canonical = $canonical ?? url()->current();
         $ogImage = asset($ogImage ?? 'images/brand/logo-icon.jpg');
-        $brandName = config('dezato.brand.name', 'Dezato Cake House');
     @endphp
     <title>{{ $pageTitle }}</title>
     <meta name="description" content="{{ $pageDescription }}">

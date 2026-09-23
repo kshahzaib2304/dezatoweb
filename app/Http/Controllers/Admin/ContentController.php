@@ -208,6 +208,34 @@ class ContentController extends Controller
         return back()->with('status', 'Homepage category shortcuts and occasion tiles saved.');
     }
 
+    public function storeCategory(): RedirectResponse
+    {
+        HomeShowcase::appendCategory();
+
+        return back()->with('status', 'New category tile added. Edit the label/link/photo and save.');
+    }
+
+    public function destroyCategory(string $tile): RedirectResponse
+    {
+        return HomeShowcase::removeCategory($tile)
+            ? back()->with('status', 'Category tile removed.')
+            : back()->withErrors(['categories' => 'Keep at least one category tile.']);
+    }
+
+    public function storeOccasion(): RedirectResponse
+    {
+        HomeShowcase::appendOccasion();
+
+        return back()->with('status', 'New occasion tile added. Edit and save.');
+    }
+
+    public function destroyOccasion(string $tile): RedirectResponse
+    {
+        return HomeShowcase::removeOccasion($tile)
+            ? back()->with('status', 'Occasion tile removed.')
+            : back()->withErrors(['occasions' => 'Keep at least one occasion tile.']);
+    }
+
     /**
      * @return array{headline: string, lede: string}
      */

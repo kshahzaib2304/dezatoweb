@@ -813,8 +813,9 @@
     margin-top: 1rem;
 }
 
-.admin-form__actions--spaced {
-    margin-top: 1rem;
+.admin-section-title {
+    margin: 1.75rem 0 0.65rem;
+    font-size: 1.15rem;
 }
 
 .form-grid--spaced {

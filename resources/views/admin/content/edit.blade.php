@@ -136,10 +136,19 @@
         @csrf
         @method('PUT')
         <section class="admin-panel">
-            <h2>Menu category shortcuts</h2>
+            <div class="admin-panel__head">
+                <h2>Menu category shortcuts</h2>
+                <button class="btn btn--outline btn--sm" type="submit" form="add-category-tile">Add tile</button>
+            </div>
             <p class="admin-lead">Tiles under the homepage hero. Link example: <code>/menu?category=cakes</code>. Photo ≈ {{ $tileGuide['size'] }}.</p>
             @foreach ($categories as $index => $tile)
                 <article class="admin-slide-card">
+                    <div class="admin-panel__head">
+                        <strong>{{ $tile['label'] }}</strong>
+                        @if (count($categories) > 1)
+                            <button class="btn btn--ghost btn--sm" type="submit" form="delete-cat-{{ $tile['id'] }}" onclick="return confirm('Remove this tile?')">Remove</button>
+                        @endif
+                    </div>
                     <input type="hidden" name="categories[{{ $index }}][id]" value="{{ $tile['id'] }}">
                     <input type="hidden" name="categories[{{ $index }}][existing_image]" value="{{ $tile['image'] ?? '' }}">
                     <div class="form-grid">
@@ -168,10 +177,19 @@
         </section>
 
         <section class="admin-panel admin-panel--spaced">
-            <h2>Occasion tiles</h2>
+            <div class="admin-panel__head">
+                <h2>Occasion tiles</h2>
+                <button class="btn btn--outline btn--sm" type="submit" form="add-occasion-tile">Add tile</button>
+            </div>
             <p class="admin-lead">“Birthdays”, “Gifting”, etc. Same photo size as category tiles.</p>
             @foreach ($occasions as $index => $tile)
                 <article class="admin-slide-card">
+                    <div class="admin-panel__head">
+                        <strong>{{ $tile['label'] }}</strong>
+                        @if (count($occasions) > 1)
+                            <button class="btn btn--ghost btn--sm" type="submit" form="delete-occ-{{ $tile['id'] }}" onclick="return confirm('Remove this tile?')">Remove</button>
+                        @endif
+                    </div>
                     <input type="hidden" name="occasions[{{ $index }}][id]" value="{{ $tile['id'] }}">
                     <input type="hidden" name="occasions[{{ $index }}][existing_image]" value="{{ $tile['image'] ?? '' }}">
                     <div class="form-grid">
@@ -199,4 +217,18 @@
             <button class="btn btn--primary" type="submit">Save homepage tiles</button>
         </div>
     </form>
+
+    <form id="add-category-tile" method="post" action="{{ route('admin.content.categories.store') }}" class="sr-only">@csrf</form>
+    <form id="add-occasion-tile" method="post" action="{{ route('admin.content.occasions.store') }}" class="sr-only">@csrf</form>
+
+    @foreach ($categories as $tile)
+        @if (count($categories) > 1)
+            <form id="delete-cat-{{ $tile['id'] }}" method="post" action="{{ route('admin.content.categories.destroy', $tile['id']) }}" class="sr-only">@csrf @method('DELETE')</form>
+        @endif
+    @endforeach
+    @foreach ($occasions as $tile)
+        @if (count($occasions) > 1)
+            <form id="delete-occ-{{ $tile['id'] }}" method="post" action="{{ route('admin.content.occasions.destroy', $tile['id']) }}" class="sr-only">@csrf @method('DELETE')</form>
+        @endif
+    @endforeach
 @endsection

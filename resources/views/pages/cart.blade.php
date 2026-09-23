@@ -127,7 +127,10 @@
     </section>
 
     @php
-        $upsells = collect(config('dezato.menu.products', []))->where('badge', '!=', null)->take(3)->values();
+        $upsells = \App\Support\Catalog::products()
+            ->filter(fn (array $p): bool => ($p['badge'] ?? null) !== null)
+            ->take(3)
+            ->values();
     @endphp
     @if ($upsells->isNotEmpty())
         <section class="section-block section-block--tint">

@@ -59,6 +59,75 @@ final class HomeShowcase
         ]);
     }
 
+    public static function appendCategory(): void
+    {
+        $config = self::config();
+        $config['categories'][] = [
+            'id' => 'tile-'.Str::lower(Str::random(4)),
+            'label' => 'New category',
+            'href' => '/menu',
+            'tone' => 'cream',
+            'image' => '',
+        ];
+        self::save($config);
+    }
+
+    public static function appendOccasion(): void
+    {
+        $config = self::config();
+        $config['occasions'][] = [
+            'id' => 'occasion-'.Str::lower(Str::random(4)),
+            'label' => 'New occasion',
+            'href' => '/menu',
+            'image' => '',
+        ];
+        self::save($config);
+    }
+
+    public static function removeCategory(string $id): bool
+    {
+        $config = self::config();
+        if (count($config['categories']) <= 1) {
+            return false;
+        }
+
+        $before = count($config['categories']);
+        $config['categories'] = array_values(array_filter(
+            $config['categories'],
+            fn (array $row): bool => ($row['id'] ?? '') !== $id
+        ));
+
+        if (count($config['categories']) === $before) {
+            return false;
+        }
+
+        self::save($config);
+
+        return true;
+    }
+
+    public static function removeOccasion(string $id): bool
+    {
+        $config = self::config();
+        if (count($config['occasions']) <= 1) {
+            return false;
+        }
+
+        $before = count($config['occasions']);
+        $config['occasions'] = array_values(array_filter(
+            $config['occasions'],
+            fn (array $row): bool => ($row['id'] ?? '') !== $id
+        ));
+
+        if (count($config['occasions']) === $before) {
+            return false;
+        }
+
+        self::save($config);
+
+        return true;
+    }
+
     /**
      * @param  list<array<string, mixed>>  $rows
      * @return list<array<string, mixed>>

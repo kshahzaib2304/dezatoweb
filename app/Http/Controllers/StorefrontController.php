@@ -135,7 +135,7 @@ class StorefrontController extends Controller
         return view('pages.customization', [
             'title' => 'Cake Customization | Dezato Cake House',
             'metaDescription' => 'Custom celebration cakes in Karachi - flavours, sizes, inscriptions, and finishes from Dezato Cake House.',
-            'options' => config('dezato.customization.options', []),
+            'options' => \App\Support\StorefrontCards::customizationOptions(),
         ]);
     }
 
@@ -150,7 +150,7 @@ class StorefrontController extends Controller
         return view('pages.order', [
             'title' => 'Order | Dezato Cake House',
             'metaDescription' => 'Order Dezato for Karachi pickup, local delivery, or Pakistan courier shipping.',
-            'options' => config('dezato.order.options', []),
+            'options' => \App\Support\StorefrontCards::orderOptionsForStorefront(),
             'fulfillmentSummary' => $fulfillment->summary(),
         ]);
     }

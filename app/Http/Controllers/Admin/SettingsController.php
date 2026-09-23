@@ -6,12 +6,15 @@ use App\Http\Controllers\Controller;
 use App\Models\SiteSetting;
 use App\Models\User;
 use App\Support\BakeryProfile;
+use App\Support\NavigationMenu;
 use App\Support\ShippingSettings;
+use App\Support\SiteBrand;
 use App\Support\SiteContent;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password as PasswordRule;
 use Illuminate\Validation\ValidationException;
 
@@ -19,11 +22,9 @@ class SettingsController extends Controller
 {
     public function edit(): View
     {
-        $shipping = ShippingSettings::all();
-
         return view('admin.settings.edit', [
             'title' => 'Contact & store | Dezato Admin',
-            'heading' => 'Contact, shipping & account',
+            'heading' => 'Contact, brand & store',
             'active' => 'settings',
             'nav' => config('dezato_admin.nav'),
             'notifyEmail' => BakeryProfile::notifyEmail(),
@@ -32,13 +33,21 @@ class SettingsController extends Controller
             'whatsapp' => SiteSetting::getValue('whatsapp') ?: BakeryProfile::phone(),
             'siteUrl' => BakeryProfile::siteUrl(),
             'statusEmails' => SiteContent::statusEmailsEnabled(),
-            'shipping' => $shipping,
+            'shipping' => ShippingSettings::all(),
+            'brand' => SiteBrand::all(),
+            'navLinks' => NavigationMenu::links(),
+            'navRouteOptions' => NavigationMenu::allowedRoutes(),
         ]);
     }
 
     public function update(Request $request): RedirectResponse
     {
+        $allowedRoutes = array_keys(NavigationMenu::allowedRoutes());
+
         $data = $request->validate([
+            'brand_name' => ['required', 'string', 'max:120'],
+            'brand_short_name' => ['required', 'string', 'max:40'],
+            'brand_tagline' => ['required', 'string', 'max:160'],
             'notify_email' => ['required', 'email', 'max:180'],
             'public_email' => ['required', 'email', 'max:180'],
             'public_phone' => ['required', 'string', 'max:40'],
@@ -48,13 +57,24 @@ class SettingsController extends Controller
             'shipping_fee' => ['required', 'numeric', 'min:0', 'max:99999'],
             'shipping_eta' => ['required', 'string', 'max:160'],
             'shipping_label' => ['required', 'string', 'max:80'],
+            'nav' => ['required', 'array', 'min:1'],
+            'nav.*.label' => ['required', 'string', 'max:60'],
+            'nav.*.route' => ['required', 'string', Rule::in($allowedRoutes)],
             'current_password' => ['nullable', 'string'],
             'password' => ['nullable', 'confirmed', PasswordRule::defaults()],
         ], [
-            'notify_email.required' => 'Enter the email where new orders and messages should arrive.',
-            'public_phone.required' => 'Enter the bakery phone number customers can call.',
+            'brand_name.required' => 'Enter the bakery name customers should see.',
+            'nav.min' => 'Keep at least one menu link.',
             'site_url.required' => 'Enter your live website address (https://…).',
         ]);
+
+        SiteBrand::save([
+            'name' => $data['brand_name'],
+            'short_name' => $data['brand_short_name'],
+            'tagline' => $data['brand_tagline'],
+        ]);
+
+        NavigationMenu::save($data['nav']);
 
         SiteSetting::putValue('notify_email', $data['notify_email']);
         SiteSetting::putValue('public_email', $data['public_email']);
@@ -84,9 +104,17 @@ class SettingsController extends Controller
             $user->forceFill(['password' => $data['password']])->save();
         }
 
-        return back()->with(
-            'status',
-            'Contact, shipping, and account settings saved.'
-        );
+        return back()->with('status', 'Brand, menu, contact, and store settings saved.');
+    }
+
+    public function moveNav(Request $request, int $index): RedirectResponse
+    {
+        $direction = $request->validate([
+            'direction' => ['required', 'in:up,down'],
+        ])['direction'];
+
+        return NavigationMenu::move($index, $direction)
+            ? back()->with('status', 'Menu order updated.')
+            : back()->withErrors(['nav' => 'That menu item cannot move further.']);
     }
 }

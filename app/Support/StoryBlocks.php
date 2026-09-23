@@ -63,6 +63,35 @@ final class StoryBlocks
         SiteSetting::putJson(self::MILESTONES_KEY, $clean);
     }
 
+    public static function appendMilestone(): void
+    {
+        $rows = self::milestones();
+        $rows[] = [
+            'id' => 'm-'.Str::lower(Str::random(4)),
+            'year' => (string) now()->year,
+            'title' => 'New milestone',
+            'text' => 'Short story for this year.',
+        ];
+        self::saveMilestones($rows);
+    }
+
+    public static function removeMilestone(string $id): bool
+    {
+        $rows = self::milestones();
+        if (count($rows) <= 1) {
+            return false;
+        }
+
+        $filtered = array_values(array_filter($rows, fn (array $row): bool => ($row['id'] ?? '') !== $id));
+        if (count($filtered) === count($rows)) {
+            return false;
+        }
+
+        self::saveMilestones($filtered);
+
+        return true;
+    }
+
     /**
      * @return list<array{id: string, title: string, serves: string, price: string, blurb: string, image: string}>
      */
@@ -125,5 +154,41 @@ final class StoryBlocks
         }
 
         SiteSetting::putJson(self::PACKAGES_KEY, $clean);
+    }
+
+    public static function appendPackage(): void
+    {
+        $rows = self::packages();
+        $rows[] = [
+            'id' => 'pkg-'.Str::lower(Str::random(4)),
+            'title' => 'New package',
+            'serves' => 'Custom',
+            'price' => 'From ₨ 0',
+            'blurb' => 'Describe this package for customers.',
+            'image' => '',
+        ];
+        self::savePackages($rows);
+    }
+
+    public static function removePackage(string $id): bool
+    {
+        $rows = self::packages();
+        if (count($rows) <= 1) {
+            return false;
+        }
+
+        $removed = collect($rows)->firstWhere('id', $id);
+        $filtered = array_values(array_filter($rows, fn (array $row): bool => ($row['id'] ?? '') !== $id));
+        if (count($filtered) === count($rows)) {
+            return false;
+        }
+
+        if (is_array($removed)) {
+            MediaPaths::deleteIfOwned($removed['image'] ?? null);
+        }
+
+        self::savePackages($filtered);
+
+        return true;
     }
 }

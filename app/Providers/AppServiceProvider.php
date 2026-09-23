@@ -43,7 +43,11 @@ class AppServiceProvider extends ServiceProvider
             $fulfillment = app(Fulfillment::class);
 
             $view->with([
-                'navLinks' => config('dezato.nav', []),
+                'navLinks' => \App\Support\NavigationMenu::links(),
+                'brandName' => \App\Support\SiteBrand::name(),
+                'brandShortName' => \App\Support\SiteBrand::shortName(),
+                'brandTagline' => \App\Support\SiteBrand::tagline(),
+                'menuCategories' => Catalog::categories()->all(),
                 'currentRoute' => Route::currentRouteName(),
                 'cartCount' => $cart->count(),
                 'fulfillmentSummary' => $fulfillment->summary(),
@@ -51,8 +55,8 @@ class AppServiceProvider extends ServiceProvider
                 'welcomeSeen' => $fulfillment->welcomeSeen(),
                 'currentFulfillment' => $fulfillment->get(),
                 'fulfillmentLocations' => Catalog::locations()->all(),
-                'shippingFee' => \App\Support\ShippingSettings::fee(),
-                'shippingEta' => \App\Support\ShippingSettings::eta(),
+                'shippingFee' => ShippingSettings::fee(),
+                'shippingEta' => ShippingSettings::eta(),
             ]);
         });
 

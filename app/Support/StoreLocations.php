@@ -67,6 +67,53 @@ final class StoreLocations
         SiteSetting::putJson(self::KEY, array_values($clean));
     }
 
+    public static function appendBlank(): void
+    {
+        $rows = self::all();
+        $rows[] = self::normalize([
+            'name' => 'New bakery location',
+            'city' => 'Karachi',
+            'region' => 'Sindh',
+            'address' => '',
+            'hours' => 'Daily 10:00 AM – 10:00 PM',
+            'phone' => '',
+            'map_url' => '',
+            'services' => ['Pickup', 'Delivery'],
+            'delivers' => true,
+            'delivery_fee' => 199,
+            'image' => '',
+            'active' => true,
+        ]);
+        self::save($rows);
+    }
+
+    public static function remove(string $id): bool
+    {
+        $rows = self::all();
+
+        if (count($rows) <= 1) {
+            return false;
+        }
+
+        $filtered = array_values(array_filter(
+            $rows,
+            fn (array $row): bool => ($row['id'] ?? '') !== $id
+        ));
+
+        if (count($filtered) === count($rows)) {
+            return false;
+        }
+
+        $removed = collect($rows)->firstWhere('id', $id);
+        if (is_array($removed)) {
+            MediaPaths::deleteIfOwned($removed['image'] ?? null);
+        }
+
+        self::save($filtered);
+
+        return true;
+    }
+
     /**
      * @param  array<string, mixed>  $row
      * @return array<string, mixed>
