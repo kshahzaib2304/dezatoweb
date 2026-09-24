@@ -28,7 +28,7 @@
                 <div class="form-row form-row--full">
                     <label class="field-label" for="name">Product name *</label>
                     <input id="name" class="field-input" type="text" name="name" value="{{ old('name', $product->name) }}" required maxlength="160" placeholder="e.g. Chocolate Truffle Cake">
-                    <p class="field-hint">This is what customers see on the menu.</p>
+                    <p class="field-hint">This is what customers see on the menu. Renaming a product keeps its existing page link.</p>
                 </div>
 
                 <div class="form-row">

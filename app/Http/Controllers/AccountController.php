@@ -77,10 +77,10 @@ class AccountController extends Controller
         }
 
         $user->addresses()->create([
-            'label' => $data['label'] ?: 'Home',
+            'label' => filled($data['label'] ?? null) ? $data['label'] : 'Home',
             'line1' => $data['line1'],
-            'area' => $data['area'] ?? null,
-            'city' => $data['city'] ?: 'Karachi',
+            'area' => filled($data['area'] ?? null) ? $data['area'] : null,
+            'city' => filled($data['city'] ?? null) ? $data['city'] : 'Karachi',
             'is_default' => $makeDefault,
         ]);
 

@@ -89,12 +89,16 @@ class PromoController extends Controller
         }
 
         $data['code'] = strtoupper(trim($data['code']));
-        $data['label'] = $data['label'] ?: null;
-        $data['min_subtotal'] = $data['min_subtotal'] !== null && $data['min_subtotal'] !== ''
-            ? (int) $data['min_subtotal']
+        $data['label'] = filled($data['label'] ?? null) ? $data['label'] : null;
+
+        $minSubtotal = $data['min_subtotal'] ?? null;
+        $data['min_subtotal'] = $minSubtotal !== null && $minSubtotal !== ''
+            ? (int) $minSubtotal
             : null;
-        $data['max_uses'] = $data['max_uses'] !== null && $data['max_uses'] !== ''
-            ? (int) $data['max_uses']
+
+        $maxUses = $data['max_uses'] ?? null;
+        $data['max_uses'] = $maxUses !== null && $maxUses !== ''
+            ? (int) $maxUses
             : null;
         $data['is_active'] = $request->boolean('is_active', true);
 

@@ -19,6 +19,13 @@
                 <img src="{{ asset('images/brand/logo-mark.svg') }}" width="32" height="32" alt="">
                 <span>Dezato Admin</span>
             </a>
+            <div class="admin-sidebar__tools">
+                <a class="admin-sidebar__store" href="{{ route('home') }}" target="_blank" rel="noopener">View website</a>
+                <form class="admin-sidebar__logout" method="post" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit">Sign out</button>
+                </form>
+            </div>
             <nav aria-label="Admin">
                 @foreach ($nav as $item)
                     <a
@@ -30,11 +37,6 @@
                     </a>
                 @endforeach
             </nav>
-            <a class="admin-sidebar__store" href="{{ route('home') }}" target="_blank" rel="noopener">View website</a>
-            <form class="admin-sidebar__logout" method="post" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit">Sign out</button>
-            </form>
         </aside>
         <div class="admin-content">
             <header class="admin-top">

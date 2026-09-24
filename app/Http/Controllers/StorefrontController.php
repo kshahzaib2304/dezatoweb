@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Support\Catalog;
 use App\Support\Fulfillment;
+use App\Support\FulfillmentSchedule;
 use App\Support\HeroSlider;
 use App\Support\HomeShowcase;
 use App\Support\SiteContent;
@@ -169,13 +170,10 @@ class StorefrontController extends Controller
             ->values()
             ->all();
 
-        $gallery = collect([$item['image']])
-            ->merge(collect($related)->pluck('image'))
-            ->filter()
-            ->unique()
-            ->take(4)
-            ->values()
-            ->all();
+        $stock = $item['stock'] ?? null;
+        $available = $stock === null || (int) $stock > 0;
+        $schedule = FulfillmentSchedule::config();
+        $hours = (int) $schedule['min_hours'];
 
         return view('pages.product', [
             'title' => $item['name'].' | Dezato Cake House',
@@ -183,9 +181,30 @@ class StorefrontController extends Controller
             'product' => $item,
             'categoryLabel' => Catalog::categoryLabel($item['category']),
             'related' => $related,
-            'gallery' => $gallery,
+            'gallery' => array_values(array_filter([$item['image'] ?? null])),
             'fulfillmentSummary' => app(Fulfillment::class)->summary(),
+            'available' => $available,
+            'stockLabel' => $this->stockLabel($stock),
+            'leadTime' => $hours > 0
+                ? 'Order at least '.$hours.' '.($hours === 1 ? 'hour' : 'hours').' ahead.'
+                : 'Same-day slots may be available.',
+            'scheduleNote' => $schedule['note'],
         ]);
+    }
+
+    private function stockLabel(mixed $stock): string
+    {
+        if ($stock === null || $stock === '') {
+            return 'Baked to order';
+        }
+
+        $count = (int) $stock;
+
+        return match (true) {
+            $count <= 0 => 'Sold out',
+            $count === 1 => '1 left',
+            default => $count.' available',
+        };
     }
 
     public function sitemap(): Response

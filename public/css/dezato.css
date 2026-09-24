@@ -1195,7 +1195,6 @@ p {
     }
 
     .desktop-nav {
-        display: flex;
         align-items: center;
         justify-content: center;
         gap: 0.25rem 1.35rem;
@@ -1231,10 +1230,6 @@ p {
         display: flex;
         align-items: center;
         gap: 0.35rem;
-    }
-
-    .menu-toggle {
-        display: none;
     }
 
     .cart-btn--mobile {
@@ -1323,6 +1318,14 @@ p {
 @media (min-width: 960px) {
     .mobile-appbar {
         display: none !important;
+    }
+
+    .menu-toggle {
+        display: none;
+    }
+
+    .desktop-nav {
+        display: flex;
     }
 }
 
@@ -1483,6 +1486,11 @@ p {
     gap: 1.15rem;
 }
 
+.product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem 0.65rem;
+}
+
 .product-card,
 .location-card,
 .package-card,
@@ -1543,7 +1551,8 @@ p {
 .product-card__meta {
     display: flex;
     justify-content: space-between;
-    gap: 0.75rem;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.75rem;
     align-items: flex-start;
 }
 
@@ -1556,6 +1565,12 @@ p {
     font-weight: 600;
     color: var(--ink);
     line-height: 1.25;
+    min-width: 0;
+    flex: 1 1 8rem;
+}
+
+.product-card__title a {
+    overflow-wrap: anywhere;
 }
 
 .product-card__price,
@@ -1682,8 +1697,9 @@ p {
     color: var(--plum-700);
 }
 
-.form-row input,
-.form-row textarea {
+.form-row input:not([type="checkbox"]):not([type="radio"]),
+.form-row textarea,
+.form-row select {
     width: 100%;
     min-height: 48px;
     border-radius: 12px;
@@ -1692,6 +1708,24 @@ p {
     padding: 0.7rem 0.85rem;
     font: inherit;
     color: var(--ink);
+}
+
+.form-row input[type="checkbox"],
+.form-row input[type="radio"],
+.check-inline input[type="checkbox"],
+.check-inline input[type="radio"],
+.pay-option input,
+.agree-row input,
+.store-option input {
+    width: 1.125rem;
+    height: 1.125rem;
+    min-width: 1.125rem;
+    min-height: 1.125rem;
+    max-width: 1.125rem;
+    margin: 0.15rem 0 0;
+    padding: 0;
+    flex: 0 0 auto;
+    accent-color: var(--plum-600);
 }
 
 .form-row textarea {
@@ -2383,8 +2417,13 @@ p {
 
 .qty-row {
     display: flex;
+    flex-wrap: wrap;
     gap: 0.65rem;
     align-items: center;
+}
+
+.qty-row .btn {
+    flex: 1 1 12rem;
 }
 
 .qty-input {
@@ -2423,13 +2462,15 @@ p {
 .cart-line__top {
     display: flex;
     justify-content: space-between;
-    gap: 0.75rem;
+    flex-wrap: wrap;
+    gap: 0.35rem 0.75rem;
 }
 
 .cart-line__top h2 {
     font-family: var(--font-brand);
     font-size: 1.05rem;
     color: var(--ink);
+    min-width: 0;
 }
 
 .cart-line__price {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Category;
+use App\Support\Slugs;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -33,7 +34,7 @@ class CategoryController extends Controller
 
         Category::query()->create([
             'label' => $data['label'],
-            'slug' => Str::slug($data['slug'] ?: $data['label']),
+            'slug' => $this->slugFor($data['slug'] ?? null, $data['label']),
             'sort_order' => (int) ($data['sort_order'] ?? 0),
             'is_active' => true,
         ]);
@@ -52,7 +53,7 @@ class CategoryController extends Controller
 
         $category->update([
             'label' => $data['label'],
-            'slug' => Str::slug($data['slug']),
+            'slug' => $this->slugFor($data['slug'] ?? null, $data['label'], $category->id),
             'sort_order' => (int) ($data['sort_order'] ?? 0),
             'is_active' => $request->boolean('is_active'),
         ]);
@@ -71,5 +72,16 @@ class CategoryController extends Controller
         $category->delete();
 
         return back()->with('status', 'Category deleted.');
+    }
+
+    private function slugFor(mixed $requested, string $label, ?int $ignoreId = null): string
+    {
+        $source = trim((string) $requested);
+
+        if ($source === '' || Str::slug($source) === '') {
+            $source = $label;
+        }
+
+        return Slugs::unique(Category::class, $source, $ignoreId, 80);
     }
 }

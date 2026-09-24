@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
+use App\Support\Slugs;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -154,19 +155,47 @@ class ProductController extends Controller
             'price.required' => 'Enter the price in Pakistani Rupees (numbers only, e.g. 1850).',
         ]);
 
-        $data['slug'] = Str::slug($data['slug'] ?: $data['name']);
+        $data['slug'] = $this->slugFor($data, $product);
         $data['is_active'] = $request->boolean('is_active');
         $data['is_featured'] = $request->boolean('is_featured');
-        $data['sort_order'] = (int) ($data['sort_order'] ?? 0);
-        $data['badge'] = $data['badge'] ?: null;
-        $data['weight'] = $data['weight'] ?: null;
-        $data['stock'] = array_key_exists('stock', $data) && $data['stock'] !== null && $data['stock'] !== ''
-            ? (int) $data['stock']
-            : null;
+        $data['sort_order'] = (int) ($data['sort_order'] ?? $product?->sort_order ?? 0);
+
+        foreach (['description', 'badge', 'weight'] as $field) {
+            if (! array_key_exists($field, $data)) {
+                continue;
+            }
+
+            $value = is_string($data[$field]) ? trim($data[$field]) : $data[$field];
+            $data[$field] = filled($value) ? $value : null;
+        }
+
+        if (array_key_exists('stock', $data)) {
+            $data['stock'] = $data['stock'] !== null && $data['stock'] !== ''
+                ? (int) $data['stock']
+                : null;
+        }
 
         unset($data['image']);
 
         return $data;
+    }
+
+    /**
+     * @param  array<string, mixed>  $data
+     */
+    private function slugFor(array $data, ?Product $product): string
+    {
+        $requested = trim((string) ($data['slug'] ?? ''));
+
+        if (($requested === '' || Str::slug($requested) === '') && filled($product?->slug)) {
+            $requested = (string) $product->slug;
+        }
+
+        if ($requested === '' || Str::slug($requested) === '') {
+            $requested = (string) $data['name'];
+        }
+
+        return Slugs::unique(Product::class, $requested, $product?->id, 180);
     }
 
     private function storeImage(Request $request): ?string
