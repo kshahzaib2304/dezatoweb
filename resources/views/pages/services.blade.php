@@ -1,12 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <x-page-hero
-        eyebrow="Our Services"
-        title="Catering, gifting &amp; events"
-        text="{{ $intro }}"
-        image="images/home/promo-catering.jpg"
-    >
+    <x-page-hero page="services" :text="$intro">
         <a class="btn btn--primary" href="#inquiry">Get a quote</a>
     </x-page-hero>
 

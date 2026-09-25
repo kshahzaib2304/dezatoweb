@@ -1,7 +1,7 @@
 <footer class="site-footer site-footer--brand" id="contact">
     <div class="container footer-brand">
         <div class="footer-brand__intro">
-            <img src="{{ asset('images/brand/logo-mark.svg') }}" width="48" height="48" alt="">
+            <img src="{{ asset($brandLogoMark ?? 'images/brand/logo-mark.svg') }}" width="48" height="48" alt="">
             <div>
                 <strong>{{ $brandName ?? 'Dezato Cake House' }}</strong>
                 <p>{{ $brandTagline ?? 'Cakes, cupcakes, eclairs & more - baked fresh in Karachi.' }}</p>

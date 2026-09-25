@@ -144,7 +144,8 @@
                 <h2>Menu category shortcuts</h2>
                 <button class="btn btn--outline btn--sm" type="submit" form="add-category-tile">Add tile</button>
             </div>
-            <p class="admin-lead">Tiles under the homepage hero. Link example: <code>/menu?category=cakes</code>. Photo ≈ {{ $tileGuide['size'] }}.</p>
+            <p class="admin-lead">Tiles under the homepage hero. Link example: <code>/menu?category=cakes</code>.</p>
+            <p class="field-hint">Photo: {{ $tileGuide['size'] }} · {{ $tileGuide['ratio'] }} · {{ $tileGuide['formats'] }} · max {{ $tileGuide['max'] }}. {{ $tileGuide['tip'] }}</p>
             @foreach ($categories as $index => $tile)
                 <article class="admin-slide-card">
                     <div class="admin-panel__head">
@@ -185,7 +186,8 @@
                 <h2>Occasion tiles</h2>
                 <button class="btn btn--outline btn--sm" type="submit" form="add-occasion-tile">Add tile</button>
             </div>
-            <p class="admin-lead">“Birthdays”, “Gifting”, etc. Same photo size as category tiles.</p>
+            <p class="admin-lead">“Birthdays”, “Gifting”, etc.</p>
+            <p class="field-hint">Photo: {{ $tileGuide['size'] }} · {{ $tileGuide['ratio'] }} · {{ $tileGuide['formats'] }} · max {{ $tileGuide['max'] }}. {{ $tileGuide['tip'] }}</p>
             @foreach ($occasions as $index => $tile)
                 <article class="admin-slide-card">
                     <div class="admin-panel__head">

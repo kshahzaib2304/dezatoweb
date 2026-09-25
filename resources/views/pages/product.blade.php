@@ -102,13 +102,17 @@
                     </div>
                 </form>
 
-                <section class="product-notes" aria-label="Good to know">
-                    <h2>Good to know</h2>
+                <section class="product-notes" aria-label="{{ $storefrontCopy['product_notes_title'] ?? 'Good to know' }}">
+                    <h2>{{ $storefrontCopy['product_notes_title'] ?? 'Good to know' }}</h2>
                     @if ($scheduleNote !== '')
                         <p>{{ $scheduleNote }}</p>
                     @endif
-                    <p>Cakes are baked fresh and are best the day you receive them. Keep chilled and bring to room temperature before serving.</p>
-                    <p>Our kitchen handles wheat, milk, eggs, soy, and nuts. Tell us about allergies in the order notes, or <a href="{{ route('builder.show') }}">design a custom cake</a> if you need a message, colour, or different size.</p>
+                    <p>{{ $storefrontCopy['product_notes_fresh'] ?? '' }}</p>
+                    <p>
+                        {{ $storefrontCopy['product_notes_allergy'] ?? '' }}
+                        <a href="{{ route('builder.show') }}">{{ $storefrontCopy['product_notes_custom_cta'] ?? 'Design a custom cake' }}</a>
+                        {{ $storefrontCopy['product_notes_custom_text'] ?? '' }}
+                    </p>
                 </section>
             </div>
         </div>

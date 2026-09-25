@@ -1,13 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-    <x-page-hero
-        eyebrow="Your order"
-        title="Cart"
-        text="Review your treats, then we’ll confirm pickup or delivery details at checkout."
-        image="images/home/delivery-ship.jpg"
-        :compact="true"
-    />
+@php
+    $copy = $storefrontCopy ?? \App\Support\StorefrontCopy::all();
+@endphp
+
+    <x-page-hero page="cart" />
 
     <section class="section-block">
         <div class="container">
@@ -18,9 +16,9 @@
             <div class="cart-layout">
                 @if ($lines->isEmpty())
                     <div class="empty-state cart-empty">
-                        <h2>Your cart is empty</h2>
-                        <p>Browse the menu and add something sweet.</p>
-                        <a class="btn btn--primary" href="{{ route('menu') }}">Browse menu</a>
+                        <h2>{{ $copy['cart_empty_title'] }}</h2>
+                        <p>{{ $copy['cart_empty_text'] }}</p>
+                        <a class="btn btn--primary" href="{{ route('menu') }}">{{ $copy['cart_empty_cta'] }}</a>
                     </div>
                 @else
                     <div class="cart-lines">
@@ -98,7 +96,7 @@
                     </div>
 
                     <aside class="cart-summary">
-                        <h2>Order summary</h2>
+                        <h2>{{ $copy['cart_summary_title'] }}</h2>
                         @if ($fulfillmentSummary)
                             <p class="cart-summary__fulfillment">
                                 {{ $fulfillmentSummary }}
@@ -126,9 +124,9 @@
                             </div>
                         </dl>
                         <a class="btn btn--primary btn--block" href="{{ route('checkout.show') }}">
-                            Checkout
+                            {{ $copy['cart_checkout_cta'] }}
                         </a>
-                        <a class="btn btn--outline btn--block" href="{{ route('menu') }}">Keep shopping</a>
+                        <a class="btn btn--outline btn--block" href="{{ route('menu') }}">{{ $copy['cart_continue_cta'] }}</a>
                     </aside>
                 @endif
             </div>
@@ -145,8 +143,8 @@
         <section class="section-block section-block--tint">
             <div class="container">
                 <div class="section-head">
-                    <h2>You might also like</h2>
-                    <p>Add a little extra to your order.</p>
+                    <h2>{{ $copy['cart_upsell_title'] }}</h2>
+                    <p>{{ $copy['cart_upsell_text'] }}</p>
                 </div>
                 <div class="upsell-row">
                     @foreach ($upsells as $product)

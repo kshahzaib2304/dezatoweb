@@ -12,15 +12,18 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        User::query()->updateOrCreate(
+        $admin = User::query()->updateOrCreate(
             ['email' => 'admin@dezato.pk'],
             [
                 'name' => 'Dezato Admin',
                 'phone' => '+92 300 0000000',
-                'role' => User::ROLE_ADMIN,
                 'password' => 'DezatoAdmin123!',
             ]
         );
+
+        if ($admin->role !== User::ROLE_ADMIN) {
+            $admin->forceFill(['role' => User::ROLE_ADMIN])->save();
+        }
 
         $categories = collect(config('dezato.menu.categories', []))
             ->reject(fn (array $category): bool => ($category['id'] ?? '') === 'all')

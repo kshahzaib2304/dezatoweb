@@ -227,7 +227,21 @@ class StorefrontController extends Controller
 
     public function robots(): Response
     {
-        $body = "User-agent: *\nAllow: /\n\nSitemap: ".url('/sitemap.xml')."\n";
+        $body = implode("\n", [
+            'User-agent: *',
+            'Allow: /',
+            'Disallow: /admin',
+            'Disallow: /admin/',
+            'Disallow: /account',
+            'Disallow: /account/',
+            'Disallow: /checkout',
+            'Disallow: /cart',
+            'Disallow: /login',
+            'Disallow: /register',
+            '',
+            'Sitemap: '.url('/sitemap.xml'),
+            '',
+        ]);
 
         return response($body, 200)->header('Content-Type', 'text/plain');
     }

@@ -27,10 +27,10 @@
         </button>
 
         <a class="brand" href="{{ route('home') }}" aria-label="{{ $brandName ?? 'Dezato Cake House' }} home">
-            <img class="brand__mark" src="{{ asset('images/brand/logo-mark.svg') }}" width="40" height="40" alt="">
+            <img class="brand__mark" src="{{ asset($brandLogoMark ?? 'images/brand/logo-mark.svg') }}" width="40" height="40" alt="">
             <span class="brand__text">
                 <span class="brand__name">{{ $brandShortName ?? 'Dezato' }}</span>
-                <span class="brand__tag">cake house</span>
+                <span class="brand__tag">{{ $brandHeaderTag ?? 'cake house' }}</span>
             </span>
         </a>
 
@@ -50,9 +50,9 @@
                 </svg>
             </a>
             @if ($hasFulfillment)
-                <a class="btn btn--primary header-cta" href="{{ route('menu') }}">Order</a>
+                <a class="btn btn--primary header-cta" href="{{ route('menu') }}">{{ $storefrontCopy['header_order_cta'] ?? 'Order' }}</a>
             @else
-                <button class="btn btn--primary header-cta" type="button" data-fulfillment-open>Order</button>
+                <button class="btn btn--primary header-cta" type="button" data-fulfillment-open>{{ $storefrontCopy['header_order_cta'] ?? 'Order' }}</button>
             @endif
 
             <button

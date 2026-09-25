@@ -4,16 +4,17 @@
     <aside class="admin-media-guide">
         <strong>What you can change here</strong>
         <ol class="admin-steps">
-            <li><strong>Brand name</strong> shown in the header, footer, and emails.</li>
+            <li><strong>Brand name</strong>, tagline, logos, and favicon.</li>
             <li><strong>Top menu</strong> labels and order (Home, About, etc.).</li>
             <li>Phone, WhatsApp, emails, live website URL, courier fee.</li>
             <li>Your admin password (optional).</li>
         </ol>
+        <p class="admin-muted">Page heroes, homepage section titles, cart copy, and Karachi areas: <a href="{{ route('admin.chrome.edit') }}">Storefront chrome</a>.</p>
         <p class="admin-muted">SMTP / Google / Facebook keys: <a href="{{ route('admin.integrations.edit') }}">Email, logins &amp; links</a>.</p>
     </aside>
 
     <section class="admin-panel">
-        <form class="admin-form" method="post" action="{{ route('admin.settings.update') }}">
+        <form class="admin-form" method="post" action="{{ route('admin.settings.update') }}" enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
@@ -28,9 +29,29 @@
                     <input id="brand_short_name" class="field-input" type="text" name="brand_short_name" value="{{ old('brand_short_name', $brand['short_name']) }}" required>
                     <p class="field-hint">Shown next to the logo (e.g. Dezato).</p>
                 </div>
+                <div class="form-row">
+                    <label class="field-label" for="brand_header_tag">Header subtitle *</label>
+                    <input id="brand_header_tag" class="field-input" type="text" name="brand_header_tag" value="{{ old('brand_header_tag', $brand['header_tag']) }}" required>
+                    <p class="field-hint">Small line under the short name (e.g. cake house).</p>
+                </div>
                 <div class="form-row form-row--full">
                     <label class="field-label" for="brand_tagline">Tagline *</label>
                     <input id="brand_tagline" class="field-input" type="text" name="brand_tagline" value="{{ old('brand_tagline', $brand['tagline']) }}" required>
+                </div>
+            </div>
+
+            <h2 class="admin-section-title">Logos</h2>
+            <p class="field-hint">Leave blank to keep the current files. Square SVG/PNG/JPG/WebP under 1&nbsp;MB.</p>
+            <div class="form-grid">
+                <div class="form-row">
+                    <label class="field-label" for="logo_mark">Header logo mark</label>
+                    <img class="admin-thumb" src="{{ asset($brand['logo_mark']) }}" alt="" width="48" height="48">
+                    <input id="logo_mark" class="field-input" type="file" name="logo_mark" accept="image/*,.svg">
+                </div>
+                <div class="form-row">
+                    <label class="field-label" for="logo_icon">Favicon / social icon</label>
+                    <img class="admin-thumb" src="{{ asset($brand['logo_icon']) }}" alt="" width="48" height="48">
+                    <input id="logo_icon" class="field-input" type="file" name="logo_icon" accept="image/*">
                 </div>
             </div>
 

@@ -6,8 +6,8 @@
 
 @if ($lines->isEmpty())
     <div class="cart-drawer__empty">
-        <p>Your cart is empty.</p>
-        <a class="btn btn--primary" href="{{ route('menu') }}" data-cart-close>Browse the menu</a>
+        <p>{{ $storefrontCopy['cart_empty_title'] ?? 'Your cart is empty' }}</p>
+        <a class="btn btn--primary" href="{{ route('menu') }}" data-cart-close>{{ $storefrontCopy['cart_empty_cta'] ?? 'Browse menu' }}</a>
     </div>
 @else
     <p class="cart-drawer__status" data-cart-status role="status" hidden></p>

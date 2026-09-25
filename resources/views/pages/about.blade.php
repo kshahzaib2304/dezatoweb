@@ -1,25 +1,25 @@
 @extends('layouts.app')
 
 @section('content')
-    <x-page-hero
-        eyebrow="Dezato Cake House"
-        title="About Us"
-        text="Handcrafted cakes and desserts for Karachi - baked fresh since 2018."
-        image="images/home/promo-anniversary.jpg"
-    />
+@php
+    $copy = $storefrontCopy ?? \App\Support\StorefrontCopy::all();
+    $chrome = \App\Support\HomeChrome::all();
+@endphp
+
+    <x-page-hero page="about" />
 
     <section class="section-block">
         <div class="container story-intro" data-reveal>
             <img
                 class="story-intro__image"
-                src="{{ asset('images/products/chocolate-heaven-cake.jpg') }}"
-                alt="Dezato chocolate heaven cake"
+                src="{{ asset($chrome['about_intro_image']) }}"
+                alt="{{ $brandShortName ?? 'Dezato' }} cake"
                 width="320"
                 height="320"
                 loading="lazy"
             >
             <div>
-                <h2>Baked for Karachi celebrations</h2>
+                <h2>{{ $copy['about_story_title'] }}</h2>
                 <p>{{ $intro }}</p>
             </div>
         </div>
@@ -28,8 +28,8 @@
     <section class="section-block section-block--tint" aria-label="Timeline">
         <div class="container">
             <div class="section-head">
-                <h2>Our journey</h2>
-                <p>A few moments that shaped Dezato Cake House.</p>
+                <h2>{{ $copy['about_journey_title'] }}</h2>
+                <p>{{ $copy['about_journey_text'] }}</p>
             </div>
 
             <ol class="timeline">
@@ -48,11 +48,11 @@
 
     <section class="cta-band" data-reveal>
         <div class="container cta-band__inner">
-            <h2>Taste what’s baking</h2>
-            <p>Order for pickup, Karachi delivery, or plan something sweet for your next gathering.</p>
+            <h2>{{ $copy['about_cta_title'] }}</h2>
+            <p>{{ $copy['about_cta_text'] }}</p>
             <div class="cta-band__actions">
-                <a class="btn btn--primary" href="{{ route('menu') }}">Browse menu</a>
-                <a class="btn btn--outline" href="{{ route('customization') }}">Custom cake</a>
+                <a class="btn btn--primary" href="{{ route('menu') }}">{{ $copy['about_cta_primary'] }}</a>
+                <a class="btn btn--outline" href="{{ route('customization') }}">{{ $copy['about_cta_secondary'] }}</a>
             </div>
         </div>
     </section>

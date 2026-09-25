@@ -1,12 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <x-page-hero
-        eyebrow="Made for you"
-        title="Cake Customization"
-        text="Tell us the flavour, size, and message - we’ll bake a celebration cake for your Karachi occasion."
-        image="images/home/promo-anniversary.jpg"
-    >
+    <x-page-hero page="customization">
         <a class="btn btn--primary" href="{{ route('builder.show') }}">Open cake builder</a>
     </x-page-hero>
 

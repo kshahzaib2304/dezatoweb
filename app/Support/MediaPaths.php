@@ -39,7 +39,16 @@ final class MediaPaths
     {
         $path = trim((string) $path);
 
-        if ($path !== '' && Storage::disk('public')->exists($path)) {
+        if ($path === '') {
+            return;
+        }
+
+        if (str_starts_with($path, 'storage/')) {
+            $path = substr($path, strlen('storage/'));
+        }
+
+        // Only remove files owned by the public disk (uploaded media), never theme assets.
+        if (! str_starts_with($path, 'images/') && Storage::disk('public')->exists($path)) {
             Storage::disk('public')->delete($path);
         }
     }

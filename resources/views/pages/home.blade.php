@@ -1,10 +1,11 @@
-﻿@extends('layouts.app')
+@extends('layouts.app')
 
 @section('content')
 @php
     $categories = $homeCategories ?? [];
     $occasions = $homeOccasions ?? [];
     $favorites = $favorites ?? [];
+    $chrome = \App\Support\HomeChrome::all();
 @endphp
 
 <section
@@ -32,16 +33,16 @@
                 </div>
                 <div class="home-hero__veil"></div>
                 <div class="container home-hero__content">
-                    <p class="home-hero__brand">Dezato</p>
+                    <p class="home-hero__brand">{{ $brandShortName ?? 'Dezato' }}</p>
                     <h1>{{ $slide['headline'] }}</h1>
                     <p class="home-hero__lede">{{ $slide['lede'] }}</p>
                     <div class="home-hero__actions">
                         @if ($hasFulfillment ?? false)
-                            <a class="btn btn--primary" href="{{ route('menu') }}">Shop the menu</a>
+                            <a class="btn btn--primary" href="{{ route('menu') }}">{{ $chrome['hero_cta_primary'] }}</a>
                         @else
-                            <button class="btn btn--primary" type="button" data-fulfillment-open>Start an order</button>
+                            <button class="btn btn--primary" type="button" data-fulfillment-open>{{ $chrome['hero_cta_start'] }}</button>
                         @endif
-                        <a class="btn btn--ghost-light" href="{{ route('locations') }}">Visit us</a>
+                        <a class="btn btn--ghost-light" href="{{ route('locations') }}">{{ $chrome['hero_cta_secondary'] }}</a>
                     </div>
                 </div>
             </div>
@@ -50,7 +51,7 @@
 
     @if (count($heroSlides) > 1)
         <div class="home-hero__controls" data-hero-controls>
-            <button type="button" class="home-hero__nav" data-hero-prev aria-label="Previous slide">‹</button>
+            <button type="button" class="home-hero__nav" data-hero-prev aria-label="Previous slide">�</button>
             <div class="home-hero__dots" role="tablist" aria-label="Choose slide">
                 @foreach ($heroSlides as $index => $slide)
                     <button
@@ -62,7 +63,7 @@
                     ></button>
                 @endforeach
             </div>
-            <button type="button" class="home-hero__nav" data-hero-next aria-label="Next slide">›</button>
+            <button type="button" class="home-hero__nav" data-hero-next aria-label="Next slide">�</button>
         </div>
     @endif
 </section>
@@ -70,8 +71,8 @@
 <section class="home-section" data-reveal>
     <div class="container">
         <div class="home-section__head">
-            <h2>Favourites</h2>
-            <a class="home-link" href="{{ route('menu') }}">Shop all</a>
+            <h2>{{ $chrome['favorites_title'] }}</h2>
+            <a class="home-link" href="{{ route('menu') }}">{{ $chrome['favorites_link'] }}</a>
         </div>
         <div class="product-grid product-grid--home">
             @foreach ($favorites as $product)
@@ -84,8 +85,8 @@
 <section class="home-section home-section--soft" data-reveal>
     <div class="container">
         <div class="home-section__head home-section__head--stack">
-            <h2>Shop by category</h2>
-            <p>Cakes, cupcakes, cheesecakes, eclairs, brownies, sundaes, tarts &amp; mini pies.</p>
+            <h2>{{ $chrome['categories_title'] }}</h2>
+            <p>{{ $chrome['categories_text'] }}</p>
         </div>
         <div class="home-cats" data-rail>
             <div class="home-cats__viewport" data-rail-viewport>
@@ -107,25 +108,30 @@
 <section class="home-section" data-reveal>
     <div class="container">
         <div class="home-section__head home-section__head--stack">
-            <h2>How you’ll get it</h2>
-            <p>Pickup in DHA or Gizri, or delivery across Karachi.</p>
+            <h2>{{ $chrome['ways_title'] }}</h2>
+            <p>{{ $chrome['ways_text'] }}</p>
         </div>
         <div class="home-ways">
-            <button class="home-way" type="button" data-fulfillment-open data-fulfillment-method="pickup">
-                <img src="{{ asset('images/home/delivery-pickup.jpg') }}" alt="" width="400" height="400" loading="lazy">
-                <h3>Store pickup</h3>
-                <p>Order ahead and collect fresh from our counters.</p>
-            </button>
-            <button class="home-way" type="button" data-fulfillment-open data-fulfillment-method="delivery">
-                <img src="{{ asset('images/home/delivery-catering.jpg') }}" alt="" width="400" height="400" loading="lazy">
-                <h3>Karachi delivery</h3>
-                <p>Same-day delivery where we serve your neighbourhood.</p>
-            </button>
-            <a class="home-way" href="{{ route('builder.show') }}">
-                <img src="{{ asset('images/home/delivery-ship.jpg') }}" alt="" width="400" height="400" loading="lazy">
-                <h3>Custom cakes</h3>
-                <p>Build a celebration cake with flavours, size, and finish.</p>
-            </a>
+            @foreach ($chrome['ways'] as $way)
+                @if (($way['action'] ?? '') === 'builder')
+                    <a class="home-way" href="{{ route('builder.show') }}">
+                        <img src="{{ asset($way['image']) }}" alt="" width="400" height="400" loading="lazy">
+                        <h3>{{ $way['title'] }}</h3>
+                        <p>{{ $way['text'] }}</p>
+                    </a>
+                @else
+                    <button
+                        class="home-way"
+                        type="button"
+                        data-fulfillment-open
+                        @if (! empty($way['action'])) data-fulfillment-method="{{ $way['action'] }}" @endif
+                    >
+                        <img src="{{ asset($way['image']) }}" alt="" width="400" height="400" loading="lazy">
+                        <h3>{{ $way['title'] }}</h3>
+                        <p>{{ $way['text'] }}</p>
+                    </button>
+                @endif
+            @endforeach
         </div>
     </div>
 </section>
@@ -133,8 +139,8 @@
 <section class="home-section home-section--plum" data-reveal>
     <div class="container">
         <div class="home-section__head home-section__head--light">
-            <h2>For every occasion</h2>
-            <p>Birthdays, office treats, custom cakes, and gifts.</p>
+            <h2>{{ $chrome['occasions_title'] }}</h2>
+            <p>{{ $chrome['occasions_text'] }}</p>
         </div>
         <ul class="home-occasions">
             @foreach ($occasions as $item)
@@ -152,13 +158,13 @@
 <section class="home-story" data-reveal>
     <div class="container home-story__grid">
         <div class="home-story__copy">
-            <p class="home-kicker">About Dezato</p>
-            <h2>Karachi-baked. Celebration-ready.</h2>
-            <p>Since 2018 we’ve baked cakes and desserts for Karachi - from Lotus and Ferrero classics to custom birthday finishes.</p>
-            <a class="btn btn--outline" href="{{ route('about') }}">About us</a>
+            <p class="home-kicker">{{ $chrome['story_kicker'] }}</p>
+            <h2>{{ $chrome['story_title'] }}</h2>
+            <p>{{ $chrome['story_text'] }}</p>
+            <a class="btn btn--outline" href="{{ route('about') }}">{{ $chrome['story_cta'] }}</a>
         </div>
         <div class="home-story__media">
-            <img src="{{ asset('images/home/promo-workshop.jpg') }}" alt="Dezato cakes prepared for an order" width="800" height="1000" loading="lazy">
+            <img src="{{ asset($chrome['story_image']) }}" alt="{{ $brandShortName ?? 'Dezato' }} cakes prepared for an order" width="800" height="1000" loading="lazy">
         </div>
     </div>
 </section>
@@ -166,17 +172,17 @@
 <section class="home-cater" data-reveal>
     <div class="container home-cater__inner">
         <div>
-            <h2>Services &amp; catering</h2>
-            <p>Office boxes, dessert tables, and corporate gifting - built around your guest list.</p>
+            <h2>{{ $chrome['cater_title'] }}</h2>
+            <p>{{ $chrome['cater_text'] }}</p>
         </div>
-        <a class="btn btn--primary" href="{{ route('services') }}">Our services</a>
+        <a class="btn btn--primary" href="{{ route('services') }}">{{ $chrome['cater_cta'] }}</a>
     </div>
 </section>
 
 <section class="home-news" id="newsletter" data-reveal>
     <div class="container home-news__inner">
-        <h2>Stay in the know</h2>
-        <p>Seasonal flavours and bakery news - no spam.</p>
+        <h2>{{ $chrome['news_title'] }}</h2>
+        <p>{{ $chrome['news_text'] }}</p>
         @if (session('status'))
             <p class="flash" role="status">{{ session('status') }}</p>
         @endif
@@ -184,8 +190,8 @@
             @csrf
             <input type="hidden" name="type" value="newsletter">
             <label class="sr-only" for="news-email">Email</label>
-            <input id="news-email" type="email" name="email" value="{{ old('email') }}" placeholder="Email address" autocomplete="email" required>
-            <button class="btn btn--primary" type="submit">Subscribe</button>
+            <input id="news-email" type="email" name="email" value="{{ old('email') }}" placeholder="{{ $chrome['news_placeholder'] }}" autocomplete="email" required>
+            <button class="btn btn--primary" type="submit">{{ $chrome['news_cta'] }}</button>
         </form>
     </div>
 </section>

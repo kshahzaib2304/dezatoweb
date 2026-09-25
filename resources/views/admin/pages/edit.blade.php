@@ -72,7 +72,7 @@
                 <h2>Services packages</h2>
                 <button class="btn btn--outline btn--sm" type="submit" form="add-package">Add package</button>
             </div>
-            <p class="admin-lead">Photo ≈ {{ $packageGuide['size'] }} ({{ $packageGuide['ratio'] }}), max {{ $packageGuide['max'] }}. {{ $packageGuide['tip'] }}</p>
+            <p class="admin-lead">Photo ≈ {{ $packageGuide['size'] }} ({{ $packageGuide['ratio'] }}) · {{ $packageGuide['formats'] }} · max {{ $packageGuide['max'] }}. {{ $packageGuide['tip'] }}</p>
             @foreach ($packages as $index => $package)
                 <article class="admin-slide-card">
                     <div class="admin-panel__head">
@@ -148,7 +148,7 @@
             </div>
             <p class="admin-lead">
                 Pickup / Courier / Catering style cards on the Order page.
-                Photo ≈ {{ $orderCardGuide['size'] }} ({{ $orderCardGuide['ratio'] }}), max {{ $orderCardGuide['max'] }}.
+                Photo ≈ {{ $orderCardGuide['size'] }} ({{ $orderCardGuide['ratio'] }}) · {{ $orderCardGuide['formats'] }} · max {{ $orderCardGuide['max'] }}.
                 <a href="{{ route('order.start') }}" target="_blank" rel="noopener">View Order page</a>
             </p>
             @foreach ($orderOptions as $index => $card)

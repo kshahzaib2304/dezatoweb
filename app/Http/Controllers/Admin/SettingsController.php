@@ -48,6 +48,9 @@ class SettingsController extends Controller
             'brand_name' => ['required', 'string', 'max:120'],
             'brand_short_name' => ['required', 'string', 'max:40'],
             'brand_tagline' => ['required', 'string', 'max:160'],
+            'brand_header_tag' => ['required', 'string', 'max:40'],
+            'logo_mark' => ['nullable', 'file', 'max:1024', 'mimes:jpeg,jpg,png,webp,gif,svg'],
+            'logo_icon' => ['nullable', 'file', 'max:1024', 'mimes:jpeg,jpg,png,webp,gif'],
             'notify_email' => ['required', 'email', 'max:180'],
             'public_email' => ['required', 'email', 'max:180'],
             'public_phone' => ['required', 'string', 'max:40'],
@@ -72,7 +75,8 @@ class SettingsController extends Controller
             'name' => $data['brand_name'],
             'short_name' => $data['brand_short_name'],
             'tagline' => $data['brand_tagline'],
-        ]);
+            'header_tag' => $data['brand_header_tag'],
+        ], $request->file('logo_mark'), $request->file('logo_icon'));
 
         NavigationMenu::save($data['nav']);
 

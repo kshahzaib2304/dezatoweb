@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\Admin\ChromeController as AdminChromeController;
 use App\Http\Controllers\Admin\CakeBuilderController as AdminCakeBuilderController;
 use App\Http\Controllers\Admin\CategoryController as AdminCategoryController;
 use App\Http\Controllers\Admin\ContentController as AdminContentController;
@@ -50,23 +51,27 @@ Route::get('/privacy-policy', fn () => app(PageController::class)->show('privacy
 Route::get('/terms', fn () => app(PageController::class)->show('terms'))->name('pages.terms');
 Route::get('/faq', fn () => app(PageController::class)->show('faq'))->name('pages.faq');
 
-Route::post('/inquiries', [InquiryController::class, 'store'])->name('inquiries.store');
+Route::post('/inquiries', [InquiryController::class, 'store'])
+    ->middleware('throttle:8,1')
+    ->name('inquiries.store');
 
 Route::middleware('guest')->group(function (): void {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:6,1');
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
-    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:6,1');
     Route::get('/forgot-password', [AuthController::class, 'showForgot'])->name('password.request');
-    Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->name('password.email');
+    Route::post('/forgot-password', [AuthController::class, 'sendResetLink'])->middleware('throttle:3,1')->name('password.email');
     Route::get('/reset-password/{token}', [AuthController::class, 'showReset'])->name('password.reset');
-    Route::post('/reset-password', [AuthController::class, 'reset'])->name('password.update');
+    Route::post('/reset-password', [AuthController::class, 'reset'])->middleware('throttle:6,1')->name('password.update');
 
     Route::get('/auth/{provider}/redirect', [SocialAuthController::class, 'redirect'])
         ->whereIn('provider', ['google', 'facebook'])
+        ->middleware('throttle:20,1')
         ->name('auth.social.redirect');
     Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'callback'])
         ->whereIn('provider', ['google', 'facebook'])
+        ->middleware('throttle:20,1')
         ->name('auth.social.callback');
 });
 
@@ -142,6 +147,11 @@ Route::middleware(['auth', EnsureUserIsAdmin::class])->prefix('admin')->name('ad
     Route::delete('/pages/customization/{item}', [AdminPagesController::class, 'destroyCustomization'])->name('pages.customization.destroy');
     Route::post('/pages/order-cards', [AdminPagesController::class, 'storeOrderCard'])->name('pages.order-cards.store');
     Route::delete('/pages/order-cards/{item}', [AdminPagesController::class, 'destroyOrderCard'])->name('pages.order-cards.destroy');
+
+    Route::get('/chrome', [AdminChromeController::class, 'edit'])->name('chrome.edit');
+    Route::put('/chrome', [AdminChromeController::class, 'update'])->name('chrome.update');
+    Route::post('/chrome/areas', [AdminChromeController::class, 'storeArea'])->name('chrome.areas.store');
+    Route::delete('/chrome/areas/{area}', [AdminChromeController::class, 'destroyArea'])->name('chrome.areas.destroy');
 
     Route::get('/cake-builder', [AdminCakeBuilderController::class, 'edit'])->name('cake-builder.edit');
     Route::put('/cake-builder', [AdminCakeBuilderController::class, 'update'])->name('cake-builder.update');

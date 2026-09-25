@@ -1,11 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
+@php
+    $copy = $storefrontCopy ?? \App\Support\StorefrontCopy::all();
+@endphp
     <section class="checkout-page">
         <div class="container checkout-layout">
             <header class="checkout-page__head">
-                <h1>Checkout</h1>
-                <p>Confirm your details and place your order. We bake and deliver across Karachi.</p>
+                <h1>{{ $copy['checkout_title'] }}</h1>
+                <p>{{ $copy['checkout_lede'] }}</p>
             </header>
 
             @if ($errors->any())
@@ -22,7 +25,7 @@
                 @csrf
 
                 <div class="checkout-form__section">
-                    <h2>Contact</h2>
+                    <h2>{{ $copy['checkout_contact_title'] }}</h2>
                     <div class="form-grid">
                         <div class="form-row form-row--full">
                             <label class="field-label" for="customer_name">Full name</label>
@@ -31,7 +34,7 @@
                         <div class="form-row">
                             <label class="field-label" for="phone">Phone (WhatsApp)</label>
                             <input id="phone" class="field-input" type="tel" name="phone" value="{{ old('phone', auth()->user()->phone ?? '') }}" autocomplete="tel" inputmode="tel" required>
-                            <p class="field-hint">We’ll confirm your order on this number.</p>
+                            <p class="field-hint">{{ $copy['checkout_phone_hint'] }}</p>
                         </div>
                         <div class="form-row">
                             <label class="field-label" for="email">Email</label>

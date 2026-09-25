@@ -1,13 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <x-page-hero
-        eyebrow="Dezato Cake House"
-        :title="$pageTitle"
-        text="Information for our Karachi customers."
-        image="images/home/promo-workshop.jpg"
-        :compact="true"
-    />
+    <x-page-hero page="legal" :title="$pageTitle" />
 
     <section class="section-block">
         <div class="container legal-page" data-reveal>

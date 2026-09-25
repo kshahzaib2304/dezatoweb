@@ -38,7 +38,7 @@
 
         <div class="fulfillment-sheet" data-fulfillment>
             <div class="fulfillment-sheet__brand">
-                <img src="{{ asset('images/brand/logo-mark.svg') }}" width="72" height="72" alt="{{ $brandShortName ?? 'Dezato' }}">
+                <img src="{{ asset($brandLogoMark ?? 'images/brand/logo-mark.svg') }}" width="72" height="72" alt="{{ $brandShortName ?? 'Dezato' }}">
             </div>
 
             @if (session('status') && $forceOpen)

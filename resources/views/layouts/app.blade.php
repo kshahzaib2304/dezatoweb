@@ -6,11 +6,14 @@
     <meta name="theme-color" content="#FAF6F2">
     @php
         $brandName = $brandName ?? \App\Support\SiteBrand::name();
+        $brandLogoMark = $brandLogoMark ?? \App\Support\SiteBrand::logoMark();
+        $brandLogoIcon = $brandLogoIcon ?? \App\Support\SiteBrand::logoIcon();
         $pageTitle = $title ?? $brandName;
         $pageDescription = $metaDescription ?? $brandName.' - cakes, cupcakes, eclairs, brownies, cheesecakes, tarts, mini pies and sundaes in Karachi. Order in PKR.';
         $canonical = $canonical ?? url()->current();
-        $ogImage = asset($ogImage ?? 'images/brand/logo-icon.jpg');
+        $ogImage = asset($ogImage ?? $brandLogoIcon);
         $isCheckout = ($currentRoute ?? null) === 'checkout.show';
+        $faviconType = str_ends_with(strtolower($brandLogoMark), '.svg') ? 'image/svg+xml' : 'image/png';
     @endphp
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $pageTitle }}</title>
@@ -30,8 +33,8 @@
     <meta name="twitter:description" content="{{ $pageDescription }}">
     <meta name="twitter:image" content="{{ $ogImage }}">
 
-    <link rel="icon" type="image/svg+xml" href="{{ asset('images/brand/logo-mark.svg') }}">
-    <link rel="apple-touch-icon" href="{{ asset('images/brand/logo-icon.jpg') }}">
+    <link rel="icon" type="{{ $faviconType }}" href="{{ asset($brandLogoMark) }}">
+    <link rel="apple-touch-icon" href="{{ asset($brandLogoIcon) }}">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

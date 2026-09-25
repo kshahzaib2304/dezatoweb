@@ -6,7 +6,7 @@
         <ol class="admin-steps">
             <li>Edit each bakery address, hours, phone, and delivery fee.</li>
             <li>Paste a Google Maps link so customers can open directions.</li>
-            <li>Use <strong>Add location</strong> for a new shop. Photo: <strong>{{ $mediaGuide['size'] }}</strong>.</li>
+            <li>Use <strong>Add location</strong> for a new shop. Photo: <strong>{{ $mediaGuide['size'] }}</strong> · {{ $mediaGuide['formats'] }} · max {{ $mediaGuide['max'] }}.</li>
         </ol>
         <p class="admin-muted">{{ $mediaGuide['tip'] }}</p>
     </aside>
@@ -94,6 +94,7 @@
                             <img src="{{ $location['image_url'] }}" alt="" width="120" height="75" loading="lazy" decoding="async">
                             <input class="field-input" type="file" name="locations[{{ $index }}][image]" accept="image/jpeg,image/png,image/webp">
                         </div>
+                        <p class="field-hint">{{ $mediaGuide['size'] }} · {{ $mediaGuide['formats'] }} · max {{ $mediaGuide['max'] }}</p>
                     </div>
                 </div>
             </section>

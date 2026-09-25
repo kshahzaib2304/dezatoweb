@@ -18,12 +18,7 @@
 @endpush
 
 @section('content')
-    <x-page-hero
-        eyebrow="Menu"
-        title="What we’re baking"
-        text="Cakes, cupcakes, cheesecakes, eclairs & more - priced in PKR."
-        image="images/home/promo-workshop.jpg"
-    />
+    <x-page-hero page="menu" />
 
     <div class="menu-toolbar" data-sticky-toolbar>
         <div class="container">

@@ -24,7 +24,8 @@
                 <li><strong>Store locations</strong> - Addresses, hours, Maps links, delivery fees. Use <em>Add location</em> for a new shop.</li>
                 <li><strong>Homepage &amp; text</strong> - Announcement, hero slides, category shortcuts, and occasion tiles. Use <em>Add tile</em> for new shortcuts.</li>
                 <li><strong>Website pages</strong> - About intro, timeline, Services packages, Cake Customization cards, Order choice cards (Pickup / Courier / Catering), Privacy / Terms / FAQ. Use the <em>Add</em> buttons for new rows.</li>
-                <li><strong>Contact &amp; store</strong> - Brand name (“Dezato Cake House”), top menu labels/order, phone, WhatsApp, emails, courier fee, and admin password.</li>
+                <li><strong>Storefront chrome</strong> - Inner page heroes, homepage section titles / “How you’ll get it” tiles, product notes, cart &amp; checkout copy, Karachi delivery areas.</li>
+                <li><strong>Contact &amp; store</strong> - Brand name, logos, favicon, top menu, phone, WhatsApp, emails, courier fee, and admin password.</li>
                 <li><strong>Email, logins &amp; links</strong> - SMTP, Google/Facebook login, footer links, online payment API keys.</li>
                 <li><strong>Custom cake prices</strong> - Sizes, flavours, bakery rules (fondant / heart / letter cakes), and décor add-ons (flowers, toppers, macarons). Use Add for new rows; Restore bakery defaults if needed.</li>
                 <li><strong>Promo codes</strong> - Discount codes customers enter at checkout.</li>
@@ -35,8 +36,12 @@
         <section class="admin-panel">
             <h2>Where to change website wording</h2>
             <dl class="admin-detail">
-                <div><dt>Bakery name in header / footer</dt><dd>Contact &amp; store → Brand name</dd></div>
+                <div><dt>Bakery name, logos, favicon</dt><dd>Contact &amp; store → Brand name / Logos</dd></div>
                 <div><dt>Top links (Home / About / Services…)</dt><dd>Contact &amp; store → Top website menu</dd></div>
+                <div><dt>Menu / About / Cart page banners</dt><dd>Storefront chrome → Page heroes</dd></div>
+                <div><dt>Homepage section titles &amp; pickup tiles</dt><dd>Storefront chrome → Homepage sections</dd></div>
+                <div><dt>Product “Good to know” notes</dt><dd>Storefront chrome → Product notes, cart &amp; checkout</dd></div>
+                <div><dt>Karachi delivery neighbourhoods</dt><dd>Storefront chrome → Karachi delivery areas</dd></div>
                 <div><dt>Cake Customization blurbs</dt><dd>Website pages → Cake Customization cards</dd></div>
                 <div><dt>Fondant / heart / flower prices</dt><dd>Custom cake prices → Bakery rules &amp; Add-ons</dd></div>
                 <div><dt>Order page Pickup / Courier / Catering</dt><dd>Website pages → Order page choice cards</dd></div>
@@ -53,6 +58,12 @@
                 <li>Customers will see “Continue with Google / Facebook” on Sign in and Create account.</li>
             </ol>
             <p class="admin-muted">Instagram is not used for login (Meta does not offer a reliable free website login with email). Put your Instagram profile under Footer links so customers can follow you.</p>
+        </section>
+
+        <section class="admin-panel">
+            <h2>Theme-only pieces</h2>
+            <p class="admin-muted">Layout, colours, and typography live in the website theme CSS. Almost all customer-facing copy and images are editable in Admin (Homepage &amp; text, Website pages, Storefront chrome, Contact &amp; store).</p>
+            <p class="admin-muted">Picture sizes for every upload type are listed below and also on each edit screen.</p>
         </section>
 
         <section class="admin-panel">

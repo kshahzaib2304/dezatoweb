@@ -71,7 +71,6 @@ class AuthController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'phone' => $data['phone'] ?? null,
-            'role' => User::ROLE_CUSTOMER,
             'password' => $data['password'],
         ]);
 

@@ -13,6 +13,7 @@ use App\Support\ShippingSettings;
 use App\Support\SiteBrand;
 use App\Support\SocialAuth;
 use App\Support\SocialLinks;
+use App\Support\StorefrontCopy;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
@@ -48,6 +49,7 @@ class AppServiceProvider extends ServiceProvider
                 || str_starts_with($name, 'admin.')
                 || str_starts_with($name, 'mail.')
                 || str_starts_with($name, 'pagination.')
+                || str_starts_with($name, 'errors.')
             ) {
                 return;
             }
@@ -56,11 +58,18 @@ class AppServiceProvider extends ServiceProvider
                 $cart = app(Cart::class);
                 $fulfillment = app(Fulfillment::class);
 
+                $brand = SiteBrand::all();
+                $copy = StorefrontCopy::all();
+
                 return [
                     'navLinks' => NavigationMenu::links(),
-                    'brandName' => SiteBrand::name(),
-                    'brandShortName' => SiteBrand::shortName(),
-                    'brandTagline' => SiteBrand::tagline(),
+                    'brandName' => $brand['name'],
+                    'brandShortName' => $brand['short_name'],
+                    'brandTagline' => $brand['tagline'],
+                    'brandHeaderTag' => $brand['header_tag'],
+                    'brandLogoMark' => $brand['logo_mark'],
+                    'brandLogoIcon' => $brand['logo_icon'],
+                    'storefrontCopy' => $copy,
                     'menuCategories' => Catalog::categories()->all(),
                     'currentRoute' => Route::currentRouteName(),
                     'cartCount' => $cart->count(),

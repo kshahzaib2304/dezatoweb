@@ -42,6 +42,7 @@ return [
             'items' => [
                 ['id' => 'content', 'label' => 'Homepage & text', 'route' => 'admin.content.edit'],
                 ['id' => 'pages', 'label' => 'Website pages', 'route' => 'admin.pages.edit'],
+                ['id' => 'chrome', 'label' => 'Storefront chrome', 'route' => 'admin.chrome.edit'],
                 ['id' => 'settings', 'label' => 'Contact & store', 'route' => 'admin.settings.edit'],
                 ['id' => 'integrations', 'label' => 'Email, logins & links', 'route' => 'admin.integrations.edit'],
                 ['id' => 'help', 'label' => 'Help & guide', 'route' => 'admin.help'],
@@ -59,12 +60,20 @@ return [
             'tip' => 'Use a bright photo of the cake on a plain background. Crop tightly so the cake fills most of the frame.',
         ],
         'hero' => [
-            'label' => 'Homepage hero slide photo',
+            'label' => 'Homepage hero / page banner photo',
             'size' => '1600 × 1000 px',
             'ratio' => 'Landscape (16:10)',
             'formats' => 'JPG or WebP',
             'max' => '3 MB',
-            'tip' => 'Wide photo for each slider slide. Keep important parts of the cake away from the bottom (text sits there).',
+            'tip' => 'Wide photo. Keep the cake away from the bottom edge where text sits.',
+        ],
+        'logo' => [
+            'label' => 'Brand logo',
+            'size' => '512 × 512 px (mark) · 256 × 256 px (icon)',
+            'ratio' => 'Square',
+            'formats' => 'SVG, PNG, JPG, or WebP',
+            'max' => '1 MB',
+            'tip' => 'Logo mark appears in the header. Icon is used for favicon / social sharing.',
         ],
         'tile' => [
             'label' => 'Homepage category / occasion tile',
