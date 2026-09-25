@@ -32,7 +32,6 @@ class ReportController extends Controller
             'title' => 'Reports | Dezato Admin',
             'heading' => 'Simple reports',
             'active' => 'reports',
-            'nav' => config('dezato_admin.nav'),
             'stats' => [
                 ['label' => 'Orders today', 'value' => (string) $todayOrders, 'hint' => pkr($todayRevenue).' revenue'],
                 ['label' => 'Last 7 days', 'value' => (string) $weekOrders, 'hint' => pkr($weekRevenue).' revenue'],

@@ -30,7 +30,6 @@ class ChromeController extends Controller
             'title' => 'Storefront chrome | Dezato Admin',
             'heading' => 'Storefront chrome',
             'active' => 'chrome',
-            'nav' => config('dezato_admin.nav'),
             'heroes' => PageHeroes::forAdmin(),
             'heroGuide' => config('dezato_admin.media.hero'),
             'home' => $home,

@@ -16,7 +16,6 @@ class PaymentSettingsController extends Controller
             'title' => 'Payment options | Dezato Admin',
             'heading' => 'Payment options',
             'active' => 'payments',
-            'nav' => config('dezato_admin.nav'),
             'catalog' => PaymentMethods::catalog(),
             'enabled' => PaymentMethods::enabledIds(),
             'instructions' => PaymentMethods::instructions(),

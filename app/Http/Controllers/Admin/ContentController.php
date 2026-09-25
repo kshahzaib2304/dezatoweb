@@ -34,7 +34,6 @@ class ContentController extends Controller
             'title' => 'Homepage & text | Dezato Admin',
             'heading' => 'Homepage & website text',
             'active' => 'content',
-            'nav' => config('dezato_admin.nav'),
             'announcement' => SiteSetting::getValue(
                 'announcement',
                 (string) config('dezato.home.announcement', '')

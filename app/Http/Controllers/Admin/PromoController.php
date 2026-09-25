@@ -17,7 +17,6 @@ class PromoController extends Controller
             'title' => 'Promo codes | Dezato Admin',
             'heading' => 'Promo codes',
             'active' => 'promos',
-            'nav' => config('dezato_admin.nav'),
             'promos' => Promo::query()->latest()->paginate(20),
         ]);
     }

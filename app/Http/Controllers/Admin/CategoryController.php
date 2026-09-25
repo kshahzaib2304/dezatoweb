@@ -19,7 +19,6 @@ class CategoryController extends Controller
             'title' => 'Categories | Dezato Admin',
             'heading' => 'Categories',
             'active' => 'categories',
-            'nav' => config('dezato_admin.nav'),
             'categories' => Category::query()->withCount('products')->orderBy('sort_order')->orderBy('label')->get(),
         ]);
     }
@@ -99,7 +98,6 @@ class CategoryController extends Controller
             'title' => ($editing ? 'Edit category' : 'Add category').' | Dezato Admin',
             'heading' => $editing ? 'Edit category' : 'Add category',
             'active' => 'categories',
-            'nav' => config('dezato_admin.nav'),
             'category' => $category,
         ]);
     }

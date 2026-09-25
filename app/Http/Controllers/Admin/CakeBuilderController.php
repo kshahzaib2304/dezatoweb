@@ -18,7 +18,6 @@ class CakeBuilderController extends Controller
             'title' => 'Custom cake prices | Dezato Admin',
             'heading' => 'Custom cake prices',
             'active' => 'cake-builder',
-            'nav' => config('dezato_admin.nav'),
             'builder' => CakeBuilder::config(),
             'referenceGuide' => config('dezato_admin.media.reference'),
         ]);

@@ -24,7 +24,6 @@ class IntegrationsController extends Controller
             'title' => 'Email, logins & links | Dezato Admin',
             'heading' => 'Email, logins & links',
             'active' => 'integrations',
-            'nav' => config('dezato_admin.nav'),
             'mail' => $mail,
             'mailPasswordHint' => SecureSettings::maskedHint('mail_smtp_password'),
             'socialProviders' => SocialAuth::providers(),

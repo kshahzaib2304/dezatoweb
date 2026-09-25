@@ -25,7 +25,6 @@ class LocationController extends Controller
             'title' => 'Store locations | Dezato Admin',
             'heading' => 'Store locations',
             'active' => 'locations',
-            'nav' => config('dezato_admin.nav'),
             'locations' => $locations,
             'mediaGuide' => config('dezato_admin.media.location'),
         ]);

@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\SiteSetting;
+use App\Support\AdminNav;
 use App\Support\BakeryProfile;
 use App\Support\Cart;
 use App\Support\Catalog;
@@ -41,6 +42,10 @@ class AppServiceProvider extends ServiceProvider
         } catch (Throwable) {
             // Database may be unavailable during early install / migrate.
         }
+
+        View::composer(['layouts.admin', 'admin.*'], function ($view): void {
+            $view->with('adminNav', AdminNav::groups());
+        });
 
         View::composer('*', function ($view): void {
             $name = $view->name();

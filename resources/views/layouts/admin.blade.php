@@ -44,7 +44,7 @@
             </div>
 
             <nav>
-                @foreach ($nav as $group)
+                @foreach ($adminNav as $group)
                     <div class="admin-nav-group">
                         @if (! empty($group['label']))
                             <p class="admin-nav-label">{{ $group['label'] }}</p>

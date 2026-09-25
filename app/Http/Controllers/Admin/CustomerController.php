@@ -20,7 +20,6 @@ class CustomerController extends Controller
             'title' => 'Customers | Dezato Admin',
             'heading' => 'Customers',
             'active' => 'customers',
-            'nav' => config('dezato_admin.nav'),
             'customers' => $customers,
         ]);
     }

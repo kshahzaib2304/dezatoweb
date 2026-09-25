@@ -29,7 +29,6 @@ class SettingsController extends Controller
             'title' => 'Contact & store | Dezato Admin',
             'heading' => 'Contact, brand & store',
             'active' => 'settings',
-            'nav' => config('dezato_admin.nav'),
             'adminUser' => [
                 'name' => $admin->name,
                 'email' => $admin->email,

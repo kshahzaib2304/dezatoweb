@@ -15,7 +15,6 @@ class InquiryController extends Controller
             'title' => 'Messages | Dezato Admin',
             'heading' => 'Messages from website',
             'active' => 'inquiries',
-            'nav' => config('dezato_admin.nav'),
             'inquiries' => Inquiry::query()->latest()->paginate(20),
             'unreadCount' => Inquiry::query()->unread()->count(),
         ]);
@@ -34,7 +33,6 @@ class InquiryController extends Controller
             'title' => 'Message | Dezato Admin',
             'heading' => $inquiry->typeLabel(),
             'active' => 'inquiries',
-            'nav' => config('dezato_admin.nav'),
             'inquiry' => $inquiry,
             'whatsappUrl' => $customerDigits !== ''
                 ? 'https://wa.me/'.$customerDigits.'?text='.rawurlencode($prefill)

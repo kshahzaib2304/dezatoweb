@@ -51,7 +51,7 @@
                 <button class="btn btn--outline btn--sm" type="submit" form="add-size">Add size</button>
             </div>
             <p class="admin-lead">Starting prices before flavours and add-ons. Fondant work usually from 4 lb+.</p>
-            @foreach ($builder['sizes'] as $i => $row)
+            @foreach (($builder['sizes'] ?? []) as $i => $row)
                 <article class="admin-slide-card">
                     <div class="admin-panel__head">
                         <strong>{{ $row['label'] }}</strong>
@@ -81,7 +81,7 @@
         <section class="admin-panel admin-panel--spaced">
             <h2>Shapes</h2>
             <p class="admin-lead">Heart, number, and letter cakes have bakery rules above - keep those shape names clear.</p>
-            @foreach ($builder['shapes'] as $i => $row)
+            @foreach (($builder['shapes'] ?? []) as $i => $row)
                 <div class="form-row">
                     <input type="hidden" name="shapes[{{ $i }}][id]" value="{{ $row['id'] }}">
                     <label class="field-label" for="shapes-{{ $i }}-label">Shape {{ $i + 1 }}</label>
@@ -198,7 +198,7 @@
             <form id="delete-guideline-{{ $i }}" method="post" action="{{ route('admin.cake-builder.guidelines.destroy', $i) }}" class="sr-only">@csrf @method('DELETE')</form>
         @endif
     @endforeach
-    @foreach ($builder['sizes'] as $row)
+    @foreach (($builder['sizes'] ?? []) as $row)
         @if (count($builder['sizes']) > 1)
             <form id="delete-size-{{ $row['id'] }}" method="post" action="{{ route('admin.cake-builder.sizes.destroy', $row['id']) }}" class="sr-only">@csrf @method('DELETE')</form>
         @endif

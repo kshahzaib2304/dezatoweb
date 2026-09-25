@@ -45,7 +45,6 @@ class PagesController extends Controller
             'title' => 'Website pages | Dezato Admin',
             'heading' => 'Website pages',
             'active' => 'pages',
-            'nav' => config('dezato_admin.nav'),
             'pages' => $pages,
             'aboutIntro' => SiteContent::section(
                 'about_intro',

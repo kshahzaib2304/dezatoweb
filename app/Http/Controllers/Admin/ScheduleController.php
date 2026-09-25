@@ -18,7 +18,6 @@ class ScheduleController extends Controller
             'title' => 'Delivery times | Dezato Admin',
             'heading' => 'Delivery & pickup times',
             'active' => 'schedule',
-            'nav' => config('dezato_admin.nav'),
             'slotsText' => implode("\n", $config['slots']),
             'minHours' => $config['min_hours'],
             'note' => $config['note'],

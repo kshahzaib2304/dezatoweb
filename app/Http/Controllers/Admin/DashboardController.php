@@ -28,7 +28,6 @@ class DashboardController extends Controller
             'title' => 'Dashboard | Dezato Admin',
             'heading' => 'Dashboard',
             'active' => 'dashboard',
-            'nav' => $this->nav(),
             'stats' => [
                 ['label' => 'Orders today', 'value' => (string) $todayOrders, 'hint' => 'Placed since midnight'],
                 ['label' => 'Revenue today', 'value' => pkr($todayRevenue), 'hint' => 'Sum of those orders'],
@@ -37,13 +36,5 @@ class DashboardController extends Controller
             ],
             'recentOrders' => Order::query()->latest('placed_at')->limit(8)->get(),
         ]);
-    }
-
-    /**
-     * @return list<array{label: string|null, items: list<array{id: string, label: string, route: string}>}>
-     */
-    private function nav(): array
-    {
-        return config('dezato_admin.nav');
     }
 }

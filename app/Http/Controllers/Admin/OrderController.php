@@ -31,7 +31,6 @@ class OrderController extends Controller
             'title' => 'Orders | Dezato Admin',
             'heading' => 'Orders',
             'active' => 'orders',
-            'nav' => config('dezato_admin.nav'),
             'orders' => $orders,
             'statuses' => Order::STATUSES,
             'status' => $status,
@@ -46,7 +45,6 @@ class OrderController extends Controller
             'title' => 'Order '.$order->number.' | Dezato Admin',
             'heading' => 'Order '.$order->number,
             'active' => 'orders',
-            'nav' => config('dezato_admin.nav'),
             'order' => $order,
             'statuses' => Order::STATUSES,
             'paymentInstructions' => PaymentMethods::isTransfer($order->payment_method)
