@@ -2,8 +2,8 @@
 
 @section('content')
     <div class="admin-toolbar">
-        <form method="get" action="{{ route('admin.orders.index') }}" class="admin-search">
-            <label class="field-label" for="status">Filter by status</label>
+        <form method="get" action="{{ route('admin.orders.index') }}" class="admin-filter">
+            <label class="field-label" for="status">Status</label>
             <select id="status" class="field-input" name="status" onchange="this.form.submit()">
                 <option value="">All orders</option>
                 @foreach ($statuses as $key => $label)

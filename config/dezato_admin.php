@@ -5,23 +5,48 @@
  */
 return [
     'nav' => [
-        ['id' => 'dashboard', 'label' => 'Dashboard', 'route' => 'admin.dashboard'],
-        ['id' => 'products', 'label' => 'Products', 'route' => 'admin.products.index'],
-        ['id' => 'categories', 'label' => 'Categories', 'route' => 'admin.categories.index'],
-        ['id' => 'orders', 'label' => 'Orders', 'route' => 'admin.orders.index'],
-        ['id' => 'inquiries', 'label' => 'Messages', 'route' => 'admin.inquiries.index'],
-        ['id' => 'customers', 'label' => 'Customers', 'route' => 'admin.customers.index'],
-        ['id' => 'cake-builder', 'label' => 'Custom cake prices', 'route' => 'admin.cake-builder.edit'],
-        ['id' => 'promos', 'label' => 'Promo codes', 'route' => 'admin.promos.index'],
-        ['id' => 'payments', 'label' => 'Payment options', 'route' => 'admin.payments.edit'],
-        ['id' => 'schedule', 'label' => 'Delivery times', 'route' => 'admin.schedule.edit'],
-        ['id' => 'locations', 'label' => 'Store locations', 'route' => 'admin.locations.edit'],
-        ['id' => 'content', 'label' => 'Homepage & text', 'route' => 'admin.content.edit'],
-        ['id' => 'pages', 'label' => 'Website pages', 'route' => 'admin.pages.edit'],
-        ['id' => 'settings', 'label' => 'Contact & store', 'route' => 'admin.settings.edit'],
-        ['id' => 'integrations', 'label' => 'Email, logins & links', 'route' => 'admin.integrations.edit'],
-        ['id' => 'reports', 'label' => 'Reports', 'route' => 'admin.reports'],
-        ['id' => 'help', 'label' => 'Help & guide', 'route' => 'admin.help'],
+        [
+            'label' => null,
+            'items' => [
+                ['id' => 'dashboard', 'label' => 'Dashboard', 'route' => 'admin.dashboard'],
+            ],
+        ],
+        [
+            'label' => 'Menu',
+            'items' => [
+                ['id' => 'products', 'label' => 'Products', 'route' => 'admin.products.index'],
+                ['id' => 'categories', 'label' => 'Categories', 'route' => 'admin.categories.index'],
+                ['id' => 'cake-builder', 'label' => 'Custom cake prices', 'route' => 'admin.cake-builder.edit'],
+                ['id' => 'promos', 'label' => 'Promo codes', 'route' => 'admin.promos.index'],
+            ],
+        ],
+        [
+            'label' => 'Orders',
+            'items' => [
+                ['id' => 'orders', 'label' => 'Orders', 'route' => 'admin.orders.index'],
+                ['id' => 'inquiries', 'label' => 'Messages', 'route' => 'admin.inquiries.index'],
+                ['id' => 'customers', 'label' => 'Customers', 'route' => 'admin.customers.index'],
+                ['id' => 'reports', 'label' => 'Reports', 'route' => 'admin.reports'],
+            ],
+        ],
+        [
+            'label' => 'Store',
+            'items' => [
+                ['id' => 'payments', 'label' => 'Payment options', 'route' => 'admin.payments.edit'],
+                ['id' => 'schedule', 'label' => 'Delivery times', 'route' => 'admin.schedule.edit'],
+                ['id' => 'locations', 'label' => 'Store locations', 'route' => 'admin.locations.edit'],
+            ],
+        ],
+        [
+            'label' => 'Website',
+            'items' => [
+                ['id' => 'content', 'label' => 'Homepage & text', 'route' => 'admin.content.edit'],
+                ['id' => 'pages', 'label' => 'Website pages', 'route' => 'admin.pages.edit'],
+                ['id' => 'settings', 'label' => 'Contact & store', 'route' => 'admin.settings.edit'],
+                ['id' => 'integrations', 'label' => 'Email, logins & links', 'route' => 'admin.integrations.edit'],
+                ['id' => 'help', 'label' => 'Help & guide', 'route' => 'admin.help'],
+            ],
+        ],
     ],
 
     'media' => [

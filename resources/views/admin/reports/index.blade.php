@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="admin-toolbar">
-        <p class="admin-lead" style="margin:0">A simple snapshot of how the bakery is doing.</p>
+        <p class="admin-lead">A simple snapshot of how the bakery is doing.</p>
         <div class="admin-toolbar__actions">
             <a class="btn btn--outline btn--sm" href="{{ route('admin.reports.export', ['days' => 7]) }}">Export 7 days CSV</a>
             <a class="btn btn--outline btn--sm" href="{{ route('admin.reports.export', ['days' => 30]) }}">Export 30 days CSV</a>

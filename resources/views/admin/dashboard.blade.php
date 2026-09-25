@@ -11,14 +11,14 @@
         @endforeach
     </section>
 
-    <div class="admin-split">
+    <div class="admin-split admin-split--board">
         <section class="admin-panel">
             <div class="admin-panel__head">
                 <h2>Recent orders</h2>
                 <a class="btn btn--outline btn--sm" href="{{ route('admin.orders.index') }}">See all</a>
             </div>
             @if ($recentOrders->isEmpty())
-                <p class="admin-empty">No orders yet. When customers place orders, they will show up here.</p>
+                <p class="admin-empty">No orders yet.</p>
             @else
                 <div class="admin-table-wrap">
                     <table class="admin-table">
@@ -49,19 +49,14 @@
         </section>
 
         <section class="admin-panel">
-            <h2>Quick tips</h2>
-            <ul class="admin-tips">
-                @foreach ($tips as $tip)
-                    <li>{{ $tip }}</li>
-                @endforeach
+            <h2>Shortcuts</h2>
+            <ul class="admin-jumps">
+                <li><a href="{{ route('admin.orders.index') }}">Orders</a></li>
+                <li><a href="{{ route('admin.products.index') }}">Products</a></li>
+                <li><a href="{{ route('admin.inquiries.index') }}">Messages</a></li>
+                <li><a href="{{ route('admin.content.edit') }}">Homepage</a></li>
+                <li><a href="{{ route('admin.help') }}">Photo sizes and setup</a></li>
             </ul>
-            <p class="admin-help-cta">
-                <a class="btn btn--primary" href="{{ route('admin.help') }}">Open Help &amp; picture guide</a>
-            </p>
-            <p class="admin-muted">
-                Product photos: <strong>1200 × 1200 px</strong> (square).<br>
-                Banner photos: <strong>1600 × 1000 px</strong> (wide).
-            </p>
         </section>
     </div>
 @endsection

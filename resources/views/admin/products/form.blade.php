@@ -80,7 +80,7 @@
                     <label class="field-label" for="image">Photo ({{ $mediaGuide['size'] }})</label>
                     @if ($product->exists && $product->image)
                         <div class="admin-current-photo">
-                            <img src="{{ asset($product->publicImagePath()) }}" alt="Current photo" width="96" height="96">
+                            <img src="{{ asset($product->publicImagePath()) }}" alt="Current photo" width="96" height="96" loading="lazy" decoding="async">
                             <span>Current photo - upload a new one only if you want to replace it.</span>
                         </div>
                     @endif

@@ -103,7 +103,7 @@
                         <div class="form-row form-row--full">
                             <label class="field-label">Photo</label>
                             <div class="admin-slide-card__preview">
-                                <img src="{{ $package['image_url'] }}" alt="" width="120" height="75">
+                                <img src="{{ $package['image_url'] }}" alt="" width="120" height="75" loading="lazy" decoding="async">
                                 <input class="field-input" type="file" name="packages[{{ $index }}][image]" accept="image/jpeg,image/png,image/webp">
                             </div>
                         </div>
@@ -185,7 +185,7 @@
                         <div class="form-row form-row--full">
                             <label class="field-label">Photo</label>
                             <div class="admin-slide-card__preview">
-                                <img src="{{ $card['image_url'] }}" alt="" width="120" height="75">
+                                <img src="{{ $card['image_url'] }}" alt="" width="120" height="75" loading="lazy" decoding="async">
                                 <input class="field-input" type="file" name="order_cards[{{ $index }}][image]" accept="image/jpeg,image/png,image/webp">
                             </div>
                             <p class="field-hint">{{ $orderCardGuide['tip'] }}</p>

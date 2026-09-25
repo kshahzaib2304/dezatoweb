@@ -11,14 +11,57 @@
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('css/dezato.css') }}">
     <link rel="stylesheet" href="{{ asset('css/features.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+    <noscript>
+        <style>
+            .admin-menu-btn { display: none !important; }
+            .admin-sidebar {
+                position: static !important;
+                transform: none !important;
+                visibility: visible !important;
+                width: auto !important;
+                height: auto !important;
+            }
+            .admin-backdrop { display: none !important; }
+        </style>
+    </noscript>
 </head>
 <body class="admin-body">
-    <div class="admin-shell">
-        <aside class="admin-sidebar">
-            <a class="admin-brand" href="{{ route('admin.dashboard') }}">
-                <img src="{{ asset('images/brand/logo-mark.svg') }}" width="32" height="32" alt="">
-                <span>Dezato Admin</span>
-            </a>
+    <div class="admin-shell" data-admin-shell>
+        <button type="button" class="admin-backdrop" data-admin-backdrop data-admin-close tabindex="-1" aria-hidden="true" aria-label="Close menu"></button>
+
+        <aside class="admin-sidebar" id="admin-sidebar" aria-label="Admin menu">
+            <div class="admin-sidebar__head">
+                <a class="admin-brand" href="{{ route('admin.dashboard') }}">
+                    <img src="{{ asset('images/brand/logo-mark.svg') }}" width="32" height="32" alt="">
+                    <span>Dezato Admin</span>
+                </a>
+                <button type="button" class="admin-menu-btn admin-menu-btn--close" data-admin-close aria-label="Close menu">
+                    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+                        <path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+            </div>
+
+            <nav>
+                @foreach ($nav as $group)
+                    <div class="admin-nav-group">
+                        @if (! empty($group['label']))
+                            <p class="admin-nav-label">{{ $group['label'] }}</p>
+                        @endif
+                        @foreach ($group['items'] as $item)
+                            <a
+                                href="{{ route($item['route']) }}"
+                                @class(['is-active' => ($active ?? '') === $item['id']])
+                                @if (($active ?? '') === $item['id']) aria-current="page" @endif
+                            >
+                                {{ $item['label'] }}
+                            </a>
+                        @endforeach
+                    </div>
+                @endforeach
+            </nav>
+
             <div class="admin-sidebar__tools">
                 <a class="admin-sidebar__store" href="{{ route('home') }}" target="_blank" rel="noopener">View website</a>
                 <form class="admin-sidebar__logout" method="post" action="{{ route('logout') }}">
@@ -26,22 +69,26 @@
                     <button type="submit">Sign out</button>
                 </form>
             </div>
-            <nav aria-label="Admin">
-                @foreach ($nav as $item)
-                    <a
-                        href="{{ route($item['route']) }}"
-                        class="{{ ($active ?? '') === $item['id'] ? 'is-active' : '' }}"
-                        @if (($active ?? '') === $item['id']) aria-current="page" @endif
-                    >
-                        {{ $item['label'] }}
-                    </a>
-                @endforeach
-            </nav>
         </aside>
-        <div class="admin-content">
+
+        <div class="admin-main">
             <header class="admin-top">
-                <h1>{{ $heading }}</h1>
-                <p class="admin-top__note">Simple tools to manage your bakery - no tech skills needed.</p>
+                <div class="admin-top__bar">
+                    <button
+                        type="button"
+                        class="admin-menu-btn"
+                        data-admin-open
+                        aria-controls="admin-sidebar"
+                        aria-expanded="false"
+                        aria-label="Open menu"
+                    >
+                        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+                            <path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <span>Menu</span>
+                    </button>
+                    <h1>{{ $heading }}</h1>
+                </div>
             </header>
 
             @if (session('status'))
@@ -62,5 +109,6 @@
             @yield('content')
         </div>
     </div>
+    <script src="{{ asset('js/admin.js') }}" defer></script>
 </body>
 </html>

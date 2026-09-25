@@ -20,8 +20,21 @@ class CategoryController extends Controller
             'heading' => 'Categories',
             'active' => 'categories',
             'nav' => config('dezato_admin.nav'),
-            'categories' => Category::query()->withCount('products')->orderBy('sort_order')->get(),
+            'categories' => Category::query()->withCount('products')->orderBy('sort_order')->orderBy('label')->get(),
         ]);
+    }
+
+    public function create(): View
+    {
+        return $this->form(new Category([
+            'sort_order' => 0,
+            'is_active' => true,
+        ]));
+    }
+
+    public function edit(Category $category): View
+    {
+        return $this->form($category);
     }
 
     public function store(Request $request): RedirectResponse
@@ -39,7 +52,9 @@ class CategoryController extends Controller
             'is_active' => true,
         ]);
 
-        return back()->with('status', 'Category added. You can now assign products to it.');
+        return redirect()
+            ->route('admin.categories.index')
+            ->with('status', 'Category added. You can now assign products to it.');
     }
 
     public function update(Request $request, Category $category): RedirectResponse
@@ -58,7 +73,9 @@ class CategoryController extends Controller
             'is_active' => $request->boolean('is_active'),
         ]);
 
-        return back()->with('status', 'Category updated.');
+        return redirect()
+            ->route('admin.categories.index')
+            ->with('status', 'Category updated.');
     }
 
     public function destroy(Category $category): RedirectResponse
@@ -72,6 +89,19 @@ class CategoryController extends Controller
         $category->delete();
 
         return back()->with('status', 'Category deleted.');
+    }
+
+    private function form(Category $category): View
+    {
+        $editing = $category->exists;
+
+        return view('admin.categories.form', [
+            'title' => ($editing ? 'Edit category' : 'Add category').' | Dezato Admin',
+            'heading' => $editing ? 'Edit category' : 'Add category',
+            'active' => 'categories',
+            'nav' => config('dezato_admin.nav'),
+            'category' => $category,
+        ]);
     }
 
     private function slugFor(mixed $requested, string $label, ?int $ignoreId = null): string

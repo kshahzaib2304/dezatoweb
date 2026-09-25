@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Support\Facades\Storage;
 
 class Product extends Model
 {
@@ -52,15 +51,17 @@ class Product extends Model
 
     public function publicImagePath(): string
     {
-        if ($this->image && Storage::disk('public')->exists($this->image)) {
-            return 'storage/'.$this->image;
+        $image = trim((string) $this->image);
+
+        if ($image === '' || str_starts_with($image, 'http://') || str_starts_with($image, 'https://')) {
+            return 'images/home/hero.jpg';
         }
 
-        if ($this->image && ! str_starts_with((string) $this->image, 'http')) {
-            return $this->image;
+        if (str_starts_with($image, 'images/') || str_starts_with($image, 'storage/')) {
+            return $image;
         }
 
-        return 'images/home/hero.jpg';
+        return 'storage/'.$image;
     }
 
     public function isInStock(): bool

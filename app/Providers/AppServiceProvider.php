@@ -2,15 +2,17 @@
 
 namespace App\Providers;
 
+use App\Models\SiteSetting;
 use App\Support\BakeryProfile;
 use App\Support\Cart;
 use App\Support\Catalog;
 use App\Support\Fulfillment;
 use App\Support\MailSettings;
+use App\Support\NavigationMenu;
 use App\Support\ShippingSettings;
+use App\Support\SiteBrand;
 use App\Support\SocialAuth;
 use App\Support\SocialLinks;
-use App\Models\SiteSetting;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\View;
@@ -39,25 +41,38 @@ class AppServiceProvider extends ServiceProvider
         }
 
         View::composer('*', function ($view): void {
-            $cart = app(Cart::class);
-            $fulfillment = app(Fulfillment::class);
+            $name = $view->name();
 
-            $view->with([
-                'navLinks' => \App\Support\NavigationMenu::links(),
-                'brandName' => \App\Support\SiteBrand::name(),
-                'brandShortName' => \App\Support\SiteBrand::shortName(),
-                'brandTagline' => \App\Support\SiteBrand::tagline(),
-                'menuCategories' => Catalog::categories()->all(),
-                'currentRoute' => Route::currentRouteName(),
-                'cartCount' => $cart->count(),
-                'fulfillmentSummary' => $fulfillment->summary(),
-                'hasFulfillment' => $fulfillment->has(),
-                'welcomeSeen' => $fulfillment->welcomeSeen(),
-                'currentFulfillment' => $fulfillment->get(),
-                'fulfillmentLocations' => Catalog::locations()->all(),
-                'shippingFee' => ShippingSettings::fee(),
-                'shippingEta' => ShippingSettings::eta(),
-            ]);
+            if (
+                $name === 'layouts.admin'
+                || str_starts_with($name, 'admin.')
+                || str_starts_with($name, 'mail.')
+                || str_starts_with($name, 'pagination.')
+            ) {
+                return;
+            }
+
+            $view->with(once(function (): array {
+                $cart = app(Cart::class);
+                $fulfillment = app(Fulfillment::class);
+
+                return [
+                    'navLinks' => NavigationMenu::links(),
+                    'brandName' => SiteBrand::name(),
+                    'brandShortName' => SiteBrand::shortName(),
+                    'brandTagline' => SiteBrand::tagline(),
+                    'menuCategories' => Catalog::categories()->all(),
+                    'currentRoute' => Route::currentRouteName(),
+                    'cartCount' => $cart->count(),
+                    'fulfillmentSummary' => $fulfillment->summary(),
+                    'hasFulfillment' => $fulfillment->has(),
+                    'welcomeSeen' => $fulfillment->welcomeSeen(),
+                    'currentFulfillment' => $fulfillment->get(),
+                    'fulfillmentLocations' => Catalog::locations()->all(),
+                    'shippingFee' => ShippingSettings::fee(),
+                    'shippingEta' => ShippingSettings::eta(),
+                ];
+            }));
         });
 
         View::composer('components.header', function ($view): void {

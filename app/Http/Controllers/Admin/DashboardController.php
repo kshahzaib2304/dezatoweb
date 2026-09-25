@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Contracts\View\View;
-use Illuminate\Support\Facades\Storage;
 
 class DashboardController extends Controller
 {
@@ -31,24 +30,17 @@ class DashboardController extends Controller
             'active' => 'dashboard',
             'nav' => $this->nav(),
             'stats' => [
-                ['label' => 'Orders today', 'value' => (string) $todayOrders, 'hint' => 'New orders placed today'],
-                ['label' => 'Revenue today', 'value' => pkr($todayRevenue), 'hint' => 'Total of today’s orders'],
-                ['label' => 'Orders in progress', 'value' => (string) $pending, 'hint' => 'Not delivered yet'],
-                ['label' => 'Low stock items', 'value' => (string) $lowStock, 'hint' => '5 or fewer left'],
+                ['label' => 'Orders today', 'value' => (string) $todayOrders, 'hint' => 'Placed since midnight'],
+                ['label' => 'Revenue today', 'value' => pkr($todayRevenue), 'hint' => 'Sum of those orders'],
+                ['label' => 'Still open', 'value' => (string) $pending, 'hint' => 'Not delivered yet'],
+                ['label' => 'Low stock', 'value' => (string) $lowStock, 'hint' => 'Five or fewer left'],
             ],
             'recentOrders' => Order::query()->latest('placed_at')->limit(8)->get(),
-            'tips' => [
-                'Homepage hero slides: 1600×1000 px each - manage under Homepage & text.',
-                'Upload product photos at 1200×1200 pixels (square) for best results.',
-                'After go-live: paste SMTP, Google/Facebook login keys, and footer Instagram link under Email, logins & links.',
-                'Set your alert email under Contact & alerts so you know when orders arrive.',
-            ],
-            'storageReady' => Storage::disk('public')->exists('.') || true,
         ]);
     }
 
     /**
-     * @return list<array{id: string, label: string, route: string}>
+     * @return list<array{label: string|null, items: list<array{id: string, label: string, route: string}>}>
      */
     private function nav(): array
     {

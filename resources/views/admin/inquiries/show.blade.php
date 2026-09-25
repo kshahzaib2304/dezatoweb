@@ -46,7 +46,7 @@
                     <a class="btn btn--outline" href="{{ $whatsappUrl }}" target="_blank" rel="noopener">WhatsApp customer</a>
                 @endif
             </div>
-            <form method="post" action="{{ route('admin.inquiries.destroy', $inquiry) }}" style="margin-top:1.5rem" onsubmit="return confirm('Delete this message?');">
+            <form method="post" action="{{ route('admin.inquiries.destroy', $inquiry) }}" onsubmit="return confirm('Delete this message?');">
                 @csrf
                 @method('DELETE')
                 <button class="text-btn text-btn--danger" type="submit">Delete message</button>

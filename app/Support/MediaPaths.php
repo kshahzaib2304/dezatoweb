@@ -13,23 +13,15 @@ final class MediaPaths
     {
         $path = trim((string) $path);
 
-        if ($path === '') {
+        if ($path === '' || str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
             return $fallback;
-        }
-
-        if (Storage::disk('public')->exists($path)) {
-            return 'storage/'.$path;
         }
 
         if (str_starts_with($path, 'storage/') || str_starts_with($path, 'images/')) {
             return $path;
         }
 
-        if (! str_starts_with($path, 'http')) {
-            return $path;
-        }
-
-        return $fallback;
+        return 'storage/'.$path;
     }
 
     public static function deleteIfOwned(?string $path): void

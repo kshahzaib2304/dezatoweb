@@ -30,7 +30,7 @@
                             >
                             <span>
                                 <strong>{{ $method['label'] }}</strong>
-                                <small class="admin-muted" style="display:block">{{ $method['hint'] }}</small>
+                                <small class="admin-muted">{{ $method['hint'] }}</small>
                                 @if ($method['live'])
                                     <span class="admin-badge admin-badge--ok">Works now</span>
                                 @else

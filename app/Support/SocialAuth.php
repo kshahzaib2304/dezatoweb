@@ -24,20 +24,9 @@ final class SocialAuth
         $stored = SiteSetting::getJson(self::KEY, []);
         $stored = is_array($stored) ? $stored : [];
 
-        $catalog = [
-            'google' => [
-                'label' => 'Google',
-                'help' => 'Free Google Cloud OAuth client. Customers tap “Continue with Google”.',
-            ],
-            'facebook' => [
-                'label' => 'Facebook',
-                'help' => 'Free Meta / Facebook Login app. Customers tap “Continue with Facebook”.',
-            ],
-        ];
-
         $out = [];
 
-        foreach ($catalog as $id => $meta) {
+        foreach (self::catalog() as $id => $meta) {
             $row = is_array($stored[$id] ?? null) ? $stored[$id] : [];
             $out[$id] = [
                 'label' => $meta['label'],
@@ -97,12 +86,34 @@ final class SocialAuth
 
     public static function apply(): void
     {
-        foreach (self::providers() as $id => $provider) {
+        $stored = SiteSetting::getJson(self::KEY, []);
+        $stored = is_array($stored) ? $stored : [];
+
+        foreach (array_keys(self::catalog()) as $id) {
+            $row = is_array($stored[$id] ?? null) ? $stored[$id] : [];
+
             Config::set("services.{$id}", [
-                'client_id' => $provider['client_id'],
+                'client_id' => (string) ($row['client_id'] ?? ''),
                 'client_secret' => SecureSettings::get("social_{$id}_secret") ?? '',
-                'redirect' => $provider['redirect'],
+                'redirect' => url('/auth/'.$id.'/callback'),
             ]);
         }
+    }
+
+    /**
+     * @return array<string, array{label: string, help: string}>
+     */
+    private static function catalog(): array
+    {
+        return [
+            'google' => [
+                'label' => 'Google',
+                'help' => 'Free Google Cloud OAuth client. Customers tap “Continue with Google”.',
+            ],
+            'facebook' => [
+                'label' => 'Facebook',
+                'help' => 'Free Meta / Facebook Login app. Customers tap “Continue with Facebook”.',
+            ],
+        ];
     }
 }

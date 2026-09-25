@@ -8,20 +8,33 @@ use Illuminate\Support\Collection;
 
 final class Catalog
 {
+    /** @var array<string, Collection<int, mixed>> */
+    private static array $memo = [];
+
     public static function products(): Collection
     {
-        if (Product::query()->exists()) {
-            return Product::query()
-                ->with('category')
-                ->active()
-                ->orderBy('sort_order')
-                ->orderBy('name')
-                ->get()
-                ->map(fn (Product $product): array => $product->toCatalogArray())
-                ->values();
+        return self::$memo['products'] ??= self::loadProducts();
+    }
+
+    /**
+     * @return Collection<int, array<string, mixed>>
+     */
+    private static function loadProducts(): Collection
+    {
+        $products = Product::query()
+            ->with('category')
+            ->active()
+            ->orderBy('sort_order')
+            ->orderBy('name')
+            ->get();
+
+        if ($products->isEmpty() && ! Product::query()->exists()) {
+            return collect(config('dezato.menu.products', []));
         }
 
-        return collect(config('dezato.menu.products', []));
+        return $products
+            ->map(fn (Product $product): array => $product->toCatalogArray())
+            ->values();
     }
 
     public static function findProduct(string $id): ?array
@@ -39,26 +52,34 @@ final class Catalog
 
     public static function categories(): Collection
     {
-        if (Category::query()->exists()) {
-            $items = Category::query()
-                ->where('is_active', true)
-                ->orderBy('sort_order')
-                ->get()
-                ->map(fn (Category $category): array => [
-                    'id' => $category->slug,
-                    'label' => $category->label,
-                ])
-                ->values();
+        return self::$memo['categories'] ??= self::loadCategories();
+    }
 
-            return collect([['id' => 'all', 'label' => 'All']])->merge($items);
+    /**
+     * @return Collection<int, array{id: string, label: string}>
+     */
+    private static function loadCategories(): Collection
+    {
+        $rows = Category::query()->orderBy('sort_order')->get(['slug', 'label', 'is_active']);
+
+        if ($rows->isEmpty()) {
+            return collect(config('dezato.menu.categories', []));
         }
 
-        return collect(config('dezato.menu.categories', []));
+        $items = $rows
+            ->where('is_active', true)
+            ->map(fn (Category $category): array => [
+                'id' => $category->slug,
+                'label' => $category->label,
+            ])
+            ->values();
+
+        return collect([['id' => 'all', 'label' => 'All']])->merge($items);
     }
 
     public static function locations(): Collection
     {
-        return collect(StoreLocations::forStorefront());
+        return self::$memo['locations'] ??= collect(StoreLocations::forStorefront());
     }
 
     public static function findLocation(string $id): ?array

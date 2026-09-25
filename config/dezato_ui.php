@@ -74,7 +74,7 @@ return [
             'Fondant work starts from 4 lbs. Extensive fondant designs may need 5 or 6 lbs.',
             'Simple number or letter cakes (short text) start from 2 lbs.',
             'Heart cakes: minimum 2 lbs; 3 lbs is preferred for heavy icing.',
-            'We do not offer full edible print cakes (printing is outsourced). A single printed page is available if needed — see add-ons.',
+            'We do not offer full edible print cakes (printing is outsourced). A single printed page is available if needed - see add-ons.',
             'Real lily flowers are subject to availability. Plastic lilies are always available.',
         ],
         'sizes' => [

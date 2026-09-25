@@ -3,7 +3,7 @@
 @section('content')
     <p class="admin-back"><a href="{{ route('admin.orders.index') }}">← Back to all orders</a></p>
 
-    <div class="admin-toolbar" style="margin-bottom:1rem">
+    <div class="admin-toolbar">
         <a class="btn btn--outline" href="{{ route('admin.orders.invoice', $order) }}" target="_blank" rel="noopener">Print invoice / packing slip</a>
         @if (($order->payment_status ?? '') !== 'paid')
             <form method="post" action="{{ route('admin.orders.paid', $order) }}">
@@ -23,17 +23,15 @@
                 Suggested flow:
                 <strong>Placed → Baking → Quality check → Out for delivery → Delivered</strong>.
             </p>
-            <form method="post" action="{{ route('admin.orders.status', $order) }}" class="admin-form">
+            <form method="post" action="{{ route('admin.orders.status', $order) }}" class="admin-inline">
                 @csrf
                 @method('PATCH')
-                <div class="form-row">
-                    <label class="field-label" for="status">Current status</label>
-                    <select id="status" class="field-input" name="status" required>
-                        @foreach ($statuses as $key => $label)
-                            <option value="{{ $key }}" @selected($order->status === $key)>{{ $label }}</option>
-                        @endforeach
-                    </select>
-                </div>
+                <label class="field-label" for="status">Current status</label>
+                <select id="status" class="field-input" name="status" required>
+                    @foreach ($statuses as $key => $label)
+                        <option value="{{ $key }}" @selected($order->status === $key)>{{ $label }}</option>
+                    @endforeach
+                </select>
                 <button class="btn btn--primary" type="submit">Update status</button>
             </form>
 
@@ -50,8 +48,8 @@
                                 <div class="admin-muted">Baker notes: {{ $item->options['notes'] }}</div>
                             @endif
                             @if ($item->image)
-                                <div style="margin-top:0.4rem">
-                                    <img src="{{ asset('storage/'.$item->image) }}" alt="Reference" width="96" height="96" style="object-fit:cover;border-radius:6px">
+                                <div class="admin-current-photo">
+                                    <img src="{{ asset('storage/'.$item->image) }}" alt="Reference" width="96" height="96">
                                 </div>
                             @endif
                         @endif

@@ -10,15 +10,14 @@
         </ol>
     </aside>
 
-    <div class="admin-split">
-        <section class="admin-panel">
+    <section class="admin-panel">
             <h2>Add a promo code</h2>
             <form class="admin-form" method="post" action="{{ route('admin.promos.store') }}">
                 @csrf
                 <div class="form-grid">
                     <div class="form-row">
                         <label class="field-label" for="code">Code *</label>
-                        <input id="code" class="field-input" type="text" name="code" value="{{ old('code') }}" required maxlength="40" placeholder="DEZATO10" style="text-transform:uppercase">
+                        <input id="code" class="field-input field-input--code" type="text" name="code" value="{{ old('code') }}" required maxlength="40" placeholder="DEZATO10">
                     </div>
                     <div class="form-row">
                         <label class="field-label" for="label">Internal note</label>
@@ -119,8 +118,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="admin-pagination">{{ $promos->links() }}</div>
+                <div class="admin-pagination">{{ $promos->links() }}                </div>
             @endif
         </section>
-    </div>
 @endsection

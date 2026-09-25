@@ -105,7 +105,7 @@ class CakeBuilderController extends Controller
     public function storeGuideline(): RedirectResponse
     {
         $config = CakeBuilder::config();
-        $config['guidelines'][] = 'New bakery rule — edit this text.';
+        $config['guidelines'][] = 'New bakery rule - edit this text.';
         CakeBuilder::saveConfig($config);
 
         return back()->with('status', 'New guideline added. Edit the text and save.');

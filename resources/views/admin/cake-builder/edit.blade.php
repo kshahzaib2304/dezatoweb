@@ -4,7 +4,7 @@
     <aside class="admin-media-guide">
         <strong>How custom cake pricing works</strong>
         <ol class="admin-steps">
-            <li>Edit <strong>Bakery rules</strong> (fondant, heart cakes, etc.) — shown to customers.</li>
+            <li>Edit <strong>Bakery rules</strong> (fondant, heart cakes, etc.) - shown to customers.</li>
             <li>Set <strong>size prices</strong> (starting price) and <strong>add-ons</strong> (extra charges).</li>
             <li>For flowers / stems / macarons, choose billing type <strong>Per item</strong> so customers pick a quantity.</li>
             <li>Use numbers only for prices (e.g. <code>1800</code> = ₨ 1,800).</li>
@@ -80,9 +80,9 @@
 
         <section class="admin-panel admin-panel--spaced">
             <h2>Shapes</h2>
-            <p class="admin-lead">Heart, number, and letter cakes have bakery rules above — keep those shape names clear.</p>
+            <p class="admin-lead">Heart, number, and letter cakes have bakery rules above - keep those shape names clear.</p>
             @foreach ($builder['shapes'] as $i => $row)
-                <div class="form-row" style="margin-bottom:0.65rem">
+                <div class="form-row">
                     <input type="hidden" name="shapes[{{ $i }}][id]" value="{{ $row['id'] }}">
                     <label class="field-label" for="shapes-{{ $i }}-label">Shape {{ $i + 1 }}</label>
                     <input id="shapes-{{ $i }}-label" class="field-input" type="text" name="shapes[{{ $i }}][label]" value="{{ old("shapes.$i.label", $row['label']) }}" required>

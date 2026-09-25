@@ -47,9 +47,15 @@
             <strong>Fulfillment</strong>
             <p>
                 {{ $order->methodLabel() }}
-                @if ($order->location_name)<br>{{ $order->location_name }}@endif
-                @if ($order->address)<br>{{ $order->address }}@if($order->city), {{ $order->city }}@endif@endif
-                @if ($order->delivery_date)<br>{{ $order->delivery_date->format('d M Y') }}@if($order->delivery_slot) · {{ $order->delivery_slot }}@endif@endif
+                @if ($order->location_name)
+                    <br>{{ $order->location_name }}
+                @endif
+                @if ($order->address)
+                    <br>{{ $order->address }}@if ($order->city), {{ $order->city }}@endif
+                @endif
+                @if ($order->delivery_date)
+                    <br>{{ $order->delivery_date->format('d M Y') }}@if ($order->delivery_slot) · {{ $order->delivery_slot }}@endif
+                @endif
             </p>
             <p class="small">Payment: {{ \App\Support\PaymentMethods::label($order->payment_method) }} ({{ ucfirst($order->payment_status ?? 'unpaid') }})</p>
         </div>

@@ -53,6 +53,8 @@
                                         alt=""
                                         width="48"
                                         height="48"
+                                        loading="lazy"
+                                        decoding="async"
                                     >
                                 </td>
                                 <td>

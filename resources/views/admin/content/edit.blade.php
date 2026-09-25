@@ -48,14 +48,14 @@
         </section>
     </form>
 
-    <section class="admin-panel" style="margin-top:1rem">
+    <section class="admin-panel">
         <h2>Hero slides ({{ count($slides) }} / {{ $maxSlides }})</h2>
         <p class="admin-lead">Each slide has its own photo, headline, and short sentence. Inactive slides are hidden on the website.</p>
 
         @foreach ($slides as $i => $slide)
             <article class="admin-slide-card">
                 <div class="admin-slide-card__preview">
-                    <img src="{{ $slide['image_url'] }}" alt="" width="160" height="100">
+                    <img src="{{ $slide['image_url'] }}" alt="" width="160" height="100" loading="lazy" decoding="async">
                     <span>Slide {{ $i + 1 }}@unless($slide['active']) · Hidden @endunless</span>
                 </div>
                 <form class="admin-form" method="post" action="{{ route('admin.content.slides.update', $slide['id']) }}" enctype="multipart/form-data">
@@ -98,7 +98,7 @@
     </section>
 
     @if ($canAddSlide)
-        <section class="admin-panel" style="margin-top:1rem">
+        <section class="admin-panel">
             <h2>Add another slide</h2>
             <form class="admin-form" method="post" action="{{ route('admin.content.slides.store') }}" enctype="multipart/form-data">
                 @csrf
@@ -167,7 +167,7 @@
                         <div class="form-row form-row--full">
                             <label class="field-label">Photo</label>
                             <div class="admin-slide-card__preview">
-                                <img src="{{ $tile['image_url'] }}" alt="" width="120" height="75">
+                                <img src="{{ $tile['image_url'] }}" alt="" width="120" height="75" loading="lazy" decoding="async">
                                 <input class="field-input" type="file" name="categories[{{ $index }}][image]" accept="image/jpeg,image/png,image/webp">
                             </div>
                         </div>
@@ -204,7 +204,7 @@
                         <div class="form-row form-row--full">
                             <label class="field-label">Photo</label>
                             <div class="admin-slide-card__preview">
-                                <img src="{{ $tile['image_url'] }}" alt="" width="120" height="75">
+                                <img src="{{ $tile['image_url'] }}" alt="" width="120" height="75" loading="lazy" decoding="async">
                                 <input class="field-input" type="file" name="occasions[{{ $index }}][image]" accept="image/jpeg,image/png,image/webp">
                             </div>
                         </div>

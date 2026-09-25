@@ -12,7 +12,7 @@
     </aside>
 
     <div class="admin-toolbar">
-        <p class="admin-lead" style="margin:0">Shown on the Locations page and in the order chooser.</p>
+        <p class="admin-lead">Shown on the Locations page and in the order chooser.</p>
         <form method="post" action="{{ route('admin.locations.store') }}">
             @csrf
             <button class="btn btn--primary" type="submit">Add location</button>
@@ -83,7 +83,7 @@
                         <input class="field-input" type="number" min="0" step="1" name="locations[{{ $index }}][delivery_fee]" value="{{ old('locations.'.$index.'.delivery_fee', $location['delivery_fee']) }}">
                     </div>
                     <div class="form-row">
-                        <label class="check-inline" style="margin-top:1.6rem">
+                        <label class="check-inline">
                             <input type="checkbox" name="locations[{{ $index }}][delivers]" value="1" @checked(old('locations.'.$index.'.delivers', $location['delivers'] ?? true))>
                             <span>Offers local delivery from this store</span>
                         </label>
@@ -91,7 +91,7 @@
                     <div class="form-row form-row--full">
                         <label class="field-label">Location photo</label>
                         <div class="admin-slide-card__preview">
-                            <img src="{{ $location['image_url'] }}" alt="" width="120" height="75">
+                            <img src="{{ $location['image_url'] }}" alt="" width="120" height="75" loading="lazy" decoding="async">
                             <input class="field-input" type="file" name="locations[{{ $index }}][image]" accept="image/jpeg,image/png,image/webp">
                         </div>
                     </div>
