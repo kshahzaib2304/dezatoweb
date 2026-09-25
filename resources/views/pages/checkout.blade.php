@@ -9,7 +9,7 @@
             </header>
 
             @if ($errors->any())
-                <div class="form-errors" role="alert">
+                <div class="form-errors checkout-page__alert" role="alert">
                     <ul>
                         @foreach ($errors->all() as $error)
                             <li>{{ $error }}</li>

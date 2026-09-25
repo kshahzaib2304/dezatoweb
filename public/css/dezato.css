@@ -2124,6 +2124,10 @@ p {
     grid-column: 1 / -1;
 }
 
+.checkout-page__alert {
+    grid-column: 1 / -1;
+}
+
 .checkout-page__head h1 {
     margin: 0;
     font-family: var(--font-brand);
@@ -2521,6 +2525,14 @@ body.is-checkout .field-input--code {
 .cart-layout {
     display: grid;
     gap: 1.25rem;
+}
+
+.flash--cart {
+    margin: 0 0 1rem;
+}
+
+.cart-layout > .cart-empty {
+    grid-column: 1 / -1;
 }
 
 .cart-line {
