@@ -68,7 +68,10 @@ class OrderItem extends Model
 
         foreach ($this->options['addons'] ?? [] as $addon) {
             if (! empty($addon['label'])) {
-                $parts[] = $addon['label'];
+                $qty = max(1, (int) ($addon['qty'] ?? 1));
+                $parts[] = $qty > 1
+                    ? $addon['label'].' × '.$qty
+                    : $addon['label'];
             }
         }
 

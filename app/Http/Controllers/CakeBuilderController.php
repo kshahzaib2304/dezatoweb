@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Support\CakeBuilder;
 use App\Support\Cart;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -26,7 +27,7 @@ class CakeBuilderController extends Controller
         ]);
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(Request $request): RedirectResponse|JsonResponse
     {
         $data = $request->validate([
             'action' => ['nullable', 'string', 'in:cart,save'],
@@ -81,8 +82,32 @@ class CakeBuilderController extends Controller
 
         $this->cart->addCustom($quote);
 
-        return redirect()
-            ->route('cart.show')
-            ->with('status', $quote['name'].' added to your cart · '.pkr($quote['unit_price']));
+        $message = $quote['name'].' added to your cart · '.pkr($quote['unit_price']);
+
+        if (
+            $request->boolean('drawer')
+            || $request->expectsJson()
+            || $request->ajax()
+            || $request->header('X-Cart-Drawer') === '1'
+        ) {
+            $lines = $this->cart->lines();
+            $subtotal = $this->cart->subtotal();
+
+            return response()->json([
+                'message' => $message,
+                'count' => $this->cart->count(),
+                'subtotal' => $subtotal,
+                'subtotal_label' => pkr($subtotal),
+                'html' => view('components.cart-drawer-body', [
+                    'lines' => $lines,
+                    'count' => $this->cart->count(),
+                    'subtotal' => $subtotal,
+                ])->render(),
+            ]);
+        }
+
+        return back()
+            ->with('status', $message)
+            ->with('open_cart', true);
     }
 }

@@ -32,6 +32,7 @@
             action="{{ route('builder.store') }}"
             enctype="multipart/form-data"
             data-cake-builder
+            data-cart-add
             data-reveal
         >
             @csrf
@@ -192,18 +193,18 @@
                                             <small>{{ $addon['hint'] }}</small>
                                         @endif
                                     </div>
-                                    <label class="addon-qty__field">
-                                        <span class="sr-only">Quantity for {{ $addon['label'] }}</span>
-                                        <input
-                                            type="number"
-                                            name="addon_qty[{{ $addon['id'] }}]"
-                                            value="0"
-                                            min="0"
-                                            max="{{ $addon['max_qty'] ?? 12 }}"
+                                    <div class="addon-qty__field">
+                                        <label class="sr-only" for="addon-qty-{{ $addon['id'] }}">Quantity for {{ $addon['label'] }}</label>
+                                        <x-qty-stepper
+                                            :id="'addon-qty-'.$addon['id']"
+                                            :name="'addon_qty['.$addon['id'].']'"
+                                            :value="0"
+                                            :min="0"
+                                            :max="(int) ($addon['max_qty'] ?? 12)"
+                                            data-builder-qty-wrap
                                             data-price="{{ $addon['price'] }}"
-                                            data-builder-qty
-                                        >
-                                    </label>
+                                        />
+                                    </div>
                                 </div>
                             @else
                                 <label class="check-tile check-tile--block">

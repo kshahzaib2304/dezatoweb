@@ -83,12 +83,19 @@
                     </p>
                 @endif
 
-                <form id="product-order" class="product-add" method="post" action="{{ route('cart.items.store') }}">
+                <form id="product-order" class="product-add" method="post" action="{{ route('cart.items.store') }}" data-cart-add>
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product['id'] }}">
                     <label class="field-label" for="qty">Quantity</label>
                     <div class="qty-row">
-                        <input id="qty" class="field-input qty-input" type="number" name="quantity" value="1" min="1" max="99" inputmode="numeric" @disabled(! $available)>
+                        <x-qty-stepper
+                            id="qty"
+                            name="quantity"
+                            :value="1"
+                            :min="1"
+                            :max="99"
+                            :disabled="! $available"
+                        />
                         <button class="btn btn--primary" type="submit" @disabled(! $available)>
                             {{ $available ? 'Add to cart' : 'Sold out' }}
                         </button>

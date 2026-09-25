@@ -17,13 +17,25 @@
         <span>Menu</span>
     </a>
     @if ($hasFulfillment)
-        <a class="mobile-appbar__order" href="{{ route('menu') }}" @class(['is-active' => in_array($currentRoute, ['order', 'cart.show', 'checkout.show'], true)])>
+        <button
+            class="mobile-appbar__order"
+            type="button"
+            data-cart-open
+            aria-controls="cart-drawer"
+            aria-expanded="false"
+            @class(['is-active' => in_array($currentRoute, ['order', 'cart.show', 'checkout.show'], true)])
+        >
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
                 <path d="M6 6h15l-1.5 9h-12z"/>
                 <path d="M6 6 5 3H2"/>
             </svg>
-            <span>Order</span>
-        </a>
+            <span>Cart</span>
+            @if (($cartCount ?? 0) > 0)
+                <span class="mobile-appbar__badge" data-cart-badge>{{ ($cartCount ?? 0) > 99 ? '99+' : $cartCount }}</span>
+            @else
+                <span class="mobile-appbar__badge" data-cart-badge hidden></span>
+            @endif
+        </button>
     @else
         <button class="mobile-appbar__order" type="button" data-fulfillment-open>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">

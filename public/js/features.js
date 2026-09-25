@@ -27,6 +27,13 @@
         extras += Number(input.dataset.price || 0);
       });
 
+      builder.querySelectorAll('[data-builder-qty-wrap]').forEach((wrap) => {
+        const input = wrap.querySelector('[data-qty-input]');
+        const qty = Math.max(0, Number(input?.value) || 0);
+        const unit = Number(wrap.dataset.price || 0);
+        extras += qty * unit;
+      });
+
       builder.querySelectorAll('input[data-builder-qty]').forEach((input) => {
         const qty = Math.max(0, Number(input.value) || 0);
         const unit = Number(input.dataset.price || 0);
@@ -40,7 +47,10 @@
 
     builder.addEventListener('change', calc);
     builder.addEventListener('input', (event) => {
-      if (event.target.matches('input[data-builder-qty]')) {
+      if (
+        event.target.matches('input[data-builder-qty]') ||
+        event.target.matches('[data-qty-input]')
+      ) {
         calc();
       }
     });

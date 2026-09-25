@@ -64,6 +64,8 @@ class AppServiceProvider extends ServiceProvider
                     'menuCategories' => Catalog::categories()->all(),
                     'currentRoute' => Route::currentRouteName(),
                     'cartCount' => $cart->count(),
+                    'cartLines' => $cart->lines(),
+                    'cartSubtotal' => $cart->subtotal(),
                     'fulfillmentSummary' => $fulfillment->summary(),
                     'hasFulfillment' => $fulfillment->has(),
                     'welcomeSeen' => $fulfillment->welcomeSeen(),

@@ -11,7 +11,7 @@
 
     <section class="section-block">
         <div class="container">
-            @if (session('status'))
+            @if (session('status') && ! session('open_cart'))
                 <p class="flash flash--cart" role="status">{{ session('status') }}</p>
             @endif
 
@@ -59,8 +59,17 @@
                                         <p class="cart-line__price">{{ pkr($line['line_total']) }}</p>
                                     </div>
                                     <p>{{ pkr($line['product']['price']) }} each</p>
-                                    @if ($line['is_custom'] && ($line['product']['description'] ?? '') !== '')
-                                        <p class="field-hint">{{ $line['product']['description'] }}</p>
+
+                                    @if ($line['is_custom'])
+                                        <x-cart-line-extras :options="$line['options']" />
+                                        @php
+                                            $extrasTotal = \App\Support\CartExtras::extrasTotal($line['options']);
+                                        @endphp
+                                        @if ($extrasTotal > 0)
+                                            <p class="cart-line__extras-total">Extras {{ pkr($extrasTotal) }}</p>
+                                        @endif
+                                    @elseif (! empty($line['product']['weight']))
+                                        <p>{{ $line['product']['weight'] }}</p>
                                     @endif
 
                                     <div class="cart-line__actions">
@@ -68,16 +77,14 @@
                                             @csrf
                                             @method('PATCH')
                                             <label class="sr-only" for="qty-{{ $line['product_id'] }}">Quantity</label>
-                                            <input
-                                                id="qty-{{ $line['product_id'] }}"
-                                                class="field-input qty-input"
-                                                type="number"
+                                            <x-qty-stepper
+                                                :id="'qty-'.$line['product_id']"
                                                 name="quantity"
-                                                value="{{ $line['quantity'] }}"
-                                                min="0"
-                                                max="99"
-                                                onchange="this.form.submit()"
-                                            >
+                                                :value="$line['quantity']"
+                                                :min="0"
+                                                :max="99"
+                                                data-auto-submit="1"
+                                            />
                                         </form>
                                         <form method="post" action="{{ route('cart.items.destroy', $line['product_id']) }}">
                                             @csrf

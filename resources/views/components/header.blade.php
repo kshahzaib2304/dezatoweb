@@ -55,15 +55,20 @@
                 <button class="btn btn--primary header-cta" type="button" data-fulfillment-open>Order</button>
             @endif
 
-            <a class="icon-btn cart-btn" href="{{ route('cart.show') }}" aria-label="Cart, {{ $cartCount }} items">
+            <button
+                class="icon-btn cart-btn"
+                type="button"
+                data-cart-open
+                aria-label="Cart, {{ $cartCount }} items"
+                aria-controls="cart-drawer"
+                aria-expanded="false"
+            >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
                     <path d="M6 6h15l-1.5 9h-12z"/><path d="M6 6 5 3H2"/>
                     <circle cx="9" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/>
                 </svg>
-                @if ($cartCount > 0)
-                    <span class="cart-btn__badge">{{ $cartCount > 99 ? '99+' : $cartCount }}</span>
-                @endif
-            </a>
+                <span class="cart-btn__badge" data-cart-badge @if ($cartCount < 1) hidden @endif>{{ $cartCount > 99 ? '99+' : $cartCount }}</span>
+            </button>
         </div>
     </div>
 </header>

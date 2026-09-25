@@ -12,6 +12,7 @@
         $ogImage = asset($ogImage ?? 'images/brand/logo-icon.jpg');
         $isCheckout = ($currentRoute ?? null) === 'checkout.show';
     @endphp
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $pageTitle }}</title>
     <meta name="description" content="{{ $pageDescription }}">
     <link rel="canonical" href="{{ $canonical }}">
@@ -82,6 +83,7 @@
         @include('components.footer')
         @include('components.mobile-appbar')
         @include('components.fulfillment-modal')
+        @include('components.cart-drawer')
     @endunless
 
     <script src="{{ asset('js/dezato.js') }}" defer></script>

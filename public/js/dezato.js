@@ -311,8 +311,19 @@
         });
     }
 
+    const cartRoot = doc.getElementById("cart-drawer-root");
+    let setCartOpen = (open) => {
+        if (!cartRoot) return;
+        cartRoot.hidden = !open;
+        body.classList.toggle("cart-locked", open);
+    };
+
     doc.addEventListener("keydown", (e) => {
         if (e.key !== "Escape") return;
+        if (cartRoot && !cartRoot.hidden) {
+            setCartOpen(false);
+            return;
+        }
         if (fulfillmentModal && !fulfillmentModal.hidden) {
             dismissWelcomeQuietly();
             return;
@@ -365,6 +376,256 @@
             setFulfillmentModal(true);
         } else {
             dismissWelcomeQuietly();
+        }
+    }
+
+    /* ---------- Quantity steppers ---------- */
+    const syncQtyStepper = (root) => {
+        if (!(root instanceof HTMLElement)) return;
+        const input = root.querySelector("[data-qty-input]");
+        if (!(input instanceof HTMLInputElement)) return;
+
+        const min = Number(root.dataset.min ?? input.min ?? 0);
+        const max = Number(root.dataset.max ?? input.max ?? 99);
+        let value = Number(input.value);
+        if (!Number.isFinite(value)) value = min;
+        value = Math.max(min, Math.min(max, value));
+        input.value = String(value);
+
+        const disabled = root.hasAttribute("data-disabled");
+        const dec = root.querySelector("[data-qty-dec]");
+        const inc = root.querySelector("[data-qty-inc]");
+        if (dec instanceof HTMLButtonElement) {
+            dec.disabled = disabled || value <= min;
+        }
+        if (inc instanceof HTMLButtonElement) {
+            inc.disabled = disabled || value >= max;
+        }
+    };
+
+    const bumpQty = (root, delta) => {
+        const input = root.querySelector("[data-qty-input]");
+        if (
+            !(input instanceof HTMLInputElement) ||
+            root.hasAttribute("data-disabled")
+        ) {
+            return;
+        }
+
+        const min = Number(root.dataset.min ?? input.min ?? 0);
+        const max = Number(root.dataset.max ?? input.max ?? 99);
+        const next = Math.max(
+            min,
+            Math.min(max, (Number(input.value) || 0) + delta),
+        );
+        if (String(next) === input.value) {
+            syncQtyStepper(root);
+            return;
+        }
+
+        input.value = String(next);
+        syncQtyStepper(root);
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+
+        if (root.hasAttribute("data-auto-submit")) {
+            const form = root.closest("form");
+            if (!form) return;
+            if (
+                form.hasAttribute("data-cart-update") ||
+                form.hasAttribute("data-cart-remove")
+            ) {
+                submitCartForm(form);
+            } else {
+                form.requestSubmit();
+            }
+            return;
+        }
+
+        input.dispatchEvent(new Event("change", { bubbles: true }));
+    };
+
+    doc.querySelectorAll("[data-qty-stepper]").forEach(syncQtyStepper);
+
+    doc.addEventListener("click", (event) => {
+        const dec = event.target.closest("[data-qty-dec]");
+        const inc = event.target.closest("[data-qty-inc]");
+        if (!dec && !inc) return;
+        const root = (dec || inc).closest("[data-qty-stepper]");
+        if (!root) return;
+        event.preventDefault();
+        bumpQty(root, dec ? -1 : 1);
+    });
+
+    doc.addEventListener("change", (event) => {
+        const input = event.target;
+        if (
+            !(input instanceof HTMLInputElement) ||
+            !input.matches("[data-qty-input]")
+        ) {
+            return;
+        }
+        const root = input.closest("[data-qty-stepper]");
+        if (root) syncQtyStepper(root);
+
+        if (root?.hasAttribute("data-auto-submit")) {
+            const form = root.closest("form");
+            if (!form) return;
+            if (
+                form.hasAttribute("data-cart-update") ||
+                form.hasAttribute("data-cart-remove")
+            ) {
+                submitCartForm(form);
+            } else if (!form.hasAttribute("data-cart-add")) {
+                form.requestSubmit();
+            }
+        }
+    });
+
+    /* ---------- Quick cart drawer ---------- */
+    const cartPanel = cartRoot?.querySelector("[data-cart-drawer]");
+    const cartBody = cartRoot?.querySelector("[data-cart-drawer-body]");
+    const csrfToken =
+        doc
+            .querySelector('meta[name="csrf-token"]')
+            ?.getAttribute("content") || "";
+
+    setCartOpen = (open) => {
+        if (!cartRoot) return;
+        cartRoot.hidden = !open;
+        body.classList.toggle("cart-locked", open);
+        doc.querySelectorAll("[data-cart-open]").forEach((btn) => {
+            btn.setAttribute("aria-expanded", open ? "true" : "false");
+        });
+        if (open) {
+            cartPanel?.focus({ preventScroll: true });
+        }
+    };
+
+    const updateCartBadges = (count) => {
+        const label = count > 99 ? "99+" : String(count);
+        doc.querySelectorAll("[data-cart-badge]").forEach((badge) => {
+            badge.hidden = count < 1;
+            badge.textContent = label;
+        });
+        doc.querySelectorAll("[data-cart-open]").forEach((btn) => {
+            btn.setAttribute("aria-label", `Cart, ${label} items`);
+        });
+    };
+
+    const applyCartPayload = (
+        payload,
+        { open = true, announce = true } = {},
+    ) => {
+        if (!payload || !cartBody) return;
+        if (typeof payload.html === "string") {
+            cartBody.innerHTML = payload.html;
+            cartBody
+                .querySelectorAll("[data-qty-stepper]")
+                .forEach(syncQtyStepper);
+        }
+        if (typeof payload.count === "number") {
+            updateCartBadges(payload.count);
+        }
+        if (announce && payload.message) {
+            const status = cartBody.querySelector("[data-cart-status]");
+            if (status) {
+                status.hidden = false;
+                status.textContent = payload.message;
+            }
+        }
+        if (open) setCartOpen(true);
+    };
+
+    const submitCartForm = async (form) => {
+        if (!(form instanceof HTMLFormElement) || form.dataset.cartBusy === "1") {
+            return;
+        }
+
+        form.dataset.cartBusy = "1";
+
+        try {
+            const bodyData = new FormData(form);
+            bodyData.set("drawer", "1");
+
+            const response = await fetch(form.action, {
+                method: "POST",
+                body: bodyData,
+                headers: {
+                    Accept: "application/json",
+                    "X-Requested-With": "XMLHttpRequest",
+                    "X-Cart-Drawer": "1",
+                    "X-CSRF-TOKEN": csrfToken,
+                },
+                credentials: "same-origin",
+            });
+
+            if (!response.ok) {
+                throw new Error("Cart request failed");
+            }
+
+            const payload = await response.json();
+            const fromDrawer = Boolean(form.closest("[data-cart-drawer-body]"));
+            applyCartPayload(payload, {
+                open: form.hasAttribute("data-cart-add") || fromDrawer || !cartRoot?.hidden,
+                announce: form.hasAttribute("data-cart-add"),
+            });
+
+            if (
+                location.pathname.replace(/\/$/, "").endsWith("/cart") &&
+                !fromDrawer
+            ) {
+                location.reload();
+            }
+        } catch (error) {
+            form.submit();
+        } finally {
+            delete form.dataset.cartBusy;
+        }
+    };
+
+    doc.querySelectorAll("[data-cart-open]").forEach((btn) => {
+        btn.addEventListener("click", () => setCartOpen(true));
+    });
+
+    cartRoot?.addEventListener("click", (event) => {
+        if (event.target.closest("[data-cart-close]")) {
+            setCartOpen(false);
+        }
+    });
+
+    doc.addEventListener("submit", (event) => {
+        const form = event.target;
+        if (!(form instanceof HTMLFormElement)) return;
+
+        if (form.hasAttribute("data-cart-add")) {
+            const submitter = event.submitter;
+            if (
+                submitter?.getAttribute("name") === "action" &&
+                submitter.value === "save"
+            ) {
+                return;
+            }
+            event.preventDefault();
+            submitCartForm(form);
+            return;
+        }
+
+        if (
+            form.hasAttribute("data-cart-update") ||
+            form.hasAttribute("data-cart-remove")
+        ) {
+            event.preventDefault();
+            submitCartForm(form);
+        }
+    });
+
+    if (cartRoot?.getAttribute("data-open-on-load") === "1") {
+        setCartOpen(true);
+        const message = cartRoot.getAttribute("data-status-message") || "";
+        const status = cartBody?.querySelector("[data-cart-status]");
+        if (status && message) {
+            status.hidden = false;
+            status.textContent = message;
         }
     }
 })();
