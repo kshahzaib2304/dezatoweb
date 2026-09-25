@@ -4,7 +4,7 @@
     <aside class="admin-media-guide">
         <strong>How delivery times work</strong>
         <ol class="admin-steps">
-            <li>Write each time window on its <strong>own line</strong> (e.g. <code>4:00 PM – 6:00 PM</code>).</li>
+            <li>Write each time window on its <strong>own line</strong> (e.g. <code>4:00 PM  -  6:00 PM</code>).</li>
             <li>Set how many hours of notice you need before the chosen date (e.g. <strong>4</strong> means customers cannot pick a slot sooner than 4 hours from now).</li>
             <li>These windows appear on the checkout page for pickup and delivery.</li>
         </ol>

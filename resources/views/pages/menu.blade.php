@@ -101,7 +101,7 @@
                 @if ($total === 0)
                     No treats match these filters. Try another search or size.
                 @else
-                    Showing {{ $from }}–{{ $to }} of {{ $total }}
+                    Showing {{ $from }} - {{ $to }} of {{ $total }}
                 @endif
             </p>
 

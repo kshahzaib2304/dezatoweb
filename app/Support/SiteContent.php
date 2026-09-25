@@ -26,7 +26,7 @@ final class SiteContent
             'label' => 'FAQ',
             'route' => 'pages.faq',
             'default_title' => 'Frequently Asked Questions',
-            'default_body' => "How far in advance should I order?\nFor celebration cakes we recommend 24–48 hours. Custom designs may need more time.\n\nDo you deliver in Karachi?\nYes - pickup, local delivery, and Pakistan courier options are available at checkout.\n\nCan I write a message on the cake?\nYes. Add your message in the notes or custom cake builder.\n\nWhat payment methods do you accept?\nCash on delivery/pickup, pay at bakery, and (when enabled) bank / JazzCash / Easypaisa transfer.",
+            'default_body' => "How far in advance should I order?\nFor celebration cakes we recommend 24 - 48 hours. Custom designs may need more time.\n\nDo you deliver in Karachi?\nYes - pickup, local delivery, and Pakistan courier options are available at checkout.\n\nCan I write a message on the cake?\nYes. Add your message in the notes or custom cake builder.\n\nWhat payment methods do you accept?\nCash on delivery/pickup, pay at bakery, and (when enabled) bank / JazzCash / Easypaisa transfer.",
         ],
     ];
 

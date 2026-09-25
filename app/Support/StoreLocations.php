@@ -75,7 +75,7 @@ final class StoreLocations
             'city' => 'Karachi',
             'region' => 'Sindh',
             'address' => '',
-            'hours' => 'Daily 10:00 AM – 10:00 PM',
+            'hours' => 'Daily 10:00 AM  -  10:00 PM',
             'phone' => '',
             'map_url' => '',
             'services' => ['Pickup', 'Delivery'],

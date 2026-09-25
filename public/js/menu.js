@@ -59,7 +59,7 @@
             status.textContent = "No treats match these filters.";
             return;
         }
-        status.textContent = `Showing 1–${shown} of ${total}`;
+        status.textContent = `Showing 1 - ${shown} of ${total}`;
     };
 
     const revealCards = (nodes) => {

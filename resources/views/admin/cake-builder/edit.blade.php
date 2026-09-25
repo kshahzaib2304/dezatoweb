@@ -67,7 +67,7 @@
                         </div>
                         <div class="form-row">
                             <label class="field-label" for="sizes-{{ $i }}-serves">Serves</label>
-                            <input id="sizes-{{ $i }}-serves" class="field-input" type="text" name="sizes[{{ $i }}][serves]" value="{{ old("sizes.$i.serves", $row['serves'] ?? '') }}" placeholder="8–10">
+                            <input id="sizes-{{ $i }}-serves" class="field-input" type="text" name="sizes[{{ $i }}][serves]" value="{{ old("sizes.$i.serves", $row['serves'] ?? '') }}" placeholder="8 - 10">
                         </div>
                         <div class="form-row">
                             <label class="field-label" for="sizes-{{ $i }}-price">Price (PKR) *</label>

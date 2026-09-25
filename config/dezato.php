@@ -45,7 +45,7 @@ return [
 
     'shipping' => [
         'fee' => 499,
-        'eta' => '2–4 business days within Pakistan',
+        'eta' => '2 - 4 business days within Pakistan',
         'label' => 'Pakistan Courier',
     ],
 
@@ -483,7 +483,7 @@ return [
             'city' => 'Karachi',
             'region' => 'Sindh',
             'address' => 'Plot 27-E, Khayaban-e-Seher Commercial, Phase 6, DHA',
-            'hours' => 'Mon–Tue & Sat 10:00 AM – 11:00 PM · Wed–Fri 10:00 AM – 10:00 PM · Sun 9:00 AM – 11:00 PM',
+            'hours' => 'Mon - Tue & Sat 10:00 AM  -  11:00 PM · Wed - Fri 10:00 AM  -  10:00 PM · Sun 9:00 AM  -  11:00 PM',
             'phone' => '+92 300 0000000',
             'services' => ['Pickup', 'Delivery', 'Custom cakes'],
             'delivers' => true,
@@ -498,7 +498,7 @@ return [
             'city' => 'Karachi',
             'region' => 'Sindh',
             'address' => 'Plot 4D/2, Shop 1, Gizri Boulevard, Phase 4, DHA',
-            'hours' => 'Mon 9:00 AM – 10:45 PM · Tue–Sun 9:00 AM – 11:00 PM',
+            'hours' => 'Mon 9:00 AM  -  10:45 PM · Tue - Sun 9:00 AM  -  11:00 PM',
             'phone' => '+92 300 0000000',
             'services' => ['Pickup', 'Delivery', 'Catering'],
             'delivers' => true,
@@ -513,14 +513,14 @@ return [
         'packages' => [
             [
                 'title' => 'Office Sweet Box',
-                'serves' => 'Serves 12–15',
+                'serves' => 'Serves 12 - 15',
                 'price' => 'From ₨ 7,500',
                 'blurb' => 'Assorted cupcakes, brownies, and eclairs for meetings and team treats.',
                 'image' => 'images/products/ferrero-cupcake.jpg',
             ],
             [
                 'title' => 'Celebration Dessert Table',
-                'serves' => 'Serves 25–40',
+                'serves' => 'Serves 25 - 40',
                 'price' => 'From ₨ 22,000',
                 'blurb' => 'Cakes, cupcakes, and sundae cups styled for birthdays and mehndi gatherings.',
                 'image' => 'images/products/lotus-cake.jpg',

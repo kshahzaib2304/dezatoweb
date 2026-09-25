@@ -78,11 +78,11 @@ return [
             'Real lily flowers are subject to availability. Plastic lilies are always available.',
         ],
         'sizes' => [
-            ['id' => '2lb', 'label' => '2 lb', 'serves' => '6–8', 'price' => 1600],
-            ['id' => '3lb', 'label' => '3 lb', 'serves' => '10–12', 'price' => 2400],
-            ['id' => '4lb', 'label' => '4 lb', 'serves' => '14–16', 'price' => 3200],
-            ['id' => '5lb', 'label' => '5 lb', 'serves' => '18–20', 'price' => 4000],
-            ['id' => '6lb', 'label' => '6 lb', 'serves' => '22–24', 'price' => 4800],
+            ['id' => '2lb', 'label' => '2 lb', 'serves' => '6 - 8', 'price' => 1600],
+            ['id' => '3lb', 'label' => '3 lb', 'serves' => '10 - 12', 'price' => 2400],
+            ['id' => '4lb', 'label' => '4 lb', 'serves' => '14 - 16', 'price' => 3200],
+            ['id' => '5lb', 'label' => '5 lb', 'serves' => '18 - 20', 'price' => 4000],
+            ['id' => '6lb', 'label' => '6 lb', 'serves' => '22 - 24', 'price' => 4800],
         ],
         'shapes' => [
             ['id' => 'round', 'label' => 'Round'],
@@ -221,12 +221,12 @@ return [
 
     'checkout' => [
         'time_slots' => [
-            '10:00 AM – 12:00 PM',
-            '12:00 PM – 2:00 PM',
-            '2:00 PM – 4:00 PM',
-            '4:00 PM – 6:00 PM',
-            '6:00 PM – 8:00 PM',
-            '8:00 PM – 10:00 PM',
+            '10:00 AM  -  12:00 PM',
+            '12:00 PM  -  2:00 PM',
+            '2:00 PM  -  4:00 PM',
+            '4:00 PM  -  6:00 PM',
+            '6:00 PM  -  8:00 PM',
+            '8:00 PM  -  10:00 PM',
         ],
         'payment_methods' => [
             ['id' => 'cod', 'label' => 'Cash on delivery / pickup', 'hint' => 'Pay in PKR when your order arrives'],

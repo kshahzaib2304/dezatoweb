@@ -67,7 +67,7 @@ class StorefrontController extends Controller
                 'total' => $paginator->total(),
                 'status' => $paginator->total() === 0
                     ? 'No treats match these filters.'
-                    : 'Showing '.$paginator->firstItem().'–'.$paginator->lastItem().' of '.$paginator->total(),
+                    : 'Showing '.$paginator->firstItem().' - '.$paginator->lastItem().' of '.$paginator->total(),
             ]);
         }
 

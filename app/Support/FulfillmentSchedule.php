@@ -15,12 +15,12 @@ final class FulfillmentSchedule
     {
         $defaults = [
             'slots' => config('dezato_ui.checkout.time_slots', [
-                '10:00 AM – 12:00 PM',
-                '12:00 PM – 2:00 PM',
-                '2:00 PM – 4:00 PM',
-                '4:00 PM – 6:00 PM',
-                '6:00 PM – 8:00 PM',
-                '8:00 PM – 10:00 PM',
+                '10:00 AM  -  12:00 PM',
+                '12:00 PM  -  2:00 PM',
+                '2:00 PM  -  4:00 PM',
+                '4:00 PM  -  6:00 PM',
+                '6:00 PM  -  8:00 PM',
+                '8:00 PM  -  10:00 PM',
             ]),
             'min_hours' => 4,
             'note' => 'Same-day slots may not always be available - we will confirm by phone if needed.',
