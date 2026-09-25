@@ -1,5 +1,22 @@
 @extends('layouts.app')
 
+@php
+    /** @var \Illuminate\Contracts\Pagination\LengthAwarePaginator $products */
+    $total = $products->total();
+    $from = $products->firstItem();
+    $to = $products->lastItem();
+    $hasMore = $products->hasMorePages();
+@endphp
+
+@push('head')
+    @if ($products->previousPageUrl())
+        <link rel="prev" href="{{ $products->previousPageUrl() }}">
+    @endif
+    @if ($products->nextPageUrl())
+        <link rel="next" href="{{ $products->nextPageUrl() }}">
+    @endif
+@endpush
+
 @section('content')
     <x-page-hero
         eyebrow="Menu"
@@ -12,9 +29,17 @@
         <div class="container">
             <nav class="chip-row" aria-label="Menu categories">
                 @foreach ($categories as $category)
+                    @php
+                        $chipQuery = array_filter([
+                            'category' => $category['id'] === 'all' ? null : $category['id'],
+                            'q' => ($filters['q'] ?? '') !== '' ? $filters['q'] : null,
+                            'sort' => (($filters['sort'] ?? 'featured') !== 'featured') ? $filters['sort'] : null,
+                            'weight' => ($filters['weight'] ?? '') !== '' ? $filters['weight'] : null,
+                        ]);
+                    @endphp
                     <a
                         class="chip {{ $activeCategory === $category['id'] ? 'is-active' : '' }}"
-                        href="{{ route('menu', array_filter(['category' => $category['id'] === 'all' ? null : $category['id']])) }}"
+                        href="{{ route('menu', $chipQuery) }}"
                     >
                         {{ $category['label'] }}
                     </a>
@@ -24,7 +49,14 @@
     </div>
 
     <section class="section-block" aria-label="Products">
-        <div class="container">
+        <div
+            class="container"
+            data-menu-listing
+            data-current-page="{{ $products->currentPage() }}"
+            data-last-page="{{ $products->lastPage() }}"
+            data-per-page="{{ $products->perPage() }}"
+            data-total="{{ $total }}"
+        >
             <form class="menu-tools" method="get" action="{{ route('menu') }}">
                 @if ($activeCategory !== 'all')
                     <input type="hidden" name="category" value="{{ $activeCategory }}">
@@ -66,15 +98,52 @@
                 <noscript><button class="btn btn--outline" type="submit">Apply filters</button></noscript>
             </form>
 
-            @if (count($products) === 0)
-                <p class="empty-state">No treats match these filters. Try another search or size.</p>
+            <p
+                class="menu-count"
+                data-menu-status
+                aria-live="polite"
+            >
+                @if ($total === 0)
+                    No treats match these filters. Try another search or size.
+                @else
+                    Showing {{ $from }}–{{ $to }} of {{ $total }}
+                @endif
+            </p>
+
+            @if ($total === 0)
+                <p class="empty-state">Browse another category or clear your search.</p>
             @else
-                <div class="product-grid">
-                    @foreach ($products as $product)
-                        <x-product-card :product="$product" />
-                    @endforeach
+                <div class="product-grid" data-menu-grid>
+                    <x-menu-product-cards :products="$products" />
+                </div>
+
+                <div class="menu-more" data-menu-more @if (! $hasMore || ! $products->onFirstPage()) hidden @endif>
+                    <button
+                        class="btn btn--outline menu-more__btn"
+                        type="button"
+                        data-menu-load-more
+                        data-next-url="{{ $products->nextPageUrl() }}"
+                        @disabled(! $hasMore || ! $products->onFirstPage())
+                    >
+                        Load more treats
+                    </button>
+                    @if ($hasMore && $products->onFirstPage())
+                        <a class="menu-more__page-link" href="{{ $products->nextPageUrl() }}" rel="next">
+                            Or go to page {{ $products->currentPage() + 1 }}
+                        </a>
+                    @endif
+                    <div class="menu-more__sentinel" data-menu-sentinel aria-hidden="true"></div>
+                </div>
+
+                {{-- Always crawlable pagination links (Google Search Central) --}}
+                <div class="menu-pager" data-menu-pager>
+                    {{ $products->links('pagination.simple') }}
                 </div>
             @endif
         </div>
     </section>
 @endsection
+
+@push('scripts')
+<script src="{{ asset('js/menu.js') }}" defer></script>
+@endpush

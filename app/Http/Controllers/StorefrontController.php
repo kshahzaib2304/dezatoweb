@@ -7,10 +7,12 @@ use App\Support\Fulfillment;
 use App\Support\FulfillmentSchedule;
 use App\Support\HeroSlider;
 use App\Support\HomeShowcase;
+use App\Support\MenuListing;
 use App\Support\SiteContent;
 use App\Support\StoryBlocks;
 use App\Support\StoreLocations;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -40,65 +42,46 @@ class StorefrontController extends Controller
         ]);
     }
 
-    public function menu(Request $request): View
+    public function menu(Request $request): View|JsonResponse
     {
-        $category = $request->string('category')->toString() ?: 'all';
-        $categories = Catalog::categories()->all();
-        $validIds = collect($categories)->pluck('id')->all();
+        $listing = MenuListing::fromRequest($request);
+        $paginator = $listing['products'];
 
-        if (! in_array($category, $validIds, true)) {
-            $category = 'all';
+        if ($this->wantsMenuPartial($request)) {
+            return response()->json([
+                'html' => view('components.menu-product-cards', [
+                    'products' => $paginator->items(),
+                ])->render(),
+                'page' => $paginator->currentPage(),
+                'last_page' => $paginator->lastPage(),
+                'has_more' => $paginator->hasMorePages(),
+                'next_url' => $paginator->nextPageUrl(),
+                'prev_url' => $paginator->previousPageUrl(),
+                'from' => $paginator->firstItem(),
+                'to' => $paginator->lastItem(),
+                'total' => $paginator->total(),
+                'status' => $paginator->total() === 0
+                    ? 'No treats match these filters.'
+                    : 'Showing '.$paginator->firstItem().'–'.$paginator->lastItem().' of '.$paginator->total(),
+            ]);
         }
 
-        $query = $request->string('q')->trim()->toString();
-        $sort = $request->string('sort')->toString() ?: 'featured';
-        $weight = $request->string('weight')->toString();
-
-        $products = Catalog::products()
-            ->when($category !== 'all', fn ($items) => $items->where('category', $category))
-            ->when($query !== '', function ($items) use ($query) {
-                $needle = mb_strtolower($query);
-
-                return $items->filter(function (array $product) use ($needle): bool {
-                    $haystack = mb_strtolower($product['name'].' '.$product['description'].' '.($product['badge'] ?? ''));
-
-                    return str_contains($haystack, $needle);
-                });
-            })
-            ->when($weight !== '', fn ($items) => $items->filter(fn (array $p): bool => ($p['weight'] ?? '') === $weight))
-            ->values();
-
-        $products = match ($sort) {
-            'price_asc' => $products->sortBy('price')->values(),
-            'price_desc' => $products->sortByDesc('price')->values(),
-            'newest' => $products->sortByDesc(fn (array $p): int => ($p['badge'] ?? null) === 'New' ? 1 : 0)->values(),
-            'popular' => $products->sortByDesc(fn (array $p): int => ($p['badge'] ?? null) !== null ? 1 : 0)->values(),
-            default => $products,
-        };
-
-        $categoryLabel = $category === 'all'
-            ? 'All desserts'
-            : Catalog::categoryLabel($category);
-
         return view('pages.menu', [
-            'title' => $categoryLabel.' | Dezato Cake House',
-            'metaDescription' => 'Browse '.$categoryLabel.' from Dezato Cake House, Karachi. Prices in PKR (₨).',
-            'categories' => $categories,
-            'products' => $products->all(),
-            'activeCategory' => $category,
-            'filters' => [
-                'q' => $query,
-                'sort' => $sort,
-                'weight' => $weight,
-            ],
-            'weights' => Catalog::products()
-                ->pluck('weight')
-                ->filter(fn (mixed $value): bool => is_string($value) && $value !== '')
-                ->unique()
-                ->sort()
-                ->values()
-                ->all(),
+            'title' => $listing['category_label'].' | Dezato Cake House',
+            'metaDescription' => 'Browse '.$listing['category_label'].' from Dezato Cake House, Karachi. Prices in PKR (₨).',
+            'canonical' => $paginator->url($paginator->currentPage()),
+            'categories' => $listing['categories'],
+            'products' => $paginator,
+            'activeCategory' => $listing['category'],
+            'filters' => $listing['filters'],
+            'weights' => $listing['weights'],
         ]);
+    }
+
+    private function wantsMenuPartial(Request $request): bool
+    {
+        return $request->boolean('partial')
+            || $request->header('X-Menu-Partial') === '1';
     }
 
     public function locations(): View

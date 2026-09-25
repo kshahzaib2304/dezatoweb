@@ -1009,6 +1009,44 @@
     font-size: 0.88rem;
 }
 
+.menu-count {
+    margin: 0 0 1rem;
+    color: var(--muted);
+    font-size: 0.92rem;
+}
+
+.menu-more {
+    display: grid;
+    justify-items: center;
+    gap: 0.35rem;
+    margin-top: 1.75rem;
+}
+
+.menu-more__btn {
+    min-width: min(100%, 16rem);
+}
+
+.menu-more__page-link {
+    font-size: 0.86rem;
+    color: var(--plum-600);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.menu-more__sentinel {
+    width: 1px;
+    height: 1px;
+    pointer-events: none;
+}
+
+.menu-pager {
+    margin-top: 1.25rem;
+}
+
+.menu-pager .pager {
+    justify-content: center;
+}
+
 .admin-price-row {
     display: grid;
     gap: 0.65rem;
