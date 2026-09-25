@@ -9,29 +9,40 @@
         $brandLogoMark = $brandLogoMark ?? \App\Support\SiteBrand::logoMark();
         $brandLogoIcon = $brandLogoIcon ?? \App\Support\SiteBrand::logoIcon();
         $pageTitle = $title ?? $brandName;
-        $pageDescription = $metaDescription ?? $brandName.' - cakes, cupcakes, eclairs, brownies, cheesecakes, tarts, mini pies and sundaes in Karachi. Order in PKR.';
+        $pageDescription = \App\Support\SeoMeta::description(
+            $metaDescription ?? ($brandName.' - cakes, cupcakes, eclairs, brownies, cheesecakes, tarts, mini pies and sundaes in Karachi. Order in PKR.')
+        );
         $canonical = $canonical ?? url()->current();
-        $ogImage = asset($ogImage ?? $brandLogoIcon);
+        $ogImagePath = $ogImage ?? $brandLogoIcon;
+        $ogImageUrl = str_starts_with((string) $ogImagePath, 'http://') || str_starts_with((string) $ogImagePath, 'https://')
+            ? (string) $ogImagePath
+            : asset((string) $ogImagePath);
+        $ogType = $ogType ?? 'website';
+        $ogImageAlt = $ogImageAlt ?? $pageTitle;
+        $robots = $robots ?? 'index, follow';
         $isCheckout = ($currentRoute ?? null) === 'checkout.show';
         $faviconType = str_ends_with(strtolower($brandLogoMark), '.svg') ? 'image/svg+xml' : 'image/png';
     @endphp
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $pageTitle }}</title>
     <meta name="description" content="{{ $pageDescription }}">
+    <meta name="robots" content="{{ $robots }}">
     <link rel="canonical" href="{{ $canonical }}">
 
-    <meta property="og:type" content="website">
+    <meta property="og:type" content="{{ $ogType }}">
     <meta property="og:site_name" content="{{ $brandName }}">
     <meta property="og:locale" content="en_PK">
     <meta property="og:title" content="{{ $pageTitle }}">
     <meta property="og:description" content="{{ $pageDescription }}">
     <meta property="og:url" content="{{ $canonical }}">
-    <meta property="og:image" content="{{ $ogImage }}">
+    <meta property="og:image" content="{{ $ogImageUrl }}">
+    <meta property="og:image:alt" content="{{ $ogImageAlt }}">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="{{ $pageTitle }}">
     <meta name="twitter:description" content="{{ $pageDescription }}">
-    <meta name="twitter:image" content="{{ $ogImage }}">
+    <meta name="twitter:image" content="{{ $ogImageUrl }}">
+    <meta name="twitter:image:alt" content="{{ $ogImageAlt }}">
 
     <link rel="icon" type="{{ $faviconType }}" href="{{ asset($brandLogoMark) }}">
     <link rel="apple-touch-icon" href="{{ asset($brandLogoIcon) }}">
@@ -59,7 +70,7 @@
     </script>
 
     <script type="application/ld+json">
-        {!! \App\Support\SeoSchema::bakery($brandName, $pageDescription) !!}
+        {!! \App\Support\SeoSchema::siteGraph() !!}
     </script>
 </head>
 <body @class([

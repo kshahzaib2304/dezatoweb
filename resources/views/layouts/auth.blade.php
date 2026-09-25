@@ -12,6 +12,8 @@
     <meta name="theme-color" content="#FAF6F2">
     <title>{{ $title ?? $brandName }}</title>
     <meta name="description" content="{{ $metaDescription ?? $brandName }}">
+    <meta name="robots" content="noindex, follow">
+    <link rel="canonical" href="{{ url()->current() }}">
     <link rel="icon" type="{{ $faviconType }}" href="{{ asset($brandLogoMark) }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

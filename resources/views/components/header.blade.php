@@ -27,7 +27,7 @@
         </button>
 
         <a class="brand" href="{{ route('home') }}" aria-label="{{ $brandName ?? 'Dezato Cake House' }} home">
-            <img class="brand__mark" src="{{ asset($brandLogoMark ?? 'images/brand/logo-mark.svg') }}" width="40" height="40" alt="">
+            <img class="brand__mark" src="{{ asset($brandLogoMark ?? 'images/brand/logo-mark.svg') }}" width="40" height="40" alt="{{ $brandName ?? 'Dezato Cake House' }}">
             <span class="brand__text">
                 <span class="brand__name">{{ $brandShortName ?? 'Dezato' }}</span>
                 <span class="brand__tag">{{ $brandHeaderTag ?? 'cake house' }}</span>

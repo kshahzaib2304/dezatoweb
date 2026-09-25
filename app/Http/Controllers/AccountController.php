@@ -229,6 +229,7 @@ class AccountController extends Controller
     private function shell(array $data): array
     {
         return array_merge([
+            'robots' => 'noindex, nofollow',
             'nav' => [
                 ['id' => 'profile', 'label' => 'Profile', 'route' => 'account.profile'],
                 ['id' => 'addresses', 'label' => 'Addresses', 'route' => 'account.addresses'],

@@ -2,7 +2,7 @@
 
 @push('head')
 <script type="application/ld+json">
-{!! \App\Support\SeoSchema::product($product) !!}
+{!! \App\Support\SeoSchema::product($product, $breadcrumbCrumbs ?? []) !!}
 </script>
 @endpush
 

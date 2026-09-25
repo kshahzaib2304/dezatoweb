@@ -32,8 +32,10 @@ class CheckoutController extends Controller
         $discount = $promoResult['ok'] ? (float) $promoResult['discount'] : 0.0;
 
         return view('pages.checkout', [
-            'title' => 'Checkout | Dezato Cake House',
+            'title' => 'Checkout | '.\App\Support\SiteBrand::name(),
             'metaDescription' => 'Complete your Dezato order for pickup, Karachi delivery, or Pakistan courier.',
+            'robots' => 'noindex, follow',
+            'canonical' => route('checkout.show'),
             'lines' => $this->cart->lines(),
             'subtotal' => $subtotal,
             'fee' => $fee,
@@ -85,8 +87,9 @@ class CheckoutController extends Controller
         $order->loadMissing('items');
 
         return view('pages.confirmation', [
-            'title' => 'Order '.$order->number.' | Dezato Cake House',
-            'metaDescription' => 'Your Dezato Cake House order confirmation.',
+            'title' => 'Order '.$order->number.' | '.\App\Support\SiteBrand::name(),
+            'metaDescription' => 'Your order confirmation from '.\App\Support\SiteBrand::name().'.',
+            'robots' => 'noindex, nofollow',
             'order' => $order,
             'paymentInstructions' => PaymentMethods::isTransfer($order->payment_method)
                 ? PaymentMethods::instructionsFor($order->payment_method)

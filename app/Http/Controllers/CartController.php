@@ -28,8 +28,10 @@ class CartController extends Controller
         $total = round($subtotal + $deliveryFee, 2);
 
         return view('pages.cart', [
-            'title' => 'Cart | Dezato Cake House',
+            'title' => 'Cart | '.\App\Support\SiteBrand::name(),
             'metaDescription' => 'Review your Dezato order for pickup, Karachi delivery, or Pakistan courier.',
+            'robots' => 'noindex, follow',
+            'canonical' => route('cart.show'),
             'lines' => $lines,
             'subtotal' => $subtotal,
             'deliveryFee' => $deliveryFee,

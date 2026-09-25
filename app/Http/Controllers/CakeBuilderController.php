@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Support\CakeBuilder;
 use App\Support\Cart;
+use App\Support\SiteBrand;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -19,8 +20,9 @@ class CakeBuilderController extends Controller
     public function show(): View
     {
         return view('builder.show', [
-            'title' => 'Custom Cake Builder | Dezato Cake House',
+            'title' => 'Custom Cake Builder | '.SiteBrand::name(),
             'metaDescription' => 'Design a custom cake - upload a reference, choose size, shape, flavour, and add-ons. Prices in PKR.',
+            'canonical' => route('builder.show'),
             'builder' => CakeBuilder::config(),
             'guidelines' => CakeBuilder::guidelines(),
             'referenceGuide' => config('dezato_admin.media.reference'),
