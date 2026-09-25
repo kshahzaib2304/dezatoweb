@@ -94,7 +94,7 @@ class ContentController extends Controller
             $data['headline'],
             $data['lede'],
             $path,
-            $request->boolean('active', true)
+            $request->boolean('active')
         );
 
         HeroSlider::save($config);

@@ -113,7 +113,7 @@ final class GatewayCredentials
 
             $flags[$group] = [
                 'online_enabled' => (bool) ($flagRow['online_enabled'] ?? false),
-                'sandbox' => (bool) ($flagRow['sandbox'] ?? true),
+                'sandbox' => (bool) ($flagRow['sandbox'] ?? false),
             ];
         }
 

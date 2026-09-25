@@ -53,7 +53,8 @@
                     </div>
                     <div class="form-row form-row--full">
                         <label class="check-inline">
-                            <input type="checkbox" name="is_active" value="1" @checked(old('is_active', true))>
+                            <input type="hidden" name="is_active" value="0">
+                            <input type="checkbox" name="is_active" value="1" @checked(filter_var(old('is_active', true), FILTER_VALIDATE_BOOLEAN))>
                             <span>Active (customers can use it)</span>
                         </label>
                     </div>

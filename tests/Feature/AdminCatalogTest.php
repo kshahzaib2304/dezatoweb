@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
+use App\Support\GatewayCredentials;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -97,5 +98,51 @@ class AdminCatalogTest extends TestCase
             'label' => 'Mini Pies',
             'slug' => 'mini-pies',
         ]);
+    }
+
+    public function test_an_unchecked_promo_stays_off_and_a_checked_one_is_active(): void
+    {
+        $admin = User::factory()->create(['role' => User::ROLE_ADMIN]);
+
+        $this->actingAs($admin)->post(route('admin.promos.store'), [
+            'code' => 'off10',
+            'type' => 'percent',
+            'value' => 10,
+            'is_active' => '0',
+        ])->assertRedirect();
+
+        $this->assertDatabaseHas('promos', [
+            'code' => 'OFF10',
+            'is_active' => 0,
+        ]);
+
+        $this->actingAs($admin)->post(route('admin.promos.store'), [
+            'code' => 'on10',
+            'type' => 'percent',
+            'value' => 10,
+            'is_active' => '1',
+        ])->assertRedirect();
+
+        $this->assertDatabaseHas('promos', [
+            'code' => 'ON10',
+            'is_active' => 1,
+        ]);
+    }
+
+    public function test_unchecking_gateway_sandbox_turns_test_mode_off(): void
+    {
+        GatewayCredentials::save([], [
+            'jazzcash' => ['online_enabled' => '1'],
+        ]);
+
+        $this->assertFalse(GatewayCredentials::sandbox('jazzcash'));
+        $this->assertTrue(GatewayCredentials::onlineEnabled('jazzcash'));
+
+        GatewayCredentials::save([], [
+            'jazzcash' => ['sandbox' => '1'],
+        ]);
+
+        $this->assertTrue(GatewayCredentials::sandbox('jazzcash'));
+        $this->assertFalse(GatewayCredentials::onlineEnabled('jazzcash'));
     }
 }

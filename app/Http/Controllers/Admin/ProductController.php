@@ -19,13 +19,14 @@ class ProductController extends Controller
     {
         $q = $request->string('q')->trim()->toString();
         $needsPhoto = $request->boolean('needs_photo');
+        $like = '%'.addcslashes($q, '%_\\').'%';
 
         $products = Product::query()
             ->with('category')
-            ->when($q !== '', function ($query) use ($q): void {
-                $query->where(function ($inner) use ($q): void {
-                    $inner->where('name', 'like', "%{$q}%")
-                        ->orWhere('slug', 'like', "%{$q}%");
+            ->when($q !== '', function ($query) use ($like): void {
+                $query->where(function ($inner) use ($like): void {
+                    $inner->where('name', 'like', $like)
+                        ->orWhere('slug', 'like', $like);
                 });
             })
             ->when($needsPhoto, function ($query): void {

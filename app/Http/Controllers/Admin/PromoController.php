@@ -100,7 +100,7 @@ class PromoController extends Controller
         $data['max_uses'] = $maxUses !== null && $maxUses !== ''
             ? (int) $maxUses
             : null;
-        $data['is_active'] = $request->boolean('is_active', true);
+        $data['is_active'] = $request->boolean('is_active');
 
         return $data;
     }

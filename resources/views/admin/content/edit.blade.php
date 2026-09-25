@@ -61,14 +61,15 @@
                 <form class="admin-form" method="post" action="{{ route('admin.content.slides.update', $slide['id']) }}" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
+                    <input type="hidden" name="_form" value="slide-{{ $slide['id'] }}">
                     <div class="form-grid">
                         <div class="form-row form-row--full">
                             <label class="field-label" for="headline-{{ $slide['id'] }}">Headline *</label>
-                            <input id="headline-{{ $slide['id'] }}" class="field-input" type="text" name="headline" value="{{ old('headline', $slide['headline']) }}" required maxlength="120">
+                            <input id="headline-{{ $slide['id'] }}" class="field-input" type="text" name="headline" value="{{ old('_form') === 'slide-'.$slide['id'] ? old('headline') : $slide['headline'] }}" required maxlength="120">
                         </div>
                         <div class="form-row form-row--full">
                             <label class="field-label" for="lede-{{ $slide['id'] }}">Supporting sentence *</label>
-                            <input id="lede-{{ $slide['id'] }}" class="field-input" type="text" name="lede" value="{{ old('lede', $slide['lede']) }}" required maxlength="240">
+                            <input id="lede-{{ $slide['id'] }}" class="field-input" type="text" name="lede" value="{{ old('_form') === 'slide-'.$slide['id'] ? old('lede') : $slide['lede'] }}" required maxlength="240">
                         </div>
                         <div class="form-row form-row--full">
                             <label class="field-label" for="image-{{ $slide['id'] }}">Replace photo (optional)</label>
@@ -77,7 +78,8 @@
                         </div>
                         <div class="form-row">
                             <label class="check-inline">
-                                <input type="checkbox" name="active" value="1" @checked(old('active', $slide['active']))>
+                                <input type="hidden" name="active" value="0">
+                                <input type="checkbox" name="active" value="1" @checked(filter_var(old('_form') === 'slide-'.$slide['id'] ? old('active') : $slide['active'], FILTER_VALIDATE_BOOLEAN))>
                                 <span>Show on homepage</span>
                             </label>
                         </div>
@@ -102,14 +104,15 @@
             <h2>Add another slide</h2>
             <form class="admin-form" method="post" action="{{ route('admin.content.slides.store') }}" enctype="multipart/form-data">
                 @csrf
+                <input type="hidden" name="_form" value="slide-new">
                 <div class="form-grid">
                     <div class="form-row form-row--full">
                         <label class="field-label" for="new-headline">Headline *</label>
-                        <input id="new-headline" class="field-input" type="text" name="headline" value="{{ old('headline') }}" required maxlength="120" placeholder="e.g. Custom cakes for every celebration">
+                        <input id="new-headline" class="field-input" type="text" name="headline" value="{{ old('_form') === 'slide-new' ? old('headline') : '' }}" required maxlength="120" placeholder="e.g. Custom cakes for every celebration">
                     </div>
                     <div class="form-row form-row--full">
                         <label class="field-label" for="new-lede">Supporting sentence *</label>
-                        <input id="new-lede" class="field-input" type="text" name="lede" value="{{ old('lede') }}" required maxlength="240" placeholder="Pickup & delivery across Karachi">
+                        <input id="new-lede" class="field-input" type="text" name="lede" value="{{ old('_form') === 'slide-new' ? old('lede') : '' }}" required maxlength="240" placeholder="Pickup & delivery across Karachi">
                     </div>
                     <div class="form-row form-row--full">
                         <label class="field-label" for="new-image">Photo * ({{ $mediaGuide['size'] }})</label>
@@ -118,7 +121,8 @@
                     </div>
                     <div class="form-row">
                         <label class="check-inline">
-                            <input type="checkbox" name="active" value="1" @checked(old('active', true))>
+                            <input type="hidden" name="active" value="0">
+                            <input type="checkbox" name="active" value="1" @checked(filter_var(old('_form') === 'slide-new' ? old('active') : true, FILTER_VALIDATE_BOOLEAN))>
                             <span>Show on homepage</span>
                         </label>
                     </div>
