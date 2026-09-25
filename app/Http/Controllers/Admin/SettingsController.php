@@ -22,11 +22,18 @@ class SettingsController extends Controller
 {
     public function edit(): View
     {
+        /** @var User $admin */
+        $admin = request()->user();
+
         return view('admin.settings.edit', [
             'title' => 'Contact & store | Dezato Admin',
             'heading' => 'Contact, brand & store',
             'active' => 'settings',
             'nav' => config('dezato_admin.nav'),
+            'adminUser' => [
+                'name' => $admin->name,
+                'email' => $admin->email,
+            ],
             'notifyEmail' => BakeryProfile::notifyEmail(),
             'publicEmail' => BakeryProfile::publicEmail(),
             'phone' => BakeryProfile::phone(),
@@ -42,6 +49,8 @@ class SettingsController extends Controller
 
     public function update(Request $request): RedirectResponse
     {
+        /** @var User $admin */
+        $admin = $request->user();
         $allowedRoutes = array_keys(NavigationMenu::allowedRoutes());
 
         $data = $request->validate([
@@ -51,6 +60,13 @@ class SettingsController extends Controller
             'brand_header_tag' => ['required', 'string', 'max:40'],
             'logo_mark' => ['nullable', 'file', 'max:1024', 'mimes:jpeg,jpg,png,webp,gif,svg'],
             'logo_icon' => ['nullable', 'file', 'max:1024', 'mimes:jpeg,jpg,png,webp,gif'],
+            'admin_name' => ['required', 'string', 'max:120'],
+            'admin_email' => [
+                'required',
+                'email',
+                'max:180',
+                Rule::unique('users', 'email')->ignore($admin->id),
+            ],
             'notify_email' => ['required', 'email', 'max:180'],
             'public_email' => ['required', 'email', 'max:180'],
             'public_phone' => ['required', 'string', 'max:40'],
@@ -67,9 +83,24 @@ class SettingsController extends Controller
             'password' => ['nullable', 'confirmed', PasswordRule::defaults()],
         ], [
             'brand_name.required' => 'Enter the bakery name customers should see.',
+            'admin_email.unique' => 'That login email is already used by another account.',
             'nav.min' => 'Keep at least one menu link.',
             'site_url.required' => 'Enter your live website address (https://…).',
         ]);
+
+        $emailChanged = strcasecmp($admin->email, $data['admin_email']) !== 0;
+        $passwordChanged = filled($data['password'] ?? null);
+        $nameChanged = $admin->name !== $data['admin_name'];
+
+        if ($emailChanged || $passwordChanged) {
+            if (! Hash::check((string) ($data['current_password'] ?? ''), $admin->password)) {
+                throw ValidationException::withMessages([
+                    'current_password' => $passwordChanged
+                        ? 'Enter your current password to set a new one.'
+                        : 'Enter your current password to change the login email.',
+                ]);
+            }
+        }
 
         SiteBrand::save([
             'name' => $data['brand_name'],
@@ -95,20 +126,25 @@ class SettingsController extends Controller
 
         BakeryProfile::applySiteUrl();
 
-        if (filled($data['password'] ?? null)) {
-            /** @var User $user */
-            $user = $request->user();
+        if ($nameChanged || $emailChanged || $passwordChanged) {
+            $payload = [
+                'name' => $data['admin_name'],
+                'email' => $data['admin_email'],
+            ];
 
-            if (! Hash::check((string) ($data['current_password'] ?? ''), $user->password)) {
-                throw ValidationException::withMessages([
-                    'current_password' => 'Enter your current password to set a new one.',
-                ]);
+            if ($passwordChanged) {
+                $payload['password'] = $data['password'];
             }
 
-            $user->forceFill(['password' => $data['password']])->save();
+            $admin->forceFill($payload)->save();
         }
 
-        return back()->with('status', 'Brand, menu, contact, and store settings saved.');
+        $status = 'Brand, menu, contact, and store settings saved.';
+        if ($emailChanged || $passwordChanged) {
+            $status = 'Settings saved. Your admin login details were updated.';
+        }
+
+        return back()->with('status', $status);
     }
 
     public function moveNav(Request $request, int $index): RedirectResponse

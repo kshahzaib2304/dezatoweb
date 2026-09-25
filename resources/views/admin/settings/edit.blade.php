@@ -4,10 +4,10 @@
     <aside class="admin-media-guide">
         <strong>What you can change here</strong>
         <ol class="admin-steps">
+            <li><strong>Admin login</strong> email and password (how you sign in).</li>
             <li><strong>Brand name</strong>, tagline, logos, and favicon.</li>
             <li><strong>Top menu</strong> labels and order (Home, About, etc.).</li>
-            <li>Phone, WhatsApp, emails, live website URL, courier fee.</li>
-            <li>Your admin password (optional).</li>
+            <li>Bakery phone, WhatsApp, public emails, live website URL, courier fee.</li>
         </ol>
         <p class="admin-muted">Page heroes, homepage section titles, cart copy, and Karachi areas: <a href="{{ route('admin.chrome.edit') }}">Storefront chrome</a>.</p>
         <p class="admin-muted">SMTP / Google / Facebook keys: <a href="{{ route('admin.integrations.edit') }}">Email, logins &amp; links</a>.</p>
@@ -18,7 +18,33 @@
             @csrf
             @method('PUT')
 
-            <h2>Brand name</h2>
+            <h2>Admin login</h2>
+            <p class="field-hint">This is the account you use to open Admin. Changing the login email or password requires your current password.</p>
+            <div class="form-grid">
+                <div class="form-row">
+                    <label class="field-label" for="admin_name">Display name *</label>
+                    <input id="admin_name" class="field-input" type="text" name="admin_name" value="{{ old('admin_name', $adminUser['name']) }}" required autocomplete="name">
+                </div>
+                <div class="form-row">
+                    <label class="field-label" for="admin_email">Login email *</label>
+                    <input id="admin_email" class="field-input" type="email" name="admin_email" value="{{ old('admin_email', $adminUser['email']) }}" required autocomplete="username">
+                </div>
+                <div class="form-row form-row--full">
+                    <label class="field-label" for="current_password">Current password</label>
+                    <input id="current_password" class="field-input" type="password" name="current_password" autocomplete="current-password">
+                    <p class="field-hint">Required only when you change the login email or set a new password.</p>
+                </div>
+                <div class="form-row">
+                    <label class="field-label" for="password">New password</label>
+                    <input id="password" class="field-input" type="password" name="password" autocomplete="new-password">
+                </div>
+                <div class="form-row">
+                    <label class="field-label" for="password_confirmation">Confirm new password</label>
+                    <input id="password_confirmation" class="field-input" type="password" name="password_confirmation" autocomplete="new-password">
+                </div>
+            </div>
+
+            <h2 class="admin-section-title">Brand name</h2>
             <div class="form-grid">
                 <div class="form-row">
                     <label class="field-label" for="brand_name">Full bakery name *</label>
@@ -88,14 +114,17 @@
             @endforeach
 
             <h2 class="admin-section-title">Contact &amp; alerts</h2>
+            <p class="field-hint">These are bakery contact details shown to customers - separate from your admin login email above.</p>
             <div class="form-grid">
                 <div class="form-row form-row--full">
                     <label class="field-label" for="notify_email">Alert email *</label>
                     <input id="notify_email" class="field-input" type="email" name="notify_email" value="{{ old('notify_email', $notifyEmail) }}" required>
+                    <p class="field-hint">Where new-order alerts are sent.</p>
                 </div>
                 <div class="form-row">
                     <label class="field-label" for="public_email">Public email *</label>
                     <input id="public_email" class="field-input" type="email" name="public_email" value="{{ old('public_email', $publicEmail) }}" required>
+                    <p class="field-hint">Shown on the website for customers.</p>
                 </div>
                 <div class="form-row">
                     <label class="field-label" for="site_url">Website address *</label>
@@ -131,23 +160,6 @@
                 <div class="form-row form-row--full">
                     <label class="field-label" for="shipping_eta">Delivery time text *</label>
                     <input id="shipping_eta" class="field-input" type="text" name="shipping_eta" value="{{ old('shipping_eta', $shipping['eta']) }}" required>
-                </div>
-            </div>
-
-            <h2 class="admin-section-title">Change admin password</h2>
-            <p class="field-hint">Leave blank to keep your current password.</p>
-            <div class="form-grid">
-                <div class="form-row form-row--full">
-                    <label class="field-label" for="current_password">Current password</label>
-                    <input id="current_password" class="field-input" type="password" name="current_password" autocomplete="current-password">
-                </div>
-                <div class="form-row">
-                    <label class="field-label" for="password">New password</label>
-                    <input id="password" class="field-input" type="password" name="password" autocomplete="new-password">
-                </div>
-                <div class="form-row">
-                    <label class="field-label" for="password_confirmation">Confirm new password</label>
-                    <input id="password_confirmation" class="field-input" type="password" name="password_confirmation" autocomplete="new-password">
                 </div>
             </div>
 
