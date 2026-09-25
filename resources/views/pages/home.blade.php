@@ -51,7 +51,11 @@
 
     @if (count($heroSlides) > 1)
         <div class="home-hero__controls" data-hero-controls>
-            <button type="button" class="home-hero__nav" data-hero-prev aria-label="Previous slide">‹</button>
+            <button type="button" class="home-hero__nav" data-hero-prev aria-label="Previous slide">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M15 6 9 12l6 6"/>
+                </svg>
+            </button>
             <div class="home-hero__dots" role="tablist" aria-label="Choose slide">
                 @foreach ($heroSlides as $index => $slide)
                     <button
@@ -63,7 +67,11 @@
                     ></button>
                 @endforeach
             </div>
-            <button type="button" class="home-hero__nav" data-hero-next aria-label="Next slide">›</button>
+            <button type="button" class="home-hero__nav" data-hero-next aria-label="Next slide">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="m9 6 6 6-6 6"/>
+                </svg>
+            </button>
         </div>
     @endif
 </section>

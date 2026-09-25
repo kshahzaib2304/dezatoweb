@@ -7,7 +7,18 @@
 
 @php
     $payments = \App\Support\PaymentMethods::forCheckout();
-    $paymentLabels = collect($payments)->pluck('label')->filter()->values()->all();
+    $paymentLabels = collect($payments)
+        ->pluck('label')
+        ->filter()
+        ->map(static function (string $label): string {
+            // Keep sidebar readable: "Cash on delivery / pickup" → "Cash on delivery"
+            $short = trim(explode('/', $label, 2)[0]);
+
+            return $short !== '' ? $short : $label;
+        })
+        ->unique()
+        ->values()
+        ->all();
     $whatsappPrefill = match ($context) {
         'product' => 'Hi Dezato, I have a question about a cake on your menu.',
         'cart' => 'Hi Dezato, I have a question about my cart.',
@@ -31,7 +42,7 @@
         @endif
         <li>Baked fresh in Karachi · Prices in PKR</li>
         @if ($whatsappUrl)
-            <li>
+            <li class="order-assurance__contact">
                 <a href="{{ $whatsappUrl }}" target="_blank" rel="noopener noreferrer">Chat on WhatsApp</a>
                 @if ($phone !== '')
                     <span class="order-assurance__sep" aria-hidden="true">·</span>
@@ -39,7 +50,9 @@
                 @endif
             </li>
         @elseif ($phone !== '')
-            <li><a href="tel:{{ preg_replace('/\s+/', '', $phone) }}">Call {{ $phone }}</a></li>
+            <li class="order-assurance__contact">
+                <a href="tel:{{ preg_replace('/\s+/', '', $phone) }}">Call {{ $phone }}</a>
+            </li>
         @endif
     </ul>
 </div>

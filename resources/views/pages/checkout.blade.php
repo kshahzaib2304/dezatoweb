@@ -34,12 +34,12 @@
                         <div class="form-row">
                             <label class="field-label" for="phone">Phone (WhatsApp)</label>
                             <input id="phone" class="field-input" type="tel" name="phone" value="{{ old('phone', auth()->user()->phone ?? '') }}" autocomplete="tel" inputmode="tel" required>
-                            <p class="field-hint">{{ $copy['checkout_phone_hint'] }}</p>
                         </div>
                         <div class="form-row">
                             <label class="field-label" for="email">Email</label>
                             <input id="email" class="field-input" type="email" name="email" value="{{ old('email', auth()->user()->email ?? '') }}" autocomplete="email" required>
                         </div>
+                        <p class="field-hint form-grid__hint">{{ $copy['checkout_phone_hint'] }}</p>
                         <div class="form-row form-row--full">
                             <label class="field-label" for="notes">Order notes <span class="field-optional">(optional)</span></label>
                             <textarea id="notes" class="field-input field-textarea" name="notes" rows="3" placeholder="Allergies, inscription, gate code…">{{ old('notes') }}</textarea>
