@@ -25,20 +25,20 @@ return [
     'home' => [
         'announcement' => 'Pickup & delivery across Karachi',
         'products' => [
-            ['label' => 'Cakes 2.5 lbs', 'image' => 'images/home/delivery-pickup.jpg', 'href' => '/menu?category=cakes', 'tone' => 'mint'],
-            ['label' => 'Cupcakes', 'image' => 'images/home/promo-workshop.jpg', 'href' => '/menu?category=cupcakes', 'tone' => 'blue'],
-            ['label' => 'Cheesecakes', 'image' => 'images/home/promo-anniversary.jpg', 'href' => '/menu?category=cheesecakes', 'tone' => 'cream'],
-            ['label' => 'Eclairs', 'image' => 'images/home/promo-seasonal.jpg', 'href' => '/menu?category=eclairs', 'tone' => 'lilac'],
-            ['label' => 'Brownies', 'image' => 'images/home/promo-cookbook.jpg', 'href' => '/menu?category=brownies', 'tone' => 'pink'],
-            ['label' => 'Sundaes', 'image' => 'images/home/promo-pudding.jpg', 'href' => '/menu?category=sundaes', 'tone' => 'pink'],
-            ['label' => 'Tarts', 'image' => 'images/home/promo-catering.jpg', 'href' => '/menu?category=tarts', 'tone' => 'cream'],
-            ['label' => 'Mini Pies', 'image' => 'images/home/delivery-ship.jpg', 'href' => '/menu?category=mini-pies', 'tone' => 'mint'],
+            ['label' => 'Cakes 2.5 lbs', 'image' => 'images/products/chocolate-heaven-cake.jpg', 'href' => '/menu?category=cakes', 'tone' => 'mint'],
+            ['label' => 'Cupcakes', 'image' => 'images/products/red-velvet-cupcake.jpg', 'href' => '/menu?category=cupcakes', 'tone' => 'blue'],
+            ['label' => 'Cheesecakes', 'image' => 'images/products/new-york-cheesecake.jpg', 'href' => '/menu?category=cheesecakes', 'tone' => 'cream'],
+            ['label' => 'Eclairs', 'image' => 'images/products/chocolate-eclair.jpg', 'href' => '/menu?category=eclairs', 'tone' => 'lilac'],
+            ['label' => 'Brownies', 'image' => 'images/products/nutella-brownie.jpg', 'href' => '/menu?category=brownies', 'tone' => 'pink'],
+            ['label' => 'Sundaes', 'image' => 'images/products/oreo-sundae.jpg', 'href' => '/menu?category=sundaes', 'tone' => 'pink'],
+            ['label' => 'Tarts', 'image' => 'images/products/chocolate-tart.jpg', 'href' => '/menu?category=tarts', 'tone' => 'cream'],
+            ['label' => 'Mini Pies', 'image' => 'images/products/walnut-pie.jpg', 'href' => '/menu?category=mini-pies', 'tone' => 'mint'],
         ],
         'occasions' => [
-            ['label' => 'Birthdays', 'image' => 'images/home/hero.jpg', 'href' => '/menu?category=cakes'],
-            ['label' => 'Office Treats', 'image' => 'images/home/promo-catering.jpg', 'href' => '/our-services'],
-            ['label' => 'Custom Cakes', 'image' => 'images/home/promo-anniversary.jpg', 'href' => '/cake-customization'],
-            ['label' => 'Gifting', 'image' => 'images/home/delivery-ship.jpg', 'href' => '/menu'],
+            ['label' => 'Birthdays', 'image' => 'images/products/red-velvet-cake.jpg', 'href' => '/menu?category=cakes'],
+            ['label' => 'Office Treats', 'image' => 'images/products/ferrero-cupcake.jpg', 'href' => '/our-services'],
+            ['label' => 'Custom Cakes', 'image' => 'images/products/lotus-cake.jpg', 'href' => '/cake-customization'],
+            ['label' => 'Gifting', 'image' => 'images/products/raffaello-cake.jpg', 'href' => '/menu'],
         ],
     ],
 
@@ -107,7 +107,7 @@ return [
                 'badge' => null,
                 'weight' => '2.5 lbs',
                 'description' => 'Soft coffee sponge layered with chocolate frosting - a 2.5 lb favourite for everyday celebrations.',
-                'image' => 'images/home/delivery-pickup.jpg',
+                'image' => 'images/products/coffee-chocolate-cake.jpg',
             ],
             [
                 'id' => 'chocolate-mousse-cake',
@@ -117,7 +117,7 @@ return [
                 'badge' => 'Popular',
                 'weight' => '2.5 lbs',
                 'description' => 'Light chocolate mousse over a tender cocoa base, finished for a clean slice every time.',
-                'image' => 'images/home/promo-pudding.jpg',
+                'image' => 'images/products/chocolate-mousse-cake.jpg',
             ],
             [
                 'id' => 'chocolate-heaven-cake',
@@ -127,7 +127,7 @@ return [
                 'badge' => 'Bestseller',
                 'weight' => '2.5 lbs',
                 'description' => 'Deep chocolate layers with a rich finish - one of our most ordered 2.5 lb cakes in Karachi.',
-                'image' => 'images/home/hero.jpg',
+                'image' => 'images/products/chocolate-heaven-cake.jpg',
             ],
             [
                 'id' => 'milky-malt-cake',
@@ -137,7 +137,7 @@ return [
                 'badge' => null,
                 'weight' => '2.5 lbs',
                 'description' => 'Creamy malt flavour in a soft, moist crumb - comfort dessert done right.',
-                'image' => 'images/home/promo-seasonal.jpg',
+                'image' => 'images/products/milky-malt-cake.jpg',
             ],
             [
                 'id' => 'cadbury-chocolate-cake',
@@ -147,7 +147,7 @@ return [
                 'badge' => null,
                 'weight' => '2.5 lbs',
                 'description' => 'Chocolate cake inspired by classic Cadbury richness, finished with a smooth chocolate cream.',
-                'image' => 'images/home/promo-cookbook.jpg',
+                'image' => 'images/products/cadbury-chocolate-cake.jpg',
             ],
             [
                 'id' => 'chocolate-fudge-cake',
@@ -157,7 +157,7 @@ return [
                 'badge' => null,
                 'weight' => '2.5 lbs',
                 'description' => 'Dense chocolate fudge layers with a glossy finish - for serious chocolate lovers.',
-                'image' => 'images/home/promo-workshop.jpg',
+                'image' => 'images/products/chocolate-fudge-cake.jpg',
             ],
             [
                 'id' => 'chocolate-malt-cake',
@@ -167,7 +167,7 @@ return [
                 'badge' => null,
                 'weight' => '2.5 lbs',
                 'description' => 'Chocolate and malt in one 2.5 lb cake - soft sponge, creamy frosting.',
-                'image' => 'images/home/promo-anniversary.jpg',
+                'image' => 'images/products/chocolate-malt-cake.jpg',
             ],
             [
                 'id' => 'nutella-cake',
@@ -177,7 +177,7 @@ return [
                 'badge' => null,
                 'weight' => '2.5 lbs',
                 'description' => 'Hazelnut-chocolate layers finished with Nutella cream.',
-                'image' => 'images/home/delivery-catering.jpg',
+                'image' => 'images/products/ferrero-classic-cake.jpg',
             ],
             [
                 'id' => 'red-velvet-cake',
@@ -187,7 +187,7 @@ return [
                 'badge' => null,
                 'weight' => '2.5 lbs',
                 'description' => 'Cocoa-kissed red velvet with cream cheese frosting - birthday classic.',
-                'image' => 'images/home/promo-anniversary.jpg',
+                'image' => 'images/products/red-velvet-cake.jpg',
             ],
             [
                 'id' => 'three-milk-cake',
@@ -197,7 +197,7 @@ return [
                 'badge' => 'Popular',
                 'weight' => '2.5 lbs',
                 'description' => 'Tres leches-style cake soaked in three milks, topped with whipped cream.',
-                'image' => 'images/home/promo-pudding.jpg',
+                'image' => 'images/products/three-milk-cake.jpg',
             ],
             [
                 'id' => 'ferrero-classic-cake',
@@ -207,7 +207,7 @@ return [
                 'badge' => 'Signature',
                 'weight' => '2.5 lbs',
                 'description' => 'Hazelnut chocolate cake with Ferrero-inspired crunch and cream.',
-                'image' => 'images/home/promo-catering.jpg',
+                'image' => 'images/products/ferrero-classic-cake.jpg',
             ],
             [
                 'id' => 'salted-caramel-cake',
@@ -217,7 +217,7 @@ return [
                 'badge' => null,
                 'weight' => '2.5 lbs',
                 'description' => 'Moist layers with salted caramel cream and a sweet drizzle finish.',
-                'image' => 'images/home/promo-seasonal.jpg',
+                'image' => 'images/products/salted-caramel-cake.jpg',
             ],
             [
                 'id' => 'lotus-cake',
@@ -227,7 +227,7 @@ return [
                 'badge' => 'Guest favorite',
                 'weight' => '2.5 lbs',
                 'description' => 'Biscoff / Lotus cream cake with caramelised cookie notes throughout.',
-                'image' => 'images/home/hero.jpg',
+                'image' => 'images/products/lotus-cake.jpg',
             ],
             [
                 'id' => 'raffaello-cake',
@@ -237,7 +237,7 @@ return [
                 'badge' => null,
                 'weight' => '2.5 lbs',
                 'description' => 'Coconut and white chocolate layers with a Raffaello-inspired finish.',
-                'image' => 'images/home/delivery-ship.jpg',
+                'image' => 'images/products/raffaello-cake.jpg',
             ],
 
             // -- Cupcakes (10) --
@@ -248,7 +248,7 @@ return [
                 'price' => 300,
                 'badge' => null,
                 'description' => 'Moist red velvet topped with cream cheese frosting. Sold per piece.',
-                'image' => 'images/home/promo-workshop.jpg',
+                'image' => 'images/products/red-velvet-cupcake.jpg',
             ],
             [
                 'id' => 'salted-caramel-cupcake',
@@ -257,7 +257,7 @@ return [
                 'price' => 300,
                 'badge' => null,
                 'description' => 'Soft cupcake with salted caramel frosting. Sold per piece.',
-                'image' => 'images/home/promo-seasonal.jpg',
+                'image' => 'images/products/salted-caramel-cupcake.jpg',
             ],
             [
                 'id' => 'malt-cupcake',
@@ -266,7 +266,7 @@ return [
                 'price' => 300,
                 'badge' => null,
                 'description' => 'Malt-flavoured cupcake with creamy frosting. Sold per piece.',
-                'image' => 'images/home/promo-pudding.jpg',
+                'image' => 'images/products/malt-cupcake.jpg',
             ],
             [
                 'id' => 'mm-cupcake',
@@ -275,7 +275,7 @@ return [
                 'price' => 300,
                 'badge' => null,
                 'description' => 'Chocolate cupcake topped with candy-coated chocolate pieces. Sold per piece.',
-                'image' => 'images/home/hero.jpg',
+                'image' => 'images/products/mm-cupcake.jpg',
             ],
             [
                 'id' => 'hazelnut-cupcake',
@@ -284,7 +284,7 @@ return [
                 'price' => 300,
                 'badge' => null,
                 'description' => 'Hazelnut sponge with creamy frosting and a nutty finish. Sold per piece.',
-                'image' => 'images/home/promo-cookbook.jpg',
+                'image' => 'images/products/hazelnut-cupcake.jpg',
             ],
             [
                 'id' => 'oreo-cupcake',
@@ -293,7 +293,7 @@ return [
                 'price' => 300,
                 'badge' => null,
                 'description' => 'Cookies-and-cream cupcake with Oreo crumbs. Sold per piece.',
-                'image' => 'images/home/promo-anniversary.jpg',
+                'image' => 'images/products/oreo-cupcake.jpg',
             ],
             [
                 'id' => 'lotus-cupcake',
@@ -302,7 +302,7 @@ return [
                 'price' => 300,
                 'badge' => 'Popular',
                 'description' => 'Lotus Biscoff cream on a soft vanilla base. Sold per piece.',
-                'image' => 'images/home/promo-catering.jpg',
+                'image' => 'images/products/lotus-eclair.jpg',
             ],
             [
                 'id' => 'swiss-dark-cupcake',
@@ -311,7 +311,7 @@ return [
                 'price' => 300,
                 'badge' => null,
                 'description' => 'Dark chocolate cupcake with a rich cocoa finish. Sold per piece.',
-                'image' => 'images/home/delivery-pickup.jpg',
+                'image' => 'images/products/coffee-cupcake.jpg',
             ],
             [
                 'id' => 'ferrero-cupcake',
@@ -320,7 +320,7 @@ return [
                 'price' => 300,
                 'badge' => null,
                 'description' => 'Hazelnut chocolate cupcake with Ferrero-style topping. Sold per piece.',
-                'image' => 'images/home/delivery-catering.jpg',
+                'image' => 'images/products/ferrero-cupcake.jpg',
             ],
             [
                 'id' => 'coffee-cupcake',
@@ -329,7 +329,7 @@ return [
                 'price' => 300,
                 'badge' => null,
                 'description' => 'Coffee-infused cupcake with a light cream swirl. Sold per piece.',
-                'image' => 'images/home/delivery-ship.jpg',
+                'image' => 'images/products/coffee-cupcake.jpg',
             ],
 
             // -- Cheesecakes (3) --
@@ -341,7 +341,7 @@ return [
                 'badge' => 'Bestseller',
                 'weight' => '2.5 lbs',
                 'description' => 'Dense, creamy New York-style cheesecake - a Dezato favourite.',
-                'image' => 'images/home/promo-anniversary.jpg',
+                'image' => 'images/products/new-york-cheesecake.jpg',
             ],
             [
                 'id' => 'caramel-cheesecake',
@@ -351,7 +351,7 @@ return [
                 'badge' => null,
                 'weight' => '2.5 lbs',
                 'description' => 'Baked cheesecake finished with a salted caramel layer.',
-                'image' => 'images/home/promo-seasonal.jpg',
+                'image' => 'images/products/new-york-cheesecake.jpg',
             ],
             [
                 'id' => 'lotus-cheesecake',
@@ -361,7 +361,7 @@ return [
                 'badge' => null,
                 'weight' => '2.5 lbs',
                 'description' => 'Creamy cheesecake with Lotus Biscoff crust and cream.',
-                'image' => 'images/home/hero.jpg',
+                'image' => 'images/products/lotus-cake.jpg',
             ],
 
             // -- Brownies (2) --
@@ -372,7 +372,7 @@ return [
                 'price' => 500,
                 'badge' => null,
                 'description' => 'Dense chocolate brownie with a glossy crackle top.',
-                'image' => 'images/home/promo-cookbook.jpg',
+                'image' => 'images/products/nutella-brownie.jpg',
             ],
             [
                 'id' => 'nutella-brownie',
@@ -381,7 +381,7 @@ return [
                 'price' => 550,
                 'badge' => 'Popular',
                 'description' => 'Fudgy brownie swirled with Nutella.',
-                'image' => 'images/home/promo-workshop.jpg',
+                'image' => 'images/products/nutella-brownie.jpg',
             ],
 
             // -- Eclairs (3) --
@@ -392,7 +392,7 @@ return [
                 'price' => 300,
                 'badge' => null,
                 'description' => 'Choux pastry filled with cream and finished with chocolate. Sold per piece.',
-                'image' => 'images/home/delivery-pickup.jpg',
+                'image' => 'images/products/chocolate-eclair.jpg',
             ],
             [
                 'id' => 'caramel-eclair',
@@ -401,7 +401,7 @@ return [
                 'price' => 300,
                 'badge' => 'Popular',
                 'description' => 'Classic eclair with caramel cream and glaze. Sold per piece.',
-                'image' => 'images/home/promo-seasonal.jpg',
+                'image' => 'images/products/caramel-eclair.jpg',
             ],
             [
                 'id' => 'lotus-eclair',
@@ -410,7 +410,7 @@ return [
                 'price' => 300,
                 'badge' => null,
                 'description' => 'Eclair filled with Lotus cream. Sold per piece.',
-                'image' => 'images/home/promo-catering.jpg',
+                'image' => 'images/products/lotus-eclair.jpg',
             ],
 
             // -- Sundaes (2) --
@@ -421,7 +421,7 @@ return [
                 'price' => 350,
                 'badge' => null,
                 'description' => 'Cup sundae inspired by three-milk cake. Sold per piece.',
-                'image' => 'images/home/promo-pudding.jpg',
+                'image' => 'images/products/three-milk-cake.jpg',
             ],
             [
                 'id' => 'oreo-sundae',
@@ -430,7 +430,7 @@ return [
                 'price' => 350,
                 'badge' => null,
                 'description' => 'Creamy Oreo sundae cup. Sold per piece.',
-                'image' => 'images/home/promo-anniversary.jpg',
+                'image' => 'images/products/oreo-sundae.jpg',
             ],
 
             // -- Tarts (2) --
@@ -441,7 +441,7 @@ return [
                 'price' => 400,
                 'badge' => null,
                 'description' => 'Buttery tart shell with pastry cream and seasonal fruit.',
-                'image' => 'images/home/promo-seasonal.jpg',
+                'image' => 'images/products/chocolate-tart.jpg',
             ],
             [
                 'id' => 'chocolate-tart',
@@ -450,7 +450,7 @@ return [
                 'price' => 400,
                 'badge' => null,
                 'description' => 'Crisp tart shell filled with smooth chocolate ganache.',
-                'image' => 'images/home/promo-cookbook.jpg',
+                'image' => 'images/products/chocolate-tart.jpg',
             ],
 
             // -- Mini Pies (2) --
@@ -461,7 +461,7 @@ return [
                 'price' => 300,
                 'badge' => null,
                 'description' => 'Mini pie filled with crunchy walnuts and a hint of vanilla.',
-                'image' => 'images/home/delivery-ship.jpg',
+                'image' => 'images/products/walnut-pie.jpg',
             ],
             [
                 'id' => 'chocolate-mini-pie',
@@ -470,7 +470,7 @@ return [
                 'price' => 300,
                 'badge' => null,
                 'description' => 'Individual chocolate pie with a flaky crust.',
-                'image' => 'images/home/promo-workshop.jpg',
+                'image' => 'images/products/walnut-pie.jpg',
             ],
         ],
     ],
@@ -487,7 +487,7 @@ return [
             'services' => ['Pickup', 'Delivery', 'Custom cakes'],
             'delivers' => true,
             'delivery_fee' => 199,
-            'image' => 'images/home/delivery-pickup.jpg',
+            'image' => 'images/products/ferrero-classic-cake.jpg',
         ],
         [
             'id' => 'gizri',
@@ -500,7 +500,7 @@ return [
             'services' => ['Pickup', 'Delivery', 'Catering'],
             'delivers' => true,
             'delivery_fee' => 199,
-            'image' => 'images/home/hero.jpg',
+            'image' => 'images/products/lotus-cake.jpg',
         ],
     ],
 
@@ -511,21 +511,21 @@ return [
                 'serves' => 'Serves 12–15',
                 'price' => 'From ₨ 7,500',
                 'blurb' => 'Assorted cupcakes, brownies, and eclairs for meetings and team treats.',
-                'image' => 'images/home/promo-catering.jpg',
+                'image' => 'images/products/ferrero-cupcake.jpg',
             ],
             [
                 'title' => 'Celebration Dessert Table',
                 'serves' => 'Serves 25–40',
                 'price' => 'From ₨ 22,000',
                 'blurb' => 'Cakes, cupcakes, and sundae cups styled for birthdays and mehndi gatherings.',
-                'image' => 'images/home/delivery-catering.jpg',
+                'image' => 'images/products/lotus-cake.jpg',
             ],
             [
                 'title' => 'Corporate Gifting',
                 'serves' => 'Custom packs',
                 'price' => 'From ₨ 4,500',
                 'blurb' => 'Boxed treats for clients and teams across Karachi.',
-                'image' => 'images/home/delivery-ship.jpg',
+                'image' => 'images/products/raffaello-cake.jpg',
             ],
         ],
     ],

@@ -468,7 +468,7 @@ p {
     border-top: 1px solid var(--line);
 }
 
-/* ---------- Hero (Magnolia-style bottom-left copy) ---------- */
+/* ---------- Hero ---------- */
 .hero {
     position: relative;
     isolation: isolate;
@@ -639,7 +639,7 @@ p {
     background: var(--plum-600);
 }
 
-/* ---------- Promo mosaic (Magnolia-style modules) ---------- */
+/* ---------- Promo mosaic ---------- */
 .promo-grid {
     display: grid;
     gap: 0;
@@ -748,15 +748,6 @@ p {
 .promo--light .promo__cta {
     background: var(--plum-600);
     color: var(--white);
-}
-
-.delivery--magnolia {
-    background: #fff;
-    padding: 4rem 0 3.5rem;
-}
-
-.delivery--magnolia .section-head {
-    max-width: 46rem;
 }
 
 .delivery-card--plain {
@@ -1734,6 +1725,9 @@ p {
 .story-intro__image {
     width: min(220px, 55%);
     margin-inline: auto;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 0.5rem;
 }
 
 .story-intro h2 {

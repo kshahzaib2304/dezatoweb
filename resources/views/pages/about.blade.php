@@ -12,8 +12,8 @@
         <div class="container story-intro" data-reveal>
             <img
                 class="story-intro__image"
-                src="{{ asset('images/home/swirl.png') }}"
-                alt=""
+                src="{{ asset('images/products/chocolate-heaven-cake.jpg') }}"
+                alt="Dezato chocolate heaven cake"
                 width="320"
                 height="320"
                 loading="lazy"
