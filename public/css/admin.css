@@ -3,6 +3,7 @@
 
 .admin-body {
     margin: 0;
+    padding-bottom: 0 !important; /* override storefront mobile app-bar padding */
     background: #f4efea;
     color: var(--ink);
     font-family: var(--font);
@@ -14,6 +15,10 @@
 }
 
 .admin-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    width: 100%;
+    max-width: 100%;
     min-height: 100vh;
     min-height: 100dvh;
 }
@@ -22,6 +27,8 @@
     position: fixed;
     inset: 0;
     z-index: 40;
+    grid-column: 1;
+    grid-row: 1;
     margin: 0;
     padding: 0;
     border: 0;
@@ -73,6 +80,8 @@
     z-index: 50;
     top: 0;
     left: 0;
+    grid-column: 1;
+    grid-row: 1;
     display: flex;
     flex-direction: column;
     width: min(19rem, calc(100vw - 2.75rem));
@@ -86,6 +95,7 @@
     visibility: hidden;
     transition: transform 0.22s var(--ease), visibility 0.22s;
     box-shadow: none;
+    box-sizing: border-box;
 }
 
 .admin-shell.is-nav-open .admin-sidebar {
@@ -214,11 +224,15 @@
 }
 
 .admin-main {
+    grid-column: 1;
+    grid-row: 1;
     display: flex;
     flex-direction: column;
     gap: 1.15rem;
+    box-sizing: border-box;
+    width: 100%;
+    max-width: 100%;
     min-width: 0;
-    width: auto;
     padding: 0 1rem calc(2.5rem + var(--safe-b));
 }
 
@@ -226,6 +240,8 @@
     display: flex;
     flex-direction: column;
     gap: 0.45rem;
+    width: 100%;
+    min-width: 0;
 }
 
 .admin-top__bar {
@@ -233,24 +249,33 @@
     top: 0;
     z-index: 30;
     display: flex;
+    flex-direction: row;
     align-items: center;
     gap: 0.7rem;
+    width: 100%;
+    min-width: 0;
     min-height: calc(3.75rem + var(--safe-t));
     margin-inline: -1rem;
     padding: calc(0.55rem + var(--safe-t)) 1rem 0.55rem;
     background: rgba(244, 239, 234, 0.94);
     border-bottom: 1px solid var(--line);
     backdrop-filter: blur(12px);
+    box-sizing: border-box;
 }
 
 .admin-top__bar h1 {
     margin: 0;
+    flex: 1 1 auto;
     min-width: 0;
     font-family: var(--font-brand);
     font-size: clamp(1.2rem, 4.2vw, 1.85rem);
     font-weight: 600;
     line-height: 1.2;
-    overflow-wrap: break-word;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    overflow-wrap: normal;
+    word-break: normal;
 }
 
 .admin-body .flash {
@@ -260,23 +285,34 @@
 @media (min-width: 1024px) {
     .admin-backdrop,
     .admin-menu-btn {
-        display: none;
+        display: none !important;
+    }
+
+    .admin-shell {
+        grid-template-columns: 17.5rem minmax(0, 1fr);
     }
 
     .admin-sidebar {
-        position: fixed;
-        transform: none;
-        visibility: visible;
-        width: 17.5rem;
+        position: sticky;
+        top: 0;
+        left: auto;
+        grid-column: 1;
+        grid-row: 1;
+        width: 100%;
+        max-width: none;
         height: 100vh;
         height: 100dvh;
+        transform: none;
+        visibility: visible;
         box-shadow: none;
     }
 
     .admin-main {
+        grid-column: 2;
+        grid-row: 1;
         width: auto;
-        max-width: none;
-        margin-left: 17.5rem;
+        max-width: 100%;
+        margin-left: 0;
         padding: 1.5rem 2rem 3rem;
     }
 
@@ -297,6 +333,9 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 0;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
     background: #fff;
     border: 1px solid var(--line);
 }
@@ -351,7 +390,8 @@
     font-size: clamp(1.25rem, 3vw, 1.55rem);
     line-height: 1.2;
     letter-spacing: -0.02em;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
+    word-break: normal;
 }
 
 .admin-stat-hint,
@@ -401,6 +441,9 @@
 .admin-split {
     display: grid;
     gap: 1.15rem;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
 }
 
 .admin-help {

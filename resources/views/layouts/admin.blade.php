@@ -9,19 +9,22 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ asset('css/dezato.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/features.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/dezato.css') }}?v={{ filemtime(public_path('css/dezato.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/features.css') }}?v={{ filemtime(public_path('css/features.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/admin.css') }}?v={{ filemtime(public_path('css/admin.css')) }}">
     <noscript>
         <style>
             .admin-menu-btn { display: none !important; }
+            .admin-shell { grid-template-columns: minmax(0, 1fr) !important; }
             .admin-sidebar {
                 position: static !important;
                 transform: none !important;
                 visibility: visible !important;
                 width: auto !important;
                 height: auto !important;
+                grid-column: 1 !important;
             }
+            .admin-main { grid-column: 1 !important; margin-left: 0 !important; width: 100% !important; }
             .admin-backdrop { display: none !important; }
         </style>
     </noscript>
