@@ -6,6 +6,7 @@ use App\Models\Address;
 use App\Models\Order;
 use App\Support\Cart;
 use App\Support\Catalog;
+use App\Support\SiteBrand;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -20,8 +21,8 @@ class AccountController extends Controller
         $user = Auth::user();
 
         return view('account.profile', $this->shell([
-            'title' => 'Profile | Dezato Cake House',
-            'metaDescription' => 'Manage your Dezato Cake House profile.',
+            'title' => 'Profile | '.SiteBrand::name(),
+            'metaDescription' => 'Manage your '.SiteBrand::name().' profile.',
             'active' => 'profile',
             'profile' => [
                 'name' => $user->name,
@@ -46,7 +47,7 @@ class AccountController extends Controller
     public function addresses(): View
     {
         return view('account.addresses', $this->shell([
-            'title' => 'Addresses | Dezato Cake House',
+            'title' => 'Addresses | '.SiteBrand::name(),
             'metaDescription' => 'Saved delivery addresses.',
             'active' => 'addresses',
             'addresses' => Auth::user()->addresses()->latest()->get()->map(fn (Address $address): array => [
@@ -116,8 +117,8 @@ class AccountController extends Controller
             ]);
 
         return view('account.orders', $this->shell([
-            'title' => 'Order history | Dezato Cake House',
-            'metaDescription' => 'Your Dezato orders.',
+            'title' => 'Order history | '.SiteBrand::name(),
+            'metaDescription' => 'Your '.SiteBrand::shortName().' orders.',
             'active' => 'orders',
             'orders' => $orders,
         ]));
@@ -181,7 +182,7 @@ class AccountController extends Controller
             ->firstOrFail();
 
         return view('account.track', $this->shell([
-            'title' => 'Track '.$order->number.' | Dezato Cake House',
+            'title' => 'Track '.$order->number.' | '.SiteBrand::name(),
             'metaDescription' => 'Track your order.',
             'active' => 'orders',
             'order' => [

@@ -222,26 +222,39 @@
                 (position) => {
                     locateBtn.disabled = false;
                     const { latitude, longitude } = position.coords;
-                    // Nearest counter: DHA Phase 6 ≈ 24.814, 67.064 · Gizri ≈ 24.814, 67.051
-                    const dha =
-                        (latitude - 24.814) ** 2 + (longitude - 67.064) ** 2;
-                    const gizri =
-                        (latitude - 24.814) ** 2 + (longitude - 67.051) ** 2;
-                    const storeId = dha <= gizri ? "dha-phase-6" : "gizri";
-                    const match = [...(areaSelect?.options || [])].find(
+                    const options = [...(areaSelect?.options || [])].filter(
                         (option) =>
                             option.value &&
-                            option.getAttribute("data-location-id") === storeId,
+                            option.dataset.lat !== undefined &&
+                            option.dataset.lng !== undefined,
                     );
 
-                    if (match && areaSelect) {
-                        areaSelect.value = match.value;
+                    let best = null;
+                    let bestDistance = Number.POSITIVE_INFINITY;
+
+                    options.forEach((option) => {
+                        const lat = Number.parseFloat(option.dataset.lat);
+                        const lng = Number.parseFloat(option.dataset.lng);
+                        if (Number.isNaN(lat) || Number.isNaN(lng)) {
+                            return;
+                        }
+                        const distance =
+                            (latitude - lat) ** 2 + (longitude - lng) ** 2;
+                        if (distance < bestDistance) {
+                            bestDistance = distance;
+                            best = option;
+                        }
+                    });
+
+                    if (best && areaSelect) {
+                        areaSelect.value = best.value;
                         syncFromArea();
                     }
 
                     if (locateHint) {
-                        locateHint.textContent =
-                            "Karachi detected. Confirm your neighbourhood below.";
+                        locateHint.textContent = best
+                            ? "Karachi detected. Confirm your neighbourhood below."
+                            : "Location found. Pick your neighbourhood from the list.";
                     }
                 },
                 () => {

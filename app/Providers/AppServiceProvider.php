@@ -9,6 +9,7 @@ use App\Support\Catalog;
 use App\Support\Fulfillment;
 use App\Support\MailSettings;
 use App\Support\NavigationMenu;
+use App\Support\PromoCodes;
 use App\Support\ShippingSettings;
 use App\Support\SiteBrand;
 use App\Support\SocialAuth;
@@ -71,6 +72,9 @@ class AppServiceProvider extends ServiceProvider
                     'brandLogoIcon' => $brand['logo_icon'],
                     'storefrontCopy' => $copy,
                     'menuCategories' => Catalog::categories()->all(),
+                    'bakeryPhone' => BakeryProfile::phone(),
+                    'bakeryEmail' => BakeryProfile::publicEmail(),
+                    'bakeryWhatsAppUrl' => BakeryProfile::whatsappUrl('Hi Dezato, I’d like to place an order.'),
                     'currentRoute' => Route::currentRouteName(),
                     'cartCount' => $cart->count(),
                     'cartLines' => $cart->lines(),
@@ -88,17 +92,34 @@ class AppServiceProvider extends ServiceProvider
 
         View::composer('components.header', function ($view): void {
             $default = (string) config('dezato.home.announcement', '');
-            $view->with(
-                'announcement',
-                SiteSetting::getValue('announcement', $default) ?: null
-            );
+            $announcement = SiteSetting::getValue('announcement', $default) ?: null;
+
+            if ($announcement === null || $announcement === '') {
+                try {
+                    $announcement = PromoCodes::storefrontHint();
+                } catch (Throwable) {
+                    $announcement = null;
+                }
+            }
+
+            $view->with('announcement', $announcement ?: null);
         });
 
         View::composer('components.footer', function ($view): void {
             try {
-                $view->with('socialLinks', SocialLinks::forFooter());
+                $view->with([
+                    'socialLinks' => SocialLinks::forFooter(),
+                    'footerCategories' => Catalog::categories()
+                        ->reject(fn (array $category): bool => ($category['id'] ?? '') === 'all')
+                        ->take(4)
+                        ->values()
+                        ->all(),
+                ]);
             } catch (Throwable) {
-                $view->with('socialLinks', []);
+                $view->with([
+                    'socialLinks' => [],
+                    'footerCategories' => [],
+                ]);
             }
         });
     }

@@ -1,4 +1,5 @@
 @php
+    use App\Support\Catalog;
     use App\Support\Fulfillment;
     use App\Support\KarachiAreas;
 
@@ -7,7 +8,14 @@
         $method = Fulfillment::METHOD_DELIVERY;
     }
 
-    $areas = KarachiAreas::all();
+    $locationsById = Catalog::locations()->keyBy('id');
+    $areas = collect(KarachiAreas::all())->map(function (array $area) use ($locationsById): array {
+        $location = $locationsById->get($area['location_id']);
+        $area['lat'] = is_array($location) ? ($location['lat'] ?? null) : null;
+        $area['lng'] = is_array($location) ? ($location['lng'] ?? null) : null;
+
+        return $area;
+    })->all();
     $selectedArea = old('area_id', $currentFulfillment['area_id'] ?? '');
     $forceOpen = request()->boolean('fulfillment') || session('open_fulfillment');
     $autoOpen = $forceOpen || ((! ($hasFulfillment ?? false)) && (! ($welcomeSeen ?? false)));
@@ -119,6 +127,8 @@
                                 value="{{ $area['id'] }}"
                                 data-location-id="{{ $area['location_id'] }}"
                                 data-label="{{ $area['label'] }}"
+                                @if ($area['lat'] !== null) data-lat="{{ $area['lat'] }}" @endif
+                                @if ($area['lng'] !== null) data-lng="{{ $area['lng'] }}" @endif
                                 @selected($selectedArea === $area['id'])
                             >{{ $area['label'] }}</option>
                         @endforeach

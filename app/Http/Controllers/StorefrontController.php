@@ -207,6 +207,7 @@ class StorefrontController extends Controller
                 ? 'Order at least '.$hours.' '.($hours === 1 ? 'hour' : 'hours').' ahead.'
                 : 'Same-day slots may be available.',
             'scheduleNote' => $schedule['note'],
+            'paymentHint' => app(Fulfillment::class)->paymentHint(),
             'breadcrumbCrumbs' => [
                 ['name' => 'Home', 'url' => route('home')],
                 ['name' => 'Menu', 'url' => route('menu')],

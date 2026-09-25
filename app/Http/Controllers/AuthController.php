@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Support\SiteBrand;
 use App\Support\SocialAuth;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Contracts\View\View;
@@ -19,8 +20,8 @@ class AuthController extends Controller
     public function showLogin(): View
     {
         return view('auth.login', [
-            'title' => 'Sign in | Dezato Cake House',
-            'metaDescription' => 'Sign in to your Dezato Cake House account.',
+            'title' => 'Sign in | '.SiteBrand::name(),
+            'metaDescription' => 'Sign in to your '.SiteBrand::name().' account.',
             'socialProviders' => SocialAuth::enabledForLogin(),
         ]);
     }
@@ -52,8 +53,8 @@ class AuthController extends Controller
     public function showRegister(): View
     {
         return view('auth.register', [
-            'title' => 'Create account | Dezato Cake House',
-            'metaDescription' => 'Create a Dezato Cake House account.',
+            'title' => 'Create account | '.SiteBrand::name(),
+            'metaDescription' => 'Create a '.SiteBrand::name().' account.',
             'socialProviders' => SocialAuth::enabledForLogin(),
         ]);
     }
@@ -79,7 +80,7 @@ class AuthController extends Controller
 
         return redirect()
             ->route('account.profile')
-            ->with('status', 'Welcome to Dezato - your account is ready.');
+            ->with('status', 'Welcome to '.SiteBrand::shortName().' - your account is ready.');
     }
 
     public function logout(Request $request): RedirectResponse
@@ -94,8 +95,8 @@ class AuthController extends Controller
     public function showForgot(): View
     {
         return view('auth.forgot-password', [
-            'title' => 'Forgot password | Dezato Cake House',
-            'metaDescription' => 'Reset your Dezato password.',
+            'title' => 'Forgot password | '.SiteBrand::name(),
+            'metaDescription' => 'Reset your '.SiteBrand::shortName().' password.',
         ]);
     }
 
@@ -113,7 +114,7 @@ class AuthController extends Controller
     public function showReset(Request $request, string $token): View
     {
         return view('auth.reset-password', [
-            'title' => 'Reset password | Dezato Cake House',
+            'title' => 'Reset password | '.SiteBrand::name(),
             'metaDescription' => 'Choose a new password.',
             'token' => $token,
             'email' => $request->string('email')->toString(),

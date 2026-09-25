@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AddCartItemRequest;
 use App\Http\Requests\UpdateCartItemRequest;
 use App\Support\Cart;
+use App\Support\CartDrawerResponse;
 use App\Support\Catalog;
 use App\Support\Fulfillment;
+use App\Support\FulfillmentSchedule;
+use App\Support\SiteBrand;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -28,14 +31,17 @@ class CartController extends Controller
         $total = round($subtotal + $deliveryFee, 2);
 
         return view('pages.cart', [
-            'title' => 'Cart | '.\App\Support\SiteBrand::name(),
-            'metaDescription' => 'Review your Dezato order for pickup, Karachi delivery, or Pakistan courier.',
+            'title' => 'Cart | '.SiteBrand::name(),
+            'metaDescription' => 'Review your order for pickup, Karachi delivery, or Pakistan courier.',
             'robots' => 'noindex, follow',
             'canonical' => route('cart.show'),
             'lines' => $lines,
             'subtotal' => $subtotal,
             'deliveryFee' => $deliveryFee,
             'feeLabel' => $this->fulfillment->feeLabel(),
+            'paymentHint' => $this->fulfillment->paymentHint(),
+            'scheduleNote' => FulfillmentSchedule::note(),
+            'upsells' => Catalog::upsells(3),
             'total' => $total,
             'fulfillment' => $fulfillment,
             'fulfillmentSummary' => $this->fulfillment->summary(),
@@ -85,7 +91,7 @@ class CartController extends Controller
     private function cartMutationResponse(Request $request, string $message): RedirectResponse|JsonResponse
     {
         if ($this->wantsCartJson($request)) {
-            return response()->json($this->drawerPayload($message));
+            return response()->json(CartDrawerResponse::payload($this->cart, $message, $this->fulfillment));
         }
 
         // Prefer returning to the browsing page with the quick cart open.
@@ -98,26 +104,5 @@ class CartController extends Controller
         return redirect()
             ->route('cart.show')
             ->with('status', $message);
-    }
-
-    /**
-     * @return array{message: string, count: int, subtotal: float, subtotal_label: string, html: string}
-     */
-    private function drawerPayload(string $message): array
-    {
-        $lines = $this->cart->lines();
-        $subtotal = $this->cart->subtotal();
-
-        return [
-            'message' => $message,
-            'count' => $this->cart->count(),
-            'subtotal' => $subtotal,
-            'subtotal_label' => pkr($subtotal),
-            'html' => view('components.cart-drawer-body', [
-                'lines' => $lines,
-                'count' => $this->cart->count(),
-                'subtotal' => $subtotal,
-            ])->render(),
-        ];
     }
 }

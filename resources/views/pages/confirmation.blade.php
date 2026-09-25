@@ -25,6 +25,15 @@
                             {{ $order->address }}, {{ $order->city }}, {{ $order->region }} {{ $order->postal_code }}
                         </p>
                     @endif
+                    @if ($order->delivery_date)
+                        <p>
+                            <span>When</span>
+                            {{ $order->delivery_date->format('D, j M Y') }}
+                            @if ($order->delivery_slot)
+                                · {{ $order->delivery_slot }}
+                            @endif
+                        </p>
+                    @endif
                     <p><span>Payment</span> {{ $paymentLabel ?? \App\Support\PaymentMethods::label($order->payment_method) }} ({{ ucfirst($order->payment_status ?? 'unpaid') }})</p>
                 </div>
 
@@ -54,7 +63,7 @@
                             <span>
                                 {{ $item->quantity }} × {{ $item->product_name }}
                                 @if ($item->isCustom())
-                                    <small style="display:block;color:var(--muted)">{{ $item->optionsSummary() }}</small>
+                                    <small class="checkout-lines__note">{{ $item->optionsSummary() }}</small>
                                 @endif
                             </span>
                             <span>{{ pkr($item->line_total) }}</span>
@@ -84,6 +93,8 @@
                         <dd>{{ pkr($order->total) }}</dd>
                     </div>
                 </dl>
+
+                <x-order-assurance context="confirmation" :compact="true" />
             </div>
 
             <div class="confirmation__actions">

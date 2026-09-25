@@ -2293,6 +2293,50 @@ body.is-checkout .field-input--code {
     line-height: 1.45;
 }
 
+.order-assurance {
+    margin: 1rem 0 0;
+    padding-top: 0.85rem;
+    border-top: 1px solid var(--line);
+}
+
+.order-assurance__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.35rem;
+    color: var(--muted);
+    font-size: 0.85rem;
+    line-height: 1.45;
+}
+
+.order-assurance__list a {
+    color: var(--plum-700, #52314f);
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
+}
+
+.order-assurance__sep {
+    margin: 0 0.25rem;
+    opacity: 0.55;
+}
+
+.order-assurance--compact {
+    margin-top: 0.85rem;
+}
+
+.product-layout__assurance {
+    margin: 0 0 1.1rem;
+    padding-top: 0;
+    border-top: 0;
+}
+
+.checkout-lines__note {
+    display: block;
+    color: var(--muted);
+    font-size: 0.85rem;
+}
+
 .checkout-form,
 .confirmation__card {
     background: rgba(255, 255, 255, 0.72);
@@ -2946,6 +2990,14 @@ body.is-checkout .field-input--code {
 .cart-drawer__subtotal strong {
     color: var(--plum-700);
     font-size: 1.1rem;
+}
+
+.cart-drawer__fee {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-size: 0.92rem;
+    color: var(--muted);
 }
 
 .cart-drawer__hint {

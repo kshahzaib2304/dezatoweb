@@ -114,10 +114,6 @@
                                     <dd>{{ pkr($deliveryFee) }}</dd>
                                 </div>
                             @endif
-                            <div>
-                                <dt>Tax</dt>
-                                <dd>{{ pkr(0) }}</dd>
-                            </div>
                             <div class="cart-totals__total">
                                 <dt>Total</dt>
                                 <dd>{{ pkr($total) }}</dd>
@@ -127,19 +123,19 @@
                             {{ $copy['cart_checkout_cta'] }}
                         </a>
                         <a class="btn btn--outline btn--block" href="{{ route('menu') }}">{{ $copy['cart_continue_cta'] }}</a>
+                        <x-order-assurance
+                            context="cart"
+                            :payment-hint="$paymentHint ?? null"
+                            :schedule-note="$scheduleNote ?? null"
+                            :compact="true"
+                        />
                     </aside>
                 @endif
             </div>
         </div>
     </section>
 
-    @php
-        $upsells = \App\Support\Catalog::products()
-            ->filter(fn (array $p): bool => ($p['badge'] ?? null) !== null)
-            ->take(3)
-            ->values();
-    @endphp
-    @if ($upsells->isNotEmpty())
+    @if (! empty($upsells))
         <section class="section-block section-block--tint">
             <div class="container">
                 <div class="section-head">

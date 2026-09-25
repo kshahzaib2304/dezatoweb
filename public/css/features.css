@@ -397,6 +397,7 @@
     position: absolute;
     top: 0.75rem;
     left: 0.75rem;
+    z-index: 1;
     padding: 0.28rem 0.55rem;
     border-radius: var(--radius-sm);
     background: rgba(250, 246, 242, 0.94);
@@ -404,6 +405,21 @@
     font-size: 0.7rem;
     font-weight: 600;
     letter-spacing: 0.02em;
+}
+
+.product-card__urgency {
+    display: inline-block;
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 1;
+    padding: 0.28rem 0.55rem;
+    border-radius: var(--radius-sm);
+    background: rgba(250, 246, 242, 0.94);
+    color: var(--plum-700);
+    font-size: 0.72rem;
+    font-weight: 600;
+    line-height: 1.2;
 }
 
 /* Gallery */

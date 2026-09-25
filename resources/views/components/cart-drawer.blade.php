@@ -3,6 +3,7 @@
     $count = (int) ($cartCount ?? 0);
     $subtotal = (float) ($cartSubtotal ?? 0);
     $openCart = (bool) session('open_cart', false);
+    $fulfillment = app(\App\Support\Fulfillment::class);
 @endphp
 
 <div
@@ -26,7 +27,7 @@
     >
         <header class="cart-drawer__head">
             <div>
-                <p class="cart-drawer__eyebrow">Dezato</p>
+                <p class="cart-drawer__eyebrow">{{ $brandShortName }}</p>
                 <h2 id="cart-drawer-title">Your cart</h2>
             </div>
             <button class="icon-btn cart-drawer__close" type="button" data-cart-close aria-label="Close cart">
@@ -41,6 +42,9 @@
                 'lines' => $lines,
                 'count' => $count,
                 'subtotal' => $subtotal,
+                'deliveryFee' => $fulfillment->fee(),
+                'feeLabel' => $fulfillment->feeLabel(),
+                'paymentHint' => $fulfillment->paymentHint(),
             ])
         </div>
     </aside>

@@ -83,6 +83,14 @@
                     </p>
                 @endif
 
+                <x-order-assurance
+                    context="product"
+                    :payment-hint="$paymentHint ?? null"
+                    :schedule-note="$scheduleNote ?? null"
+                    :compact="true"
+                    class="product-layout__assurance"
+                />
+
                 <form id="product-order" class="product-add" method="post" action="{{ route('cart.items.store') }}" data-cart-add>
                     @csrf
                     <input type="hidden" name="product_id" value="{{ $product['id'] }}">
@@ -104,9 +112,6 @@
 
                 <section class="product-notes" aria-label="{{ $storefrontCopy['product_notes_title'] ?? 'Good to know' }}">
                     <h2>{{ $storefrontCopy['product_notes_title'] ?? 'Good to know' }}</h2>
-                    @if ($scheduleNote !== '')
-                        <p>{{ $scheduleNote }}</p>
-                    @endif
                     <p>{{ $storefrontCopy['product_notes_fresh'] ?? '' }}</p>
                     <p>
                         {{ $storefrontCopy['product_notes_allergy'] ?? '' }}

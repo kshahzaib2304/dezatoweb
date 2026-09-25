@@ -50,6 +50,30 @@ final class Catalog
         return is_array($fallback) ? $fallback : null;
     }
 
+    /**
+     * Badge-highlighted products for cart / checkout upsells.
+     *
+     * @return list<array<string, mixed>>
+     */
+    public static function upsells(int $limit = 3): array
+    {
+        $limit = max(1, $limit);
+
+        $featured = self::products()
+            ->filter(fn (array $product): bool => ($product['badge'] ?? null) !== null)
+            ->take($limit)
+            ->values();
+
+        if ($featured->count() >= $limit) {
+            return $featured->all();
+        }
+
+        return self::products()
+            ->take($limit)
+            ->values()
+            ->all();
+    }
+
     public static function categories(): Collection
     {
         return self::$memo['categories'] ??= self::loadCategories();

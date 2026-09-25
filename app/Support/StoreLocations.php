@@ -145,6 +145,17 @@ final class StoreLocations
             'delivery_fee' => (float) ($row['delivery_fee'] ?? 0),
             'image' => trim((string) ($row['image'] ?? '')),
             'active' => (bool) ($row['active'] ?? true),
+            'lat' => self::optionalFloat($row['lat'] ?? null),
+            'lng' => self::optionalFloat($row['lng'] ?? null),
         ];
+    }
+
+    private static function optionalFloat(mixed $value): ?float
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        return is_numeric($value) ? (float) $value : null;
     }
 }

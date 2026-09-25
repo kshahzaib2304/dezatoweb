@@ -5,7 +5,9 @@
 @php
     $url = route('products.show', $product['id']);
     $stock = $product['stock'] ?? null;
-    $available = $stock === null || (int) $stock > 0;
+    $stockCount = ($stock === null || $stock === '') ? null : (int) $stock;
+    $available = $stockCount === null || $stockCount > 0;
+    $lowStock = $stockCount !== null && $stockCount > 0 && $stockCount <= 5;
     $canOrder = app(\App\Support\Fulfillment::class)->has();
 @endphp
 
@@ -21,6 +23,9 @@
             >
             @if (! empty($product['badge']))
                 <span class="product-card__badge">{{ $product['badge'] }}</span>
+            @endif
+            @if ($lowStock)
+                <span class="product-card__urgency">Only {{ $stockCount }} left</span>
             @endif
         </a>
 

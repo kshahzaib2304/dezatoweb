@@ -100,13 +100,17 @@
                         <input id="promo" class="field-input field-input--code" type="text" name="promo" value="{{ old('promo') }}" placeholder="e.g. DEZATO10" autocomplete="off">
                         @if ($promoMessage)
                             <p class="field-hint field-hint--ok">{{ $promoMessage }}</p>
+                        @elseif ($promoHint = \App\Support\PromoCodes::storefrontHint())
+                            <p class="field-hint">{{ $promoHint }}</p>
                         @endif
                     </div>
                 </div>
 
                 <div class="checkout-form__section" data-checkout-payment>
                     <h2>Payment</h2>
-                    <p class="field-hint">Cash on delivery is available for Karachi orders.</p>
+                    @if (! empty($paymentHint))
+                        <p class="field-hint">{{ $paymentHint }}</p>
+                    @endif
                     @forelse ($paymentMethods as $i => $method)
                         <label class="pay-option">
                             <input
@@ -143,7 +147,12 @@
                     @endforelse
                     <label class="agree-row">
                         <input type="checkbox" name="agree" value="1" @checked(old('agree')) required>
-                        <span>I confirm my order details are correct.</span>
+                        <span>
+                            I confirm my order details are correct.
+                            <a href="{{ route('pages.terms') }}">Terms</a>
+                            ·
+                            <a href="{{ route('pages.faq') }}">FAQ</a>
+                        </span>
                     </label>
                 </div>
 
@@ -187,7 +196,12 @@
                         <dd>{{ pkr($total) }}</dd>
                     </div>
                 </dl>
-                <p class="checkout-trust">Prices in PKR · Karachi pickup &amp; delivery · Confirm on WhatsApp</p>
+                <x-order-assurance
+                    context="checkout"
+                    :payment-hint="$paymentHint ?? null"
+                    :schedule-note="$scheduleNote ?? null"
+                    :compact="true"
+                />
             </aside>
         </div>
     </section>

@@ -82,7 +82,17 @@
             <span>Subtotal</span>
             <strong data-cart-subtotal>{{ pkr($subtotal) }}</strong>
         </div>
-        <p class="cart-drawer__hint">Delivery or pickup fees are calculated at checkout.</p>
+        @if (! empty($feeLabel) && isset($deliveryFee))
+            <div class="cart-drawer__fee">
+                <span>{{ $feeLabel }}</span>
+                <strong>{{ pkr($deliveryFee) }}</strong>
+            </div>
+            @if (! empty($paymentHint))
+                <p class="cart-drawer__hint">{{ $paymentHint }}</p>
+            @endif
+        @else
+            <p class="cart-drawer__hint">Pickup is free. Delivery fees show after you choose an area.</p>
+        @endif
         <a class="btn btn--primary btn--block" href="{{ route('checkout.show') }}">Checkout</a>
         <a class="btn btn--outline btn--block" href="{{ route('cart.show') }}">View full cart</a>
         <button class="text-btn cart-drawer__continue" type="button" data-cart-close>Continue shopping</button>

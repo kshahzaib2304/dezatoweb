@@ -172,7 +172,15 @@
                 ] as $field => $label)
                     <div class="form-row form-row--full">
                         <label class="field-label" for="copy-{{ $field }}">{{ $label }}</label>
-                        @if (str_contains($field, 'notes_') && $field !== 'product_notes_title' || str_contains($field, 'lede') || str_contains($field, 'allergy') || str_contains($field, 'fresh') || str_contains($field, 'cta_text') || str_contains($field, 'journey_text'))
+                        @if (
+                            (str_contains($field, 'notes_') && $field !== 'product_notes_title')
+                            || str_contains($field, 'lede')
+                            || str_contains($field, 'allergy')
+                            || str_contains($field, 'fresh')
+                            || str_contains($field, 'cta_text')
+                            || str_contains($field, 'journey_text')
+                            || str_contains($field, 'custom_text')
+                        )
                             <textarea id="copy-{{ $field }}" class="field-input field-textarea" name="copy[{{ $field }}]" rows="3" required>{{ old('copy.'.$field, $copy[$field]) }}</textarea>
                         @else
                             <input id="copy-{{ $field }}" class="field-input" type="text" name="copy[{{ $field }}]" value="{{ old('copy.'.$field, $copy[$field]) }}" required>

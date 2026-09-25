@@ -489,6 +489,8 @@ return [
             'delivers' => true,
             'delivery_fee' => 199,
             'image' => 'images/products/ferrero-classic-cake.jpg',
+            'lat' => 24.814,
+            'lng' => 67.064,
         ],
         [
             'id' => 'gizri',
@@ -502,6 +504,8 @@ return [
             'delivers' => true,
             'delivery_fee' => 199,
             'image' => 'images/products/lotus-cake.jpg',
+            'lat' => 24.814,
+            'lng' => 67.051,
         ],
     ],
 

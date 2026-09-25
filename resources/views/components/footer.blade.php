@@ -12,9 +12,9 @@
             <div>
                 <h3>Shop</h3>
                 <a href="{{ route('menu') }}">Menu</a>
-                <a href="{{ route('menu', ['category' => 'cakes']) }}">Cakes 2.5 lbs</a>
-                <a href="{{ route('menu', ['category' => 'cupcakes']) }}">Cupcakes</a>
-                <a href="{{ route('menu', ['category' => 'cheesecakes']) }}">Cheesecakes</a>
+                @foreach (($footerCategories ?? []) as $category)
+                    <a href="{{ route('menu', ['category' => $category['id']]) }}">{{ $category['label'] }}</a>
+                @endforeach
             </div>
             <div>
                 <h3>Company</h3>
@@ -24,10 +24,18 @@
                 <a href="{{ route('locations') }}">Locations</a>
             </div>
             <div>
-                <h3>Order</h3>
+                <h3>Contact</h3>
+                @if (! empty($bakeryPhone))
+                    <a href="tel:{{ preg_replace('/\s+/', '', $bakeryPhone) }}">{{ $bakeryPhone }}</a>
+                @endif
+                @if (! empty($bakeryWhatsAppUrl))
+                    <a href="{{ $bakeryWhatsAppUrl }}" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                @endif
+                @if (! empty($bakeryEmail))
+                    <a href="mailto:{{ $bakeryEmail }}">{{ $bakeryEmail }}</a>
+                @endif
                 <button type="button" data-fulfillment-open data-fulfillment-method="pickup">Pickup</button>
                 <button type="button" data-fulfillment-open data-fulfillment-method="delivery">Delivery</button>
-                <a href="{{ route('builder.show') }}">Custom cake</a>
             </div>
         </div>
 
