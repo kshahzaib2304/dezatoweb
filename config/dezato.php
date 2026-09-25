@@ -17,6 +17,7 @@ return [
 
     'nav' => [
         ['label' => 'Home', 'route' => 'home'],
+        ['label' => 'Menu', 'route' => 'menu'],
         ['label' => 'About Us', 'route' => 'about'],
         ['label' => 'Our Services', 'route' => 'services'],
         ['label' => 'Cake Customization', 'route' => 'builder.show'],

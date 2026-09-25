@@ -542,6 +542,17 @@
         }
 
         form.dataset.cartBusy = "1";
+        const submitBtn = form.querySelector(
+            "button[type='submit'], .product-card__add",
+        );
+        const label = submitBtn?.querySelector(".product-card__add-label");
+        const previousLabel = label?.textContent || "";
+
+        if (submitBtn instanceof HTMLButtonElement) {
+            submitBtn.disabled = true;
+            submitBtn.classList.add("is-busy");
+        }
+        if (label) label.textContent = "Adding…";
 
         try {
             const bodyData = new FormData(form);
@@ -566,9 +577,14 @@
             const payload = await response.json();
             const fromDrawer = Boolean(form.closest("[data-cart-drawer-body]"));
             applyCartPayload(payload, {
-                open: form.hasAttribute("data-cart-add") || fromDrawer || !cartRoot?.hidden,
+                open:
+                    form.hasAttribute("data-cart-add") ||
+                    fromDrawer ||
+                    !cartRoot?.hidden,
                 announce: form.hasAttribute("data-cart-add"),
             });
+
+            if (label) label.textContent = "Added";
 
             if (
                 location.pathname.replace(/\/$/, "").endsWith("/cart") &&
@@ -580,6 +596,13 @@
             form.submit();
         } finally {
             delete form.dataset.cartBusy;
+            window.setTimeout(() => {
+                if (submitBtn instanceof HTMLButtonElement) {
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove("is-busy");
+                }
+                if (label) label.textContent = previousLabel || "Add to cart";
+            }, 700);
         }
     };
 

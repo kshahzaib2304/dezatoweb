@@ -42,6 +42,7 @@
                 </svg>
             </button>
             <div class="nav-acc__panel">
+                <a href="{{ route('menu') }}">Shop all</a>
                 @foreach ($menuCategories as $category)
                     @continue(($category['id'] ?? '') === 'all')
                     <a href="{{ route('menu', ['category' => $category['id']]) }}">{{ $category['label'] }}</a>

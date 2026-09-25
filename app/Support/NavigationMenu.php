@@ -21,11 +21,11 @@ final class NavigationMenu
     {
         return [
             'home' => 'Home page',
+            'menu' => 'Menu',
             'about' => 'About Us',
             'services' => 'Our Services',
             'customization' => 'Cake Customization (info page)',
             'builder.show' => 'Custom cake builder',
-            'menu' => 'Menu',
             'locations' => 'Locations',
             'order' => 'Order options page',
         ];
@@ -62,7 +62,9 @@ final class NavigationMenu
             ];
         }
 
-        return $out !== [] ? $out : self::defaults();
+        $out = $out !== [] ? $out : self::defaults();
+
+        return self::ensureMenuLink($out);
     }
 
     /**
@@ -91,7 +93,7 @@ final class NavigationMenu
             ];
         }
 
-        SiteSetting::putJson(self::KEY, $clean !== [] ? $clean : self::defaults());
+        SiteSetting::putJson(self::KEY, self::ensureMenuLink($clean !== [] ? $clean : self::defaults()));
     }
 
     /**
@@ -116,12 +118,36 @@ final class NavigationMenu
     }
 
     /**
+     * Menu is a core storefront destination — keep it visible even if an older
+     * admin-saved nav omitted it.
+     *
+     * @param  list<array{label: string, route: string}>  $links
+     * @return list<array{label: string, route: string}>
+     */
+    private static function ensureMenuLink(array $links): array
+    {
+        foreach ($links as $link) {
+            if (($link['route'] ?? '') === 'menu') {
+                return $links;
+            }
+        }
+
+        array_splice($links, min(1, count($links)), 0, [[
+            'label' => 'Menu',
+            'route' => 'menu',
+        ]]);
+
+        return array_values($links);
+    }
+
+    /**
      * @return list<array{label: string, route: string}>
      */
     private static function defaults(): array
     {
         return [
             ['label' => 'Home', 'route' => 'home'],
+            ['label' => 'Menu', 'route' => 'menu'],
             ['label' => 'About Us', 'route' => 'about'],
             ['label' => 'Our Services', 'route' => 'services'],
             ['label' => 'Cake Customization', 'route' => 'builder.show'],

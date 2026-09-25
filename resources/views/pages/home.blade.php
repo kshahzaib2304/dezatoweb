@@ -73,21 +73,11 @@
             <h2>Favourites</h2>
             <a class="home-link" href="{{ route('menu') }}">Shop all</a>
         </div>
-        <ul class="home-products">
+        <div class="product-grid product-grid--home">
             @foreach ($favorites as $product)
-                <li>
-                    <a class="home-product" href="{{ route('products.show', $product['id']) }}">
-                        <span class="home-product__media">
-                            <img src="{{ asset($product['image']) }}" alt="{{ $product['name'] }}" width="480" height="480" loading="lazy">
-                        </span>
-                        <span class="home-product__meta">
-                            <span class="home-product__name">{{ $product['name'] }}</span>
-                            <span class="home-product__price">{{ pkr($product['price']) }}</span>
-                        </span>
-                    </a>
-                </li>
+                <x-product-card :product="$product" />
             @endforeach
-        </ul>
+        </div>
     </div>
 </section>
 

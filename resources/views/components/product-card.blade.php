@@ -4,21 +4,63 @@
 
 @php
     $url = route('products.show', $product['id']);
+    $stock = $product['stock'] ?? null;
+    $available = $stock === null || (int) $stock > 0;
+    $canOrder = app(\App\Support\Fulfillment::class)->has();
 @endphp
 
 <article class="product-card" data-reveal>
-    <a class="product-card__media" href="{{ $url }}">
-        <img
-            src="{{ asset($product['image']) }}"
-            alt="{{ $product['name'] }}"
-            width="800"
-            height="800"
-            loading="lazy"
-        >
-        @if (! empty($product['badge']))
-            <span class="product-card__badge">{{ $product['badge'] }}</span>
+    <div class="product-card__media-wrap">
+        <a class="product-card__media" href="{{ $url }}">
+            <img
+                src="{{ asset($product['image']) }}"
+                alt="{{ $product['name'] }}"
+                width="800"
+                height="800"
+                loading="lazy"
+            >
+            @if (! empty($product['badge']))
+                <span class="product-card__badge">{{ $product['badge'] }}</span>
+            @endif
+        </a>
+
+        @if ($available)
+            <form
+                class="product-card__quick"
+                method="post"
+                action="{{ route('cart.items.store') }}"
+                data-cart-add
+                data-quick-add
+            >
+                @csrf
+                <input type="hidden" name="product_id" value="{{ $product['id'] }}">
+                <input type="hidden" name="quantity" value="1">
+                @if ($canOrder)
+                    <button
+                        class="product-card__add"
+                        type="submit"
+                        aria-label="Add {{ $product['name'] }} to cart"
+                    >
+                        <span class="product-card__add-label">Add to cart</span>
+                        <span class="product-card__add-icon" aria-hidden="true">+</span>
+                    </button>
+                @else
+                    <button
+                        class="product-card__add"
+                        type="button"
+                        data-fulfillment-open
+                        aria-label="Choose pickup or delivery, then add {{ $product['name'] }}"
+                    >
+                        <span class="product-card__add-label">Add to cart</span>
+                        <span class="product-card__add-icon" aria-hidden="true">+</span>
+                    </button>
+                @endif
+            </form>
+        @else
+            <span class="product-card__soldout">Sold out</span>
         @endif
-    </a>
+    </div>
+
     <div class="product-card__body">
         <div class="product-card__meta">
             <h3 class="product-card__title">

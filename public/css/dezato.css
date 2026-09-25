@@ -1497,6 +1497,136 @@ p {
     border-radius: var(--radius-lg);
 }
 
+.product-card__media-wrap {
+    position: relative;
+}
+
+.product-card__quick {
+    position: absolute;
+    left: 0.55rem;
+    right: 0.55rem;
+    bottom: 0.55rem;
+    z-index: 3;
+    margin: 0;
+}
+
+.product-card__add {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+    width: 100%;
+    min-height: 2.75rem;
+    padding: 0.55rem 0.85rem;
+    border: 0;
+    border-radius: var(--radius-md);
+    background: var(--plum-600);
+    color: #fff;
+    font: inherit;
+    font-size: 0.88rem;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(36, 24, 32, 0.18);
+    transition: background 0.2s var(--ease), transform 0.2s var(--ease), opacity 0.2s var(--ease);
+}
+
+.product-card__add:hover,
+.product-card__add:focus-visible {
+    background: var(--plum-700);
+}
+
+.product-card__add:disabled,
+.product-card__add.is-busy {
+    opacity: 0.7;
+    cursor: wait;
+}
+
+.product-card__add-icon {
+    display: none;
+    font-size: 1.25rem;
+    line-height: 1;
+}
+
+.product-card__soldout {
+    position: absolute;
+    left: 0.55rem;
+    right: 0.55rem;
+    bottom: 0.55rem;
+    z-index: 3;
+    display: grid;
+    place-items: center;
+    min-height: 2.5rem;
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.92);
+    color: var(--muted);
+    font-size: 0.84rem;
+    font-weight: 600;
+}
+
+/* Pointer devices: reveal Quick Add on card hover / keyboard focus only. */
+@media (hover: hover) and (pointer: fine) {
+    .product-card__quick,
+    .product-card__soldout {
+        opacity: 0;
+        transform: translateY(0.35rem);
+        pointer-events: none;
+        transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+    }
+
+    .product-card:hover .product-card__quick,
+    .product-card:focus-within .product-card__quick,
+    .product-card:hover .product-card__soldout,
+    .product-card:focus-within .product-card__soldout {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+    }
+
+    .product-card__add {
+        min-height: 2.6rem;
+    }
+}
+
+/* Touch devices: keep a compact always-visible control (no hover). */
+@media (hover: none), (pointer: coarse) {
+    .product-card__add-label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+    }
+
+    .product-card__add-icon {
+        display: inline;
+    }
+
+    .product-card__add {
+        width: 2.75rem;
+        min-height: 2.75rem;
+        padding: 0;
+        margin-left: auto;
+        border-radius: 999px;
+    }
+
+    .product-card__quick,
+    .product-card__soldout {
+        left: auto;
+        right: 0.45rem;
+        bottom: 0.45rem;
+        width: auto;
+    }
+}
+
+.product-grid--home {
+    margin-top: 0.25rem;
+}
+
 .location-card__media,
 .package-card__media,
 .order-card__media {
