@@ -30,13 +30,13 @@ class PagesController extends Controller
         }
 
         $packages = collect(StoryBlocks::packages())->map(function (array $row): array {
-            $row['image_url'] = asset(MediaPaths::public($row['image'] ?? null, 'images/home/promo-catering.png'));
+            $row['image_url'] = asset(MediaPaths::public($row['image'] ?? null, 'images/home/promo-catering.jpg'));
 
             return $row;
         })->all();
 
         $orderOptions = collect(StorefrontCards::orderOptions())->map(function (array $row): array {
-            $row['image_url'] = asset(MediaPaths::public($row['image'] ?? null, 'images/home/delivery-pickup.png'));
+            $row['image_url'] = asset(MediaPaths::public($row['image'] ?? null, 'images/home/delivery-pickup.jpg'));
 
             return $row;
         })->all();

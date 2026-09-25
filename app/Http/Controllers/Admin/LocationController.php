@@ -15,7 +15,7 @@ class LocationController extends Controller
     public function edit(): View
     {
         $locations = collect(StoreLocations::all())->map(function (array $row): array {
-            $row['image_url'] = asset(MediaPaths::public($row['image'] ?? null, 'images/home/delivery-pickup.png'));
+            $row['image_url'] = asset(MediaPaths::public($row['image'] ?? null, 'images/home/delivery-pickup.jpg'));
             $row['services_text'] = implode(', ', $row['services'] ?? []);
 
             return $row;

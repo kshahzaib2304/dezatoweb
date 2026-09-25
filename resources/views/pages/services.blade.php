@@ -5,7 +5,7 @@
         eyebrow="Our Services"
         title="Catering, gifting &amp; events"
         text="{{ $intro }}"
-        image="images/home/promo-catering.png"
+        image="images/home/promo-catering.jpg"
     >
         <a class="btn btn--primary" href="#inquiry">Get a quote</a>
     </x-page-hero>

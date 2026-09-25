@@ -56,7 +56,9 @@
                         <label class="sr-only" for="weight">Size</label>
                         <select id="weight" name="weight" onchange="this.form.submit()">
                             <option value="">All sizes</option>
-                            <option value="2.5 lbs" @selected(($filters['weight'] ?? '') === '2.5 lbs')>2.5 lbs</option>
+                            @foreach ($weights as $size)
+                                <option value="{{ $size }}" @selected(($filters['weight'] ?? '') === $size)>{{ $size }}</option>
+                            @endforeach
                         </select>
                     </div>
                 </div>

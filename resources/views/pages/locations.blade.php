@@ -5,7 +5,7 @@
         eyebrow="Visit us"
         title="Hours &amp; Locations"
         text="Find Dezato Cake House in DHA Phase 6 and Gizri for pickup, delivery, and custom cakes."
-        image="images/home/delivery-pickup.png"
+        image="images/home/delivery-pickup.jpg"
     />
 
     <section class="section-block" aria-label="Bakery locations">

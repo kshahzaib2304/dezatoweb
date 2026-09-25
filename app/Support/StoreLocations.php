@@ -37,7 +37,7 @@ final class StoreLocations
         return collect(self::all())
             ->filter(fn (array $row): bool => (bool) ($row['active'] ?? true))
             ->map(function (array $row): array {
-                $row['image'] = MediaPaths::public($row['image'] ?? null, 'images/home/delivery-pickup.png');
+                $row['image'] = MediaPaths::public($row['image'] ?? null, 'images/home/delivery-pickup.jpg');
                 $row['phone'] = $row['phone'] !== '' ? $row['phone'] : BakeryProfile::phone();
                 $row['services'] = is_array($row['services'] ?? null)
                     ? array_values(array_filter($row['services']))

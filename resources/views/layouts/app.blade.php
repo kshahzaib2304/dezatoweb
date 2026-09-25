@@ -10,6 +10,7 @@
         $pageDescription = $metaDescription ?? $brandName.' - cakes, cupcakes, eclairs, brownies, cheesecakes, tarts, mini pies and sundaes in Karachi. Order in PKR.';
         $canonical = $canonical ?? url()->current();
         $ogImage = asset($ogImage ?? 'images/brand/logo-icon.jpg');
+        $isCheckout = ($currentRoute ?? null) === 'checkout.show';
     @endphp
     <title>{{ $pageTitle }}</title>
     <meta name="description" content="{{ $pageDescription }}">
@@ -33,14 +34,16 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+    <noscript>
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
+    </noscript>
 
     <link rel="stylesheet" href="{{ asset('css/dezato.css') }}">
     <link rel="stylesheet" href="{{ asset('css/theme-home.css') }}">
     <link rel="stylesheet" href="{{ asset('css/features.css') }}">
     @stack('head')
 
-    {{-- Hide bake-loader before paint on return visits (avoids flash on every click) --}}
     <script>
         (function () {
             try {
@@ -55,22 +58,31 @@
         {!! \App\Support\SeoSchema::bakery($brandName, $pageDescription) !!}
     </script>
 </head>
-<body class="{{ ($currentRoute ?? null) === 'home' ? 'is-home' : '' }}">
+<body @class([
+    'is-home' => ($currentRoute ?? null) === 'home',
+    'is-checkout' => $isCheckout,
+])>
     @include('components.bake-loader')
 
     <a class="sr-only" href="#main">Skip to content</a>
 
-    @include('components.header')
-    @include('components.fulfillment-bar')
-    @include('components.nav-drawer')
+    @if ($isCheckout)
+        @include('components.checkout-chrome')
+    @else
+        @include('components.header')
+        @include('components.fulfillment-bar')
+        @include('components.nav-drawer')
+    @endif
 
     <main id="main">
         @yield('content')
     </main>
 
-    @include('components.footer')
-    @include('components.mobile-appbar')
-    @include('components.fulfillment-modal')
+    @unless ($isCheckout)
+        @include('components.footer')
+        @include('components.mobile-appbar')
+        @include('components.fulfillment-modal')
+    @endunless
 
     <script src="{{ asset('js/dezato.js') }}" defer></script>
     @stack('scripts')

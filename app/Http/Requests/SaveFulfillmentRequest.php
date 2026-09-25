@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Support\Catalog;
 use App\Support\Fulfillment;
+use App\Support\KarachiAreas;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
@@ -21,42 +22,11 @@ class SaveFulfillmentRequest extends FormRequest
      */
     public function rules(): array
     {
-        $locationIds = Catalog::locations()->pluck('id')->all();
-        $method = $this->string('method')->toString();
-        $needsStore = in_array($method, [Fulfillment::METHOD_PICKUP, Fulfillment::METHOD_DELIVERY], true);
-
         return [
-            'method' => ['required', Rule::in(Fulfillment::METHODS)],
-            'location_id' => [
-                Rule::requiredIf($needsStore),
-                'nullable',
-                'string',
-                Rule::in($locationIds),
-            ],
-            'address' => [
-                Rule::requiredIf(in_array($method, [Fulfillment::METHOD_DELIVERY, Fulfillment::METHOD_SHIPPING], true)),
-                'nullable',
-                'string',
-                'max:255',
-            ],
-            'city' => [
-                Rule::requiredIf($method === Fulfillment::METHOD_SHIPPING),
-                'nullable',
-                'string',
-                'max:120',
-            ],
-            'region' => [
-                Rule::requiredIf($method === Fulfillment::METHOD_SHIPPING),
-                'nullable',
-                'string',
-                'max:64',
-            ],
-            'postal_code' => [
-                Rule::requiredIf($method === Fulfillment::METHOD_SHIPPING),
-                'nullable',
-                'string',
-                'max:32',
-            ],
+            'method' => ['required', Rule::in([Fulfillment::METHOD_PICKUP, Fulfillment::METHOD_DELIVERY])],
+            'area_id' => ['required', 'string', Rule::in(KarachiAreas::ids())],
+            'location_id' => ['nullable', 'string'],
+            'address' => ['nullable', 'string', 'max:255'],
         ];
     }
 
@@ -67,24 +37,42 @@ class SaveFulfillmentRequest extends FormRequest
                 return;
             }
 
-            $method = $this->string('method')->toString();
+            $area = KarachiAreas::find($this->string('area_id')->toString());
 
-            if ($method === Fulfillment::METHOD_SHIPPING) {
+            if ($area === null) {
+                $validator->errors()->add('area_id', 'Please select your location in Karachi.');
+
                 return;
             }
 
-            $location = Catalog::findLocation($this->string('location_id')->toString());
+            $location = Catalog::findLocation($area['location_id']);
 
             if ($location === null) {
-                $validator->errors()->add('location_id', 'Please choose a valid bakery location.');
+                $validator->errors()->add('area_id', 'That area is not available right now.');
 
                 return;
             }
 
-            if ($method === Fulfillment::METHOD_DELIVERY && empty($location['delivers'])) {
-                $validator->errors()->add('location_id', 'That bakery does not offer delivery.');
+            if ($this->string('method')->toString() === Fulfillment::METHOD_DELIVERY && empty($location['delivers'])) {
+                $validator->errors()->add('area_id', 'Delivery is not available for that area yet.');
             }
         });
+    }
+
+    /**
+     * @return array{method: string, area_id: string, location_id: string, address: string|null}
+     */
+    public function fulfillmentPayload(): array
+    {
+        $area = KarachiAreas::find($this->string('area_id')->toString());
+        $method = $this->string('method')->toString();
+
+        return [
+            'method' => $method,
+            'area_id' => $area['id'],
+            'location_id' => $area['location_id'],
+            'address' => $method === Fulfillment::METHOD_DELIVERY ? $area['label'] : null,
+        ];
     }
 
     protected function failedValidation(Validator $validator): void

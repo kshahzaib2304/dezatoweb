@@ -5,7 +5,7 @@
         eyebrow="Get Dezato"
         title="How would you like to order?"
         text="Pickup, Karachi delivery, Pakistan courier, or catering - choose what fits your plans."
-        image="images/home/delivery-ship.png"
+        image="images/home/delivery-ship.jpg"
         :compact="true"
     />
 

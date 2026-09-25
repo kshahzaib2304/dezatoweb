@@ -25,20 +25,20 @@ return [
     'home' => [
         'announcement' => 'Pickup & delivery across Karachi',
         'products' => [
-            ['label' => 'Cakes 2.5 lbs', 'image' => 'images/home/delivery-pickup.png', 'href' => '/menu?category=cakes', 'tone' => 'mint'],
+            ['label' => 'Cakes 2.5 lbs', 'image' => 'images/home/delivery-pickup.jpg', 'href' => '/menu?category=cakes', 'tone' => 'mint'],
             ['label' => 'Cupcakes', 'image' => 'images/home/promo-workshop.jpg', 'href' => '/menu?category=cupcakes', 'tone' => 'blue'],
             ['label' => 'Cheesecakes', 'image' => 'images/home/promo-anniversary.jpg', 'href' => '/menu?category=cheesecakes', 'tone' => 'cream'],
             ['label' => 'Eclairs', 'image' => 'images/home/promo-seasonal.jpg', 'href' => '/menu?category=eclairs', 'tone' => 'lilac'],
             ['label' => 'Brownies', 'image' => 'images/home/promo-cookbook.jpg', 'href' => '/menu?category=brownies', 'tone' => 'pink'],
             ['label' => 'Sundaes', 'image' => 'images/home/promo-pudding.jpg', 'href' => '/menu?category=sundaes', 'tone' => 'pink'],
-            ['label' => 'Tarts', 'image' => 'images/home/promo-catering.png', 'href' => '/menu?category=tarts', 'tone' => 'cream'],
-            ['label' => 'Mini Pies', 'image' => 'images/home/delivery-ship.png', 'href' => '/menu?category=mini-pies', 'tone' => 'mint'],
+            ['label' => 'Tarts', 'image' => 'images/home/promo-catering.jpg', 'href' => '/menu?category=tarts', 'tone' => 'cream'],
+            ['label' => 'Mini Pies', 'image' => 'images/home/delivery-ship.jpg', 'href' => '/menu?category=mini-pies', 'tone' => 'mint'],
         ],
         'occasions' => [
             ['label' => 'Birthdays', 'image' => 'images/home/hero.jpg', 'href' => '/menu?category=cakes'],
-            ['label' => 'Office Treats', 'image' => 'images/home/promo-catering.png', 'href' => '/our-services'],
+            ['label' => 'Office Treats', 'image' => 'images/home/promo-catering.jpg', 'href' => '/our-services'],
             ['label' => 'Custom Cakes', 'image' => 'images/home/promo-anniversary.jpg', 'href' => '/cake-customization'],
-            ['label' => 'Gifting', 'image' => 'images/home/delivery-ship.png', 'href' => '/menu'],
+            ['label' => 'Gifting', 'image' => 'images/home/delivery-ship.jpg', 'href' => '/menu'],
         ],
     ],
 
@@ -46,6 +46,43 @@ return [
         'fee' => 499,
         'eta' => '2–4 business days within Pakistan',
         'label' => 'Pakistan Courier',
+    ],
+
+    /*
+    | Karachi neighbourhoods for the first-visit order chooser.
+    | Each area routes to the nearest Dezato counter.
+    */
+    'karachi_areas' => [
+        ['id' => 'clifton', 'label' => 'Clifton', 'location_id' => 'gizri'],
+        ['id' => 'defence', 'label' => 'Defence (DHA)', 'location_id' => 'dha-phase-6'],
+        ['id' => 'dha-phase-2', 'label' => 'DHA Phase 2', 'location_id' => 'dha-phase-6'],
+        ['id' => 'dha-phase-4', 'label' => 'DHA Phase 4', 'location_id' => 'gizri'],
+        ['id' => 'dha-phase-5', 'label' => 'DHA Phase 5', 'location_id' => 'dha-phase-6'],
+        ['id' => 'dha-phase-6', 'label' => 'DHA Phase 6', 'location_id' => 'dha-phase-6'],
+        ['id' => 'dha-phase-7', 'label' => 'DHA Phase 7', 'location_id' => 'dha-phase-6'],
+        ['id' => 'dha-phase-8', 'label' => 'DHA Phase 8', 'location_id' => 'dha-phase-6'],
+        ['id' => 'gizri', 'label' => 'Gizri', 'location_id' => 'gizri'],
+        ['id' => 'seaview', 'label' => 'Seaview', 'location_id' => 'gizri'],
+        ['id' => 'bath-island', 'label' => 'Bath Island', 'location_id' => 'gizri'],
+        ['id' => 'zamzama', 'label' => 'Zamzama', 'location_id' => 'dha-phase-6'],
+        ['id' => 'bukhari', 'label' => 'Bukhari Commercial', 'location_id' => 'dha-phase-6'],
+        ['id' => 'khayaban-e-itzadi', 'label' => 'Khayaban-e-Ittehad', 'location_id' => 'dha-phase-6'],
+        ['id' => 'khayaban-e-shahbaz', 'label' => 'Khayaban-e-Shahbaz', 'location_id' => 'dha-phase-6'],
+        ['id' => 'saddar', 'label' => 'Saddar', 'location_id' => 'gizri'],
+        ['id' => 'pechs', 'label' => 'PECHS', 'location_id' => 'gizri'],
+        ['id' => 'bahadurabad', 'label' => 'Bahadurabad', 'location_id' => 'gizri'],
+        ['id' => 'tariq-road', 'label' => 'Tariq Road', 'location_id' => 'gizri'],
+        ['id' => 'gulshan', 'label' => 'Gulshan-e-Iqbal', 'location_id' => 'dha-phase-6'],
+        ['id' => 'gulistan-e-jauhar', 'label' => 'Gulistan-e-Jauhar', 'location_id' => 'dha-phase-6'],
+        ['id' => 'north-nazimabad', 'label' => 'North Nazimabad', 'location_id' => 'dha-phase-6'],
+        ['id' => 'fb-area', 'label' => 'F.B. Area', 'location_id' => 'dha-phase-6'],
+        ['id' => 'malir', 'label' => 'Malir', 'location_id' => 'dha-phase-6'],
+        ['id' => 'korangi', 'label' => 'Korangi', 'location_id' => 'dha-phase-6'],
+        ['id' => 'landhi', 'label' => 'Landhi', 'location_id' => 'dha-phase-6'],
+        ['id' => 'shahrah-e-faisal', 'label' => 'Shahrah-e-Faisal', 'location_id' => 'dha-phase-6'],
+        ['id' => 'nursery', 'label' => 'Nursery', 'location_id' => 'gizri'],
+        ['id' => 'mehmoodabad', 'label' => 'Mehmoodabad', 'location_id' => 'gizri'],
+        ['id' => 'askari', 'label' => 'Askari', 'location_id' => 'dha-phase-6'],
     ],
 
     'menu' => [
@@ -70,7 +107,7 @@ return [
                 'badge' => null,
                 'weight' => '2.5 lbs',
                 'description' => 'Soft coffee sponge layered with chocolate frosting - a 2.5 lb favourite for everyday celebrations.',
-                'image' => 'images/home/delivery-pickup.png',
+                'image' => 'images/home/delivery-pickup.jpg',
             ],
             [
                 'id' => 'chocolate-mousse-cake',
@@ -140,7 +177,7 @@ return [
                 'badge' => null,
                 'weight' => '2.5 lbs',
                 'description' => 'Hazelnut-chocolate layers finished with Nutella cream.',
-                'image' => 'images/home/delivery-catering.png',
+                'image' => 'images/home/delivery-catering.jpg',
             ],
             [
                 'id' => 'red-velvet-cake',
@@ -170,7 +207,7 @@ return [
                 'badge' => 'Signature',
                 'weight' => '2.5 lbs',
                 'description' => 'Hazelnut chocolate cake with Ferrero-inspired crunch and cream.',
-                'image' => 'images/home/promo-catering.png',
+                'image' => 'images/home/promo-catering.jpg',
             ],
             [
                 'id' => 'salted-caramel-cake',
@@ -200,7 +237,7 @@ return [
                 'badge' => null,
                 'weight' => '2.5 lbs',
                 'description' => 'Coconut and white chocolate layers with a Raffaello-inspired finish.',
-                'image' => 'images/home/delivery-ship.png',
+                'image' => 'images/home/delivery-ship.jpg',
             ],
 
             // -- Cupcakes (10) --
@@ -265,7 +302,7 @@ return [
                 'price' => 300,
                 'badge' => 'Popular',
                 'description' => 'Lotus Biscoff cream on a soft vanilla base. Sold per piece.',
-                'image' => 'images/home/promo-catering.png',
+                'image' => 'images/home/promo-catering.jpg',
             ],
             [
                 'id' => 'swiss-dark-cupcake',
@@ -274,7 +311,7 @@ return [
                 'price' => 300,
                 'badge' => null,
                 'description' => 'Dark chocolate cupcake with a rich cocoa finish. Sold per piece.',
-                'image' => 'images/home/delivery-pickup.png',
+                'image' => 'images/home/delivery-pickup.jpg',
             ],
             [
                 'id' => 'ferrero-cupcake',
@@ -283,7 +320,7 @@ return [
                 'price' => 300,
                 'badge' => null,
                 'description' => 'Hazelnut chocolate cupcake with Ferrero-style topping. Sold per piece.',
-                'image' => 'images/home/delivery-catering.png',
+                'image' => 'images/home/delivery-catering.jpg',
             ],
             [
                 'id' => 'coffee-cupcake',
@@ -292,7 +329,7 @@ return [
                 'price' => 300,
                 'badge' => null,
                 'description' => 'Coffee-infused cupcake with a light cream swirl. Sold per piece.',
-                'image' => 'images/home/delivery-ship.png',
+                'image' => 'images/home/delivery-ship.jpg',
             ],
 
             // -- Cheesecakes (3) --
@@ -355,7 +392,7 @@ return [
                 'price' => 300,
                 'badge' => null,
                 'description' => 'Choux pastry filled with cream and finished with chocolate. Sold per piece.',
-                'image' => 'images/home/delivery-pickup.png',
+                'image' => 'images/home/delivery-pickup.jpg',
             ],
             [
                 'id' => 'caramel-eclair',
@@ -373,7 +410,7 @@ return [
                 'price' => 300,
                 'badge' => null,
                 'description' => 'Eclair filled with Lotus cream. Sold per piece.',
-                'image' => 'images/home/promo-catering.png',
+                'image' => 'images/home/promo-catering.jpg',
             ],
 
             // -- Sundaes (2) --
@@ -424,7 +461,7 @@ return [
                 'price' => 300,
                 'badge' => null,
                 'description' => 'Mini pie filled with crunchy walnuts and a hint of vanilla.',
-                'image' => 'images/home/delivery-ship.png',
+                'image' => 'images/home/delivery-ship.jpg',
             ],
             [
                 'id' => 'chocolate-mini-pie',
@@ -450,7 +487,7 @@ return [
             'services' => ['Pickup', 'Delivery', 'Custom cakes'],
             'delivers' => true,
             'delivery_fee' => 199,
-            'image' => 'images/home/delivery-pickup.png',
+            'image' => 'images/home/delivery-pickup.jpg',
         ],
         [
             'id' => 'gizri',
@@ -474,21 +511,21 @@ return [
                 'serves' => 'Serves 12–15',
                 'price' => 'From ₨ 7,500',
                 'blurb' => 'Assorted cupcakes, brownies, and eclairs for meetings and team treats.',
-                'image' => 'images/home/promo-catering.png',
+                'image' => 'images/home/promo-catering.jpg',
             ],
             [
                 'title' => 'Celebration Dessert Table',
                 'serves' => 'Serves 25–40',
                 'price' => 'From ₨ 22,000',
                 'blurb' => 'Cakes, cupcakes, and sundae cups styled for birthdays and mehndi gatherings.',
-                'image' => 'images/home/delivery-catering.png',
+                'image' => 'images/home/delivery-catering.jpg',
             ],
             [
                 'title' => 'Corporate Gifting',
                 'serves' => 'Custom packs',
                 'price' => 'From ₨ 4,500',
                 'blurb' => 'Boxed treats for clients and teams across Karachi.',
-                'image' => 'images/home/delivery-ship.png',
+                'image' => 'images/home/delivery-ship.jpg',
             ],
         ],
     ],
@@ -534,21 +571,21 @@ return [
                 'text' => 'Choose a Karachi bakery, then order fresh treats for pickup or local delivery.',
                 'cta' => 'Choose location',
                 'route' => 'order.start',
-                'image' => 'images/home/delivery-pickup.png',
+                'image' => 'images/home/delivery-pickup.jpg',
             ],
             [
                 'title' => 'Pakistan Courier',
                 'text' => 'Fresh bakery favourites packed carefully for delivery across Pakistan.',
                 'cta' => 'Ship to me',
                 'route' => 'order.start',
-                'image' => 'images/home/delivery-ship.png',
+                'image' => 'images/home/delivery-ship.jpg',
             ],
             [
                 'title' => 'Catering & Events',
                 'text' => 'Dessert tables, office boxes, and custom cake orders for your occasion.',
                 'cta' => 'View services',
                 'route' => 'services',
-                'image' => 'images/home/delivery-catering.png',
+                'image' => 'images/home/delivery-catering.jpg',
             ],
         ],
     ],

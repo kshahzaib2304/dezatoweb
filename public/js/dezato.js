@@ -35,10 +35,10 @@
             }, wait);
         };
 
-        if (doc.readyState === "complete") {
+        if (doc.readyState === "interactive" || doc.readyState === "complete") {
             finish();
         } else {
-            window.addEventListener("load", finish, { once: true });
+            doc.addEventListener("DOMContentLoaded", finish, { once: true });
         }
     }
 
@@ -128,114 +128,135 @@
         });
     }
 
-    /* ---------- Fulfillment gate (pickup / delivery / shipping) ---------- */
+    /* ---------- Fulfillment chooser (Delivery / Pick-Up) ---------- */
     const fulfillment = doc.querySelector("[data-fulfillment]");
+    const SEEN_KEY = "dezato.fulfillmentSeen";
+
+    const markFulfillmentSeen = () => {
+        try {
+            localStorage.setItem(SEEN_KEY, "1");
+        } catch (e) {}
+    };
+
+    const hasSeenFulfillment = () => {
+        try {
+            return localStorage.getItem(SEEN_KEY) === "1";
+        } catch (e) {
+            return false;
+        }
+    };
+
     if (fulfillment) {
         const methodInput = doc.getElementById("fulfillment-method");
-        const tabs = [
-            ...fulfillment.querySelectorAll("[data-fulfillment-tab]"),
-        ];
-        const deliveryPanel = fulfillment.querySelector(
-            '[data-fulfillment-panel="delivery"]',
-        );
-        const shippingPanel = fulfillment.querySelector(
-            '[data-fulfillment-panel="shipping"]',
-        );
-        const storeSection = fulfillment.querySelector("[data-store-section]");
-        const deliveryAddress = fulfillment.querySelector(
-            "[data-delivery-address]",
-        );
-        const shippingAddress = fulfillment.querySelector(
-            "[data-shipping-address]",
-        );
-        const shippingFields = [
-            ...fulfillment.querySelectorAll("[data-shipping-field]"),
-        ];
-        const searchInput = fulfillment.querySelector("[data-store-search]");
-        const options = [
-            ...fulfillment.querySelectorAll("[data-store-option]"),
-        ];
-        const radios = [...fulfillment.querySelectorAll("[data-store-radio]")];
-        const empty = fulfillment.querySelector("[data-store-empty]");
+        const locationInput = fulfillment.querySelector("[data-fulfillment-location]");
+        const addressInput = fulfillment.querySelector("[data-fulfillment-address]");
+        const areaSelect = fulfillment.querySelector("[data-fulfillment-area]");
+        const submitBtn = fulfillment.querySelector("[data-fulfillment-submit]");
+        const locateBtn = fulfillment.querySelector("[data-fulfillment-locate]");
+        const locateHint = fulfillment.querySelector("[data-fulfillment-locate-hint]");
+        const tabs = [...fulfillment.querySelectorAll("[data-fulfillment-tab]")];
 
-        const setEnabled = (el, enabled) => {
-            if (!el) return;
-            el.disabled = !enabled;
-        };
+        const syncFromArea = () => {
+            const option = areaSelect?.selectedOptions?.[0];
+            const hasArea = Boolean(option && option.value);
 
-        const filterStores = () => {
-            const method = methodInput?.value || "pickup";
-            if (method === "shipping") {
-                if (empty) empty.hidden = true;
-                return;
+            if (locationInput) {
+                locationInput.value = hasArea
+                    ? option.getAttribute("data-location-id") || ""
+                    : "";
             }
 
-            const query = (searchInput?.value || "").trim().toLowerCase();
-            let visible = 0;
+            if (addressInput) {
+                const method = methodInput?.value || "delivery";
+                addressInput.value =
+                    method === "delivery" && hasArea
+                        ? option.getAttribute("data-label") || option.textContent.trim()
+                        : "";
+            }
 
-            options.forEach((option) => {
-                const delivers = option.getAttribute("data-delivers") === "1";
-                const name = option.getAttribute("data-store-name") || "";
-                const matchesQuery = !query || name.includes(query);
-                const matchesMethod = method === "pickup" || delivers;
-                const show = matchesQuery && matchesMethod;
-                option.hidden = !show;
-                if (!show) {
-                    const radio = option.querySelector('input[type="radio"]');
-                    if (radio?.checked) radio.checked = false;
-                } else {
-                    visible += 1;
-                }
-            });
-
-            if (empty) empty.hidden = visible > 0;
+            if (submitBtn) {
+                submitBtn.disabled = !hasArea;
+            }
         };
 
         const setMethod = (method) => {
-            if (methodInput) methodInput.value = method;
+            const next =
+                method === "pickup" || method === "delivery" ? method : "delivery";
+
+            if (methodInput) methodInput.value = next;
 
             tabs.forEach((tab) => {
-                const active =
-                    tab.getAttribute("data-fulfillment-tab") === method;
+                const active = tab.getAttribute("data-fulfillment-tab") === next;
                 tab.classList.toggle("is-active", active);
                 tab.setAttribute("aria-selected", active ? "true" : "false");
             });
 
-            if (deliveryPanel) deliveryPanel.hidden = method !== "delivery";
-            if (shippingPanel) shippingPanel.hidden = method !== "shipping";
-            if (storeSection) storeSection.hidden = method === "shipping";
-
-            setEnabled(deliveryAddress, method === "delivery");
-            setEnabled(shippingAddress, method === "shipping");
-            shippingFields.forEach((field) =>
-                setEnabled(field, method === "shipping"),
-            );
-
-            if (deliveryAddress)
-                deliveryAddress.required = method === "delivery";
-            if (shippingAddress)
-                shippingAddress.required = method === "shipping";
-            shippingFields.forEach((field) => {
-                field.required = method === "shipping";
-            });
-
-            radios.forEach((radio) => {
-                radio.required = method !== "shipping";
-                if (method === "shipping") radio.checked = false;
-            });
-
-            filterStores();
+            syncFromArea();
         };
 
         tabs.forEach((tab) => {
             tab.addEventListener("click", () => {
-                setMethod(tab.getAttribute("data-fulfillment-tab") || "pickup");
+                setMethod(tab.getAttribute("data-fulfillment-tab") || "delivery");
             });
         });
 
-        searchInput?.addEventListener("input", filterStores);
-        setMethod(methodInput?.value || "pickup");
+        areaSelect?.addEventListener("change", syncFromArea);
 
+        locateBtn?.addEventListener("click", () => {
+            if (!navigator.geolocation) {
+                if (locateHint) {
+                    locateHint.hidden = false;
+                    locateHint.textContent =
+                        "Location is not available on this device. Pick your area below.";
+                }
+                return;
+            }
+
+            locateBtn.disabled = true;
+            if (locateHint) {
+                locateHint.hidden = false;
+                locateHint.textContent = "Finding your area…";
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    locateBtn.disabled = false;
+                    const { latitude, longitude } = position.coords;
+                    // Nearest counter: DHA Phase 6 ≈ 24.814, 67.064 · Gizri ≈ 24.814, 67.051
+                    const dha =
+                        (latitude - 24.814) ** 2 + (longitude - 67.064) ** 2;
+                    const gizri =
+                        (latitude - 24.814) ** 2 + (longitude - 67.051) ** 2;
+                    const storeId = dha <= gizri ? "dha-phase-6" : "gizri";
+                    const match = [...(areaSelect?.options || [])].find(
+                        (option) =>
+                            option.value &&
+                            option.getAttribute("data-location-id") === storeId,
+                    );
+
+                    if (match && areaSelect) {
+                        areaSelect.value = match.value;
+                        syncFromArea();
+                    }
+
+                    if (locateHint) {
+                        locateHint.textContent =
+                            "Karachi detected. Confirm your neighbourhood below.";
+                    }
+                },
+                () => {
+                    locateBtn.disabled = false;
+                    if (locateHint) {
+                        locateHint.hidden = false;
+                        locateHint.textContent =
+                            "Could not read your location. Pick your area from the list.";
+                    }
+                },
+                { enableHighAccuracy: false, timeout: 8000, maximumAge: 60000 },
+            );
+        });
+
+        setMethod(methodInput?.value || "delivery");
         fulfillment._setMethod = setMethod;
     }
 
@@ -273,6 +294,7 @@
 
     /** Persist "welcome seen" without a full page reload. */
     function dismissWelcomeQuietly() {
+        markFulfillmentSeen();
         setFulfillmentModal(false);
         if (!dismissForm) return;
 
@@ -330,7 +352,19 @@
             });
         });
 
+    fulfillment?.querySelector("[data-fulfillment-form]")?.addEventListener(
+        "submit",
+        () => {
+            markFulfillmentSeen();
+        },
+    );
+
     if (fulfillmentModal?.getAttribute("data-auto-open") === "1") {
-        setFulfillmentModal(true);
+        const forced = fulfillmentModal.getAttribute("data-force-open") === "1";
+        if (forced || !hasSeenFulfillment()) {
+            setFulfillmentModal(true);
+        } else {
+            dismissWelcomeQuietly();
+        }
     }
 })();

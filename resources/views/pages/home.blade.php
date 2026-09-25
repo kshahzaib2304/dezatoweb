@@ -67,19 +67,6 @@
     @endif
 </section>
 
-<div class="home-marquee" aria-hidden="true">
-    <div class="home-marquee__track">
-        @foreach (['Baked in Karachi', 'Since 2018', 'Cakes from ₨ 1,500', 'Pickup & delivery', 'Custom inscriptions'] as $item)
-            <span>{{ $item }}</span>
-            <span class="home-marquee__dot" aria-hidden="true">·</span>
-        @endforeach
-        @foreach (['Baked in Karachi', 'Since 2018', 'Cakes from ₨ 1,500', 'Pickup & delivery', 'Custom inscriptions'] as $item)
-            <span>{{ $item }}</span>
-            <span class="home-marquee__dot" aria-hidden="true">·</span>
-        @endforeach
-    </div>
-</div>
-
 <section class="home-section" data-reveal>
     <div class="container">
         <div class="home-section__head">
@@ -131,24 +118,24 @@
     <div class="container">
         <div class="home-section__head home-section__head--stack">
             <h2>How you’ll get it</h2>
-            <p>Pickup in DHA or Gizri, delivery across Karachi, or courier across Pakistan.</p>
+            <p>Pickup in DHA or Gizri, or delivery across Karachi.</p>
         </div>
         <div class="home-ways">
             <button class="home-way" type="button" data-fulfillment-open data-fulfillment-method="pickup">
-                <img src="{{ asset('images/home/delivery-pickup.png') }}" alt="" width="400" height="400" loading="lazy">
+                <img src="{{ asset('images/home/delivery-pickup.jpg') }}" alt="" width="400" height="400" loading="lazy">
                 <h3>Store pickup</h3>
                 <p>Order ahead and collect fresh from our counters.</p>
             </button>
             <button class="home-way" type="button" data-fulfillment-open data-fulfillment-method="delivery">
-                <img src="{{ asset('images/home/delivery-catering.png') }}" alt="" width="400" height="400" loading="lazy">
+                <img src="{{ asset('images/home/delivery-catering.jpg') }}" alt="" width="400" height="400" loading="lazy">
                 <h3>Karachi delivery</h3>
                 <p>Same-day delivery where we serve your neighbourhood.</p>
             </button>
-            <button class="home-way" type="button" data-fulfillment-open data-fulfillment-method="shipping">
-                <img src="{{ asset('images/home/delivery-ship.png') }}" alt="" width="400" height="400" loading="lazy">
-                <h3>Pakistan courier</h3>
-                <p>Packed carefully for delivery across the country.</p>
-            </button>
+            <a class="home-way" href="{{ route('builder.show') }}">
+                <img src="{{ asset('images/home/delivery-ship.jpg') }}" alt="" width="400" height="400" loading="lazy">
+                <h3>Custom cakes</h3>
+                <p>Build a celebration cake with flavours, size, and finish.</p>
+            </a>
         </div>
     </div>
 </section>

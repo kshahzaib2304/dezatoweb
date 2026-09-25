@@ -27,7 +27,7 @@
                 <h3>Order</h3>
                 <button type="button" data-fulfillment-open data-fulfillment-method="pickup">Pickup</button>
                 <button type="button" data-fulfillment-open data-fulfillment-method="delivery">Delivery</button>
-                <button type="button" data-fulfillment-open data-fulfillment-method="shipping">Courier</button>
+                <a href="{{ route('builder.show') }}">Custom cake</a>
             </div>
         </div>
 

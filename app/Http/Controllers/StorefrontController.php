@@ -91,6 +91,13 @@ class StorefrontController extends Controller
                 'sort' => $sort,
                 'weight' => $weight,
             ],
+            'weights' => Catalog::products()
+                ->pluck('weight')
+                ->filter(fn (mixed $value): bool => is_string($value) && $value !== '')
+                ->unique()
+                ->sort()
+                ->values()
+                ->all(),
         ]);
     }
 

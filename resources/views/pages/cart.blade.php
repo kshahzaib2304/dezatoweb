@@ -5,7 +5,7 @@
         eyebrow="Your order"
         title="Cart"
         text="Review your treats, then we’ll confirm pickup or delivery details at checkout."
-        image="images/home/delivery-ship.png"
+        image="images/home/delivery-ship.jpg"
         :compact="true"
     />
 

@@ -1,16 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
-    <x-page-hero
-        eyebrow="Almost there"
-        title="Checkout"
-        text="Confirm your details and place your Dezato order."
-        image="images/home/delivery-ship.png"
-        :compact="true"
-    />
-
-    <section class="section-block">
+    <section class="checkout-page">
         <div class="container checkout-layout">
+            <header class="checkout-page__head">
+                <h1>Checkout</h1>
+                <p>Confirm your details and place your order. We bake and deliver across Karachi.</p>
+            </header>
+
             @if ($errors->any())
                 <div class="form-errors" role="alert">
                     <ul>
@@ -21,7 +18,7 @@
                 </div>
             @endif
 
-            <form class="checkout-form" method="post" action="{{ route('checkout.store') }}" data-reveal>
+            <form class="checkout-form" method="post" action="{{ route('checkout.store') }}">
                 @csrf
 
                 <div class="checkout-form__section">
@@ -32,12 +29,13 @@
                             <input id="customer_name" class="field-input" type="text" name="customer_name" value="{{ old('customer_name', auth()->user()->name ?? '') }}" autocomplete="name" required>
                         </div>
                         <div class="form-row">
-                            <label class="field-label" for="email">Email</label>
-                            <input id="email" class="field-input" type="email" name="email" value="{{ old('email', auth()->user()->email ?? '') }}" autocomplete="email" required>
+                            <label class="field-label" for="phone">Phone (WhatsApp)</label>
+                            <input id="phone" class="field-input" type="tel" name="phone" value="{{ old('phone', auth()->user()->phone ?? '') }}" autocomplete="tel" inputmode="tel" required>
+                            <p class="field-hint">We’ll confirm your order on this number.</p>
                         </div>
                         <div class="form-row">
-                            <label class="field-label" for="phone">Phone</label>
-                            <input id="phone" class="field-input" type="tel" name="phone" value="{{ old('phone', auth()->user()->phone ?? '') }}" autocomplete="tel" required>
+                            <label class="field-label" for="email">Email</label>
+                            <input id="email" class="field-input" type="email" name="email" value="{{ old('email', auth()->user()->email ?? '') }}" autocomplete="email" required>
                         </div>
                         <div class="form-row form-row--full">
                             <label class="field-label" for="notes">Order notes <span class="field-optional">(optional)</span></label>
@@ -96,15 +94,16 @@
                     <h2>Promo code</h2>
                     <div class="form-row">
                         <label class="field-label" for="promo">Have a code?</label>
-                        <input id="promo" class="field-input" type="text" name="promo" value="{{ old('promo') }}" placeholder="e.g. DEZATO10" style="text-transform:uppercase">
+                        <input id="promo" class="field-input field-input--code" type="text" name="promo" value="{{ old('promo') }}" placeholder="e.g. DEZATO10" autocomplete="off">
                         @if ($promoMessage)
-                            <p class="field-hint" style="color:#1b5e20">{{ $promoMessage }}</p>
+                            <p class="field-hint field-hint--ok">{{ $promoMessage }}</p>
                         @endif
                     </div>
                 </div>
 
                 <div class="checkout-form__section" data-checkout-payment>
                     <h2>Payment</h2>
+                    <p class="field-hint">Cash on delivery is available for Karachi orders.</p>
                     @forelse ($paymentMethods as $i => $method)
                         <label class="pay-option">
                             <input
@@ -145,10 +144,10 @@
                     </label>
                 </div>
 
-                <button class="btn btn--primary btn--block" type="submit">Place order</button>
+                <button class="btn btn--primary btn--block" type="submit">Place order · {{ pkr($total) }}</button>
             </form>
 
-            <aside class="cart-summary" data-reveal>
+            <aside class="cart-summary">
                 <h2>Order summary</h2>
                 <ul class="checkout-lines">
                     @foreach ($lines as $line)
@@ -156,7 +155,7 @@
                             <span>
                                 {{ $line['quantity'] }} × {{ $line['product']['name'] }}
                                 @if ($line['is_custom'] && ($line['product']['description'] ?? '') !== '')
-                                    <small style="display:block;color:var(--muted)">{{ $line['product']['description'] }}</small>
+                                    <small class="checkout-lines__note">{{ $line['product']['description'] }}</small>
                                 @endif
                             </span>
                             <span>{{ pkr($line['line_total']) }}</span>
@@ -185,7 +184,7 @@
                         <dd>{{ pkr($total) }}</dd>
                     </div>
                 </dl>
-                <a class="btn btn--outline btn--block" href="{{ route('cart.show') }}">Back to cart</a>
+                <p class="checkout-trust">Prices in PKR · Karachi pickup &amp; delivery · Confirm on WhatsApp</p>
             </aside>
         </div>
     </section>

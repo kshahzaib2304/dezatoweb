@@ -120,7 +120,7 @@ final class StoryBlocks
     public static function packagesForStorefront(): array
     {
         return array_map(function (array $row): array {
-            $row['image'] = MediaPaths::public($row['image'] ?? null, 'images/home/promo-catering.png');
+            $row['image'] = MediaPaths::public($row['image'] ?? null, 'images/home/promo-catering.jpg');
 
             return $row;
         }, self::packages());

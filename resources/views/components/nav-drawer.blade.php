@@ -63,7 +63,7 @@
             <a class="nav-link" href="{{ route('login') }}">Sign in</a>
             <a class="nav-link" href="{{ route('register') }}">Create account</a>
         @endauth
-        <button class="nav-link" type="button" data-fulfillment-open data-fulfillment-method="shipping" data-nav-close>Pakistan Courier</button>
+        <a class="nav-link" href="{{ route('locations') }}" data-nav-close>Our stores</a>
     </div>
 
     <div class="nav-drawer__cta">

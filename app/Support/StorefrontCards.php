@@ -138,7 +138,7 @@ final class StorefrontCards
     public static function orderOptionsForStorefront(): array
     {
         return array_map(function (array $row): array {
-            $row['image'] = MediaPaths::public($row['image'] ?? null, 'images/home/delivery-pickup.png');
+            $row['image'] = MediaPaths::public($row['image'] ?? null, 'images/home/delivery-pickup.jpg');
 
             return $row;
         }, self::orderOptions());
