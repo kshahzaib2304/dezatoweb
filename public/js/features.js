@@ -205,6 +205,30 @@
     syncPayPanels();
   }
 
+  /* ---------- Surprise delivery gift card ---------- */
+  const surpriseRoot = document.querySelector('[data-surprise-delivery]');
+  if (surpriseRoot) {
+    const toggle = surpriseRoot.querySelector('[data-surprise-toggle]');
+    const panel = surpriseRoot.querySelector('[data-surprise-panel]');
+    const note = surpriseRoot.querySelector('[data-surprise-note]');
+
+    const syncSurprise = () => {
+      const on = Boolean(toggle?.checked);
+      if (panel) {
+        panel.hidden = !on;
+      }
+      if (note) {
+        note.disabled = !on;
+        if (!on) {
+          note.value = '';
+        }
+      }
+    };
+
+    toggle?.addEventListener('change', syncSurprise);
+    syncSurprise();
+  }
+
   /* ---------- Homepage hero slider ---------- */
   const hero = document.querySelector('[data-hero-slider]');
   if (hero) {

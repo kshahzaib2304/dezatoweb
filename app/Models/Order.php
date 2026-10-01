@@ -50,6 +50,8 @@ class Order extends Model
         'region',
         'postal_code',
         'notes',
+        'surprise_delivery',
+        'surprise_note',
         'delivery_date',
         'delivery_slot',
         'payment_method',
@@ -71,7 +73,13 @@ class Order extends Model
             'total' => 'decimal:2',
             'placed_at' => 'datetime',
             'delivery_date' => 'date',
+            'surprise_delivery' => 'boolean',
         ];
+    }
+
+    public function isSurpriseDelivery(): bool
+    {
+        return (bool) $this->surprise_delivery;
     }
 
     public function items(): HasMany

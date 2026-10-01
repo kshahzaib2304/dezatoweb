@@ -34,6 +34,15 @@
                             @endif
                         </p>
                     @endif
+                    @if ($order->isSurpriseDelivery())
+                        <p>
+                            <span>Surprise</span>
+                            Free gift card
+                            @if ($order->surprise_note)
+                                · “{{ $order->surprise_note }}”
+                            @endif
+                        </p>
+                    @endif
                     <p><span>Payment</span> {{ $paymentLabel ?? \App\Support\PaymentMethods::label($order->payment_method) }} ({{ ucfirst($order->payment_status ?? 'unpaid') }})</p>
                 </div>
 

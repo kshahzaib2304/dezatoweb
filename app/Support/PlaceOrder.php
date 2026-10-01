@@ -23,6 +23,8 @@ final class PlaceOrder
      *     email: string,
      *     phone: string,
      *     notes?: string|null,
+     *     surprise_delivery?: bool,
+     *     surprise_note?: string|null,
      *     payment_method: string,
      *     delivery_date?: string|null,
      *     delivery_slot?: string|null,
@@ -47,6 +49,12 @@ final class PlaceOrder
         }
 
         $fulfillment = $this->fulfillment->get();
+        $method = (string) ($fulfillment['method'] ?? 'pickup');
+        $surpriseDelivery = (bool) ($customer['surprise_delivery'] ?? false);
+        $surpriseNote = $surpriseDelivery
+            ? (trim((string) ($customer['surprise_note'] ?? '')) ?: null)
+            : null;
+
         $subtotal = $this->cart->subtotal();
         $fee = $this->fulfillment->fee();
 
@@ -61,12 +69,25 @@ final class PlaceOrder
         $total = round(max(0, $subtotal + $fee - $discount), 2);
         $paymentStatus = PaymentMethods::paymentStatusFor($customer['payment_method']);
 
-        return DB::transaction(function () use ($customer, $fulfillment, $lines, $subtotal, $fee, $discount, $promo, $total, $paymentStatus): Order {
+        return DB::transaction(function () use (
+            $customer,
+            $fulfillment,
+            $method,
+            $lines,
+            $subtotal,
+            $fee,
+            $discount,
+            $promo,
+            $total,
+            $paymentStatus,
+            $surpriseDelivery,
+            $surpriseNote,
+        ): Order {
             $order = Order::query()->create([
                 'user_id' => auth()->id(),
                 'number' => $this->generateNumber(),
                 'status' => Order::STATUS_PLACED,
-                'method' => $fulfillment['method'],
+                'method' => $method,
                 'location_id' => $fulfillment['location_id'] ?? null,
                 'location_name' => $fulfillment['location_name'] ?? null,
                 'customer_name' => $customer['customer_name'],
@@ -77,6 +98,8 @@ final class PlaceOrder
                 'region' => $fulfillment['region'] ?? null,
                 'postal_code' => $fulfillment['postal_code'] ?? null,
                 'notes' => $customer['notes'] ?? null,
+                'surprise_delivery' => $surpriseDelivery,
+                'surprise_note' => $surpriseNote,
                 'delivery_date' => $customer['delivery_date'] ?? null,
                 'delivery_slot' => $customer['delivery_slot'] ?? null,
                 'payment_method' => $customer['payment_method'],

@@ -97,5 +97,13 @@
     @if ($order->notes)
         <p style="margin-top:1.5rem"><strong>Notes:</strong> {{ $order->notes }}</p>
     @endif
+    @if ($order->isSurpriseDelivery())
+        <p style="margin-top:1rem">
+            <strong>Surprise delivery:</strong> Yes · include free gift card
+            @if ($order->surprise_note)
+                <br><strong>Card message:</strong> {{ $order->surprise_note }}
+            @endif
+        </p>
+    @endif
 </body>
 </html>

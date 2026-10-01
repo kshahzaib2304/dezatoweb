@@ -14,6 +14,14 @@ class PlaceOrderRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'surprise_delivery' => $this->boolean('surprise_delivery'),
+            'express' => $this->boolean('express'),
+        ]);
+    }
+
     /**
      * @return array<string, mixed>
      */
@@ -26,10 +34,12 @@ class PlaceOrderRequest extends FormRequest
             'email' => ['required', 'email', 'max:180'],
             'phone' => ['required', 'string', 'max:40'],
             'notes' => ['nullable', 'string', 'max:1000'],
+            'surprise_delivery' => ['boolean'],
+            'surprise_note' => ['nullable', 'string', 'max:280'],
             'payment_method' => ['required', 'string', Rule::in(PaymentMethods::enabledIds())],
             'delivery_date' => ['nullable', 'date', 'after_or_equal:'.FulfillmentSchedule::earliestDate()],
             'delivery_slot' => ['nullable', 'string', 'max:80', Rule::in($slots)],
-            'express' => ['nullable', 'boolean'],
+            'express' => ['boolean'],
             'promo' => ['nullable', 'string', 'max:40'],
             'agree' => ['accepted'],
         ];
@@ -45,6 +55,7 @@ class PlaceOrderRequest extends FormRequest
             'payment_method.in' => 'Please choose an available payment option.',
             'delivery_date.after_or_equal' => 'Please choose a date that gives the bakery enough notice.',
             'delivery_slot.in' => 'Please choose one of the available time windows.',
+            'surprise_note.max' => 'The gift-card message must be 280 characters or fewer.',
         ];
     }
 }

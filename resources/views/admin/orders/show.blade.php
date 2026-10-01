@@ -110,6 +110,17 @@
                 @if ($order->notes)
                     <div><dt>Notes</dt><dd>{{ $order->notes }}</dd></div>
                 @endif
+                @if ($order->isSurpriseDelivery())
+                    <div>
+                        <dt>Surprise delivery</dt>
+                        <dd>
+                            Yes · free gift card
+                            @if ($order->surprise_note)
+                                <div class="admin-muted">Card message: “{{ $order->surprise_note }}”</div>
+                            @endif
+                        </dd>
+                    </div>
+                @endif
                 <div><dt>Placed</dt><dd>{{ optional($order->placed_at)->format('d M Y, h:i A') }}</dd></div>
             </dl>
         </section>

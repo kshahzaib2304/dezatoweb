@@ -5,6 +5,13 @@
 
 Total: **{{ pkr($order->total) }}** · {{ $order->methodLabel() }} · {{ \App\Support\PaymentMethods::label($order->payment_method) }}
 
+@if ($order->isSurpriseDelivery())
+**Surprise delivery** · free gift card
+@if ($order->surprise_note)
+<br>Card message: “{{ $order->surprise_note }}”
+@endif
+@endif
+
 @foreach ($order->items as $item)
 - {{ $item->quantity }} × {{ $item->product_name }} - {{ pkr($item->line_total) }}
   @if ($item->isCustom())

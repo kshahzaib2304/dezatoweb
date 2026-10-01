@@ -24,8 +24,51 @@
             <form class="checkout-form" method="post" action="{{ route('checkout.store') }}">
                 @csrf
 
-                <div class="checkout-form__section">
-                    <h2>{{ $copy['checkout_contact_title'] }}</h2>
+                <div class="checkout-form__section" data-surprise-delivery>
+                    <div class="checkout-section-head">
+                        <h2>{{ $copy['checkout_contact_title'] }}</h2>
+                        <label class="surprise-chip">
+                            <input
+                                type="checkbox"
+                                name="surprise_delivery"
+                                value="1"
+                                data-surprise-toggle
+                                @checked(old('surprise_delivery'))
+                            >
+                            <span class="surprise-chip__copy">
+                                <strong>Surprise delivery</strong>
+                                <em>Free</em>
+                            </span>
+                        </label>
+                    </div>
+
+                    <div
+                        class="surprise-card"
+                        data-surprise-panel
+                        @if (! old('surprise_delivery')) hidden @endif
+                    >
+                        <p class="surprise-card__note">
+                            We’ll keep this a surprise and include a free gift card. On delivery day we may only
+                            contact the recipient if access details need clarifying.
+                        </p>
+                        <div class="form-row form-row--full">
+                            <label class="field-label" for="surprise_note">
+                                Message on the gift card
+                                <span class="field-optional">(optional)</span>
+                            </label>
+                            <textarea
+                                id="surprise_note"
+                                class="field-input field-textarea"
+                                name="surprise_note"
+                                rows="3"
+                                maxlength="280"
+                                data-surprise-note
+                                placeholder="Happy birthday! With love from…"
+                            >{{ old('surprise_note') }}</textarea>
+                            <p class="field-hint">Printed on a free card with the order. Max 280 characters.</p>
+                        </div>
+                    </div>
+
                     <div class="form-grid">
                         <div class="form-row form-row--full">
                             <label class="field-label" for="customer_name">Full name</label>

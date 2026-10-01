@@ -61,6 +61,8 @@ class CheckoutController extends Controller
                 'email' => $request->string('email')->trim()->toString(),
                 'phone' => $request->string('phone')->trim()->toString(),
                 'notes' => $request->string('notes')->trim()->toString() ?: null,
+                'surprise_delivery' => $request->boolean('surprise_delivery'),
+                'surprise_note' => $request->string('surprise_note')->trim()->toString() ?: null,
                 'payment_method' => $request->string('payment_method')->toString(),
                 'delivery_date' => $request->input('delivery_date'),
                 'delivery_slot' => $request->string('delivery_slot')->trim()->toString() ?: null,
