@@ -51,7 +51,8 @@ final class Cart
      *     unit_price: int|float,
      *     summary?: string|null,
      *     options?: array<string, mixed>,
-     *     image?: string|null
+     *     image?: string|null,
+     *     images?: list<string>
      * }  $custom
      */
     public function addCustom(array $custom, int $quantity = 1): string
@@ -59,6 +60,14 @@ final class Cart
         $key = $custom['key'];
         $quantity = max(1, min(99, $quantity));
         $items = $this->items();
+        $images = array_values(array_filter(array_map(
+            static fn ($path): string => trim((string) $path),
+            is_array($custom['images'] ?? null) ? $custom['images'] : []
+        )));
+
+        if ($images === [] && ! empty($custom['image'])) {
+            $images = [(string) $custom['image']];
+        }
 
         $items[$key] = [
             'type' => 'custom',
@@ -68,7 +77,8 @@ final class Cart
             'unit_price' => (float) $custom['unit_price'],
             'summary' => $custom['summary'] ?? null,
             'options' => $custom['options'] ?? [],
-            'image' => $custom['image'] ?? null,
+            'image' => $images[0] ?? null,
+            'images' => $images,
         ];
 
         $this->session->put(self::SESSION_KEY, $items);
@@ -125,23 +135,45 @@ final class Cart
 
                 if ($type === 'custom') {
                     $unitPrice = (float) ($item['unit_price'] ?? 0);
-                    $image = $item['image'] ?? null;
+                    $images = array_values(array_filter(array_map(
+                        static fn ($path): string => trim((string) $path),
+                        is_array($item['images'] ?? null)
+                            ? $item['images']
+                            : (isset($item['image']) ? [(string) $item['image']] : [])
+                    )));
+                    $image = $images[0] ?? ($item['image'] ?? null);
                     $publicImage = $image && ! str_starts_with((string) $image, 'http')
                         ? (str_starts_with((string) $image, 'storage/') ? $image : 'storage/'.$image)
                         : 'images/home/hero.jpg';
+                    $publicImages = array_map(
+                        static function (string $path): string {
+                            if (str_starts_with($path, 'http') || str_starts_with($path, 'storage/')) {
+                                return $path;
+                            }
+
+                            return 'storage/'.$path;
+                        },
+                        $images
+                    );
+                    $options = is_array($item['options'] ?? null) ? $item['options'] : [];
+                    if ($images !== [] && empty($options['reference_images'])) {
+                        $options['reference_images'] = $images;
+                    }
 
                     return [
                         'product_id' => (string) $item['product_id'],
                         'quantity' => $quantity,
                         'type' => 'custom',
                         'is_custom' => true,
-                        'options' => is_array($item['options'] ?? null) ? $item['options'] : [],
-                        'image_path' => $item['image'] ?? null,
+                        'options' => $options,
+                        'image_path' => $image,
+                        'image_paths' => $images,
                         'product' => [
                             'id' => (string) $item['product_id'],
                             'name' => (string) ($item['name'] ?? 'Custom Cake'),
                             'price' => $unitPrice,
                             'image' => $publicImage,
+                            'images' => $publicImages !== [] ? $publicImages : [$publicImage],
                             'description' => (string) ($item['summary'] ?? ''),
                         ],
                         'line_total' => round($unitPrice * $quantity, 2),

@@ -59,14 +59,57 @@
     const upload = builder.querySelector('[data-builder-upload]');
     const preview = builder.querySelector('[data-upload-preview]');
     const label = builder.querySelector('[data-upload-label]');
+    const previewUrls = [];
+
+    const clearPreviewUrls = () => {
+      while (previewUrls.length) {
+        URL.revokeObjectURL(previewUrls.pop());
+      }
+    };
+
     upload?.addEventListener('change', () => {
-      const file = upload.files?.[0];
-      if (!file || !preview) return;
-      const url = URL.createObjectURL(file);
-      const img = preview.querySelector('img');
-      if (img) img.src = url;
+      clearPreviewUrls();
+      if (!preview) return;
+
+      const maxFiles = Math.max(1, Number(upload.dataset.maxFiles || 5));
+      let files = [...(upload.files || [])];
+
+      if (files.length > maxFiles) {
+        const transfer = new DataTransfer();
+        files.slice(0, maxFiles).forEach((file) => transfer.items.add(file));
+        upload.files = transfer.files;
+        files = [...upload.files];
+      }
+
+      preview.replaceChildren();
+
+      if (files.length === 0) {
+        preview.hidden = true;
+        if (label) {
+          label.textContent = `Upload 1–${maxFiles} cake photos or screenshots`;
+        }
+        return;
+      }
+
+      files.forEach((file, index) => {
+        const url = URL.createObjectURL(file);
+        previewUrls.push(url);
+        const figure = document.createElement('figure');
+        figure.className = 'upload-preview-grid__item';
+        const img = document.createElement('img');
+        img.src = url;
+        img.alt = `Reference ${index + 1}`;
+        figure.appendChild(img);
+        preview.appendChild(figure);
+      });
+
       preview.hidden = false;
-      if (label) label.textContent = file.name;
+      if (label) {
+        label.textContent =
+          files.length === 1
+            ? files[0].name
+            : `${files.length} photos selected`;
+      }
     });
 
     /* Message placement: hide text field when "No text" is selected */

@@ -3144,6 +3144,29 @@ body.cart-locked {
     font-size: 0.9rem;
 }
 
+.cart-line__refs,
+.cart-drawer__refs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-top: 0.55rem;
+}
+
+.cart-line__refs img,
+.cart-drawer__refs img {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--line);
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.cart-drawer__refs img {
+    width: 44px;
+    height: 44px;
+}
+
 .cart-line__actions {
     margin-top: 0.75rem;
     display: flex;

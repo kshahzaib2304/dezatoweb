@@ -90,6 +90,18 @@ final class PlaceOrder
             ]);
 
             foreach ($lines as $line) {
+                $options = is_array($line['options'] ?? null) ? $line['options'] : null;
+                $imagePaths = array_values(array_filter(array_map(
+                    static fn ($path): string => trim((string) $path),
+                    is_array($line['image_paths'] ?? null)
+                        ? $line['image_paths']
+                        : (isset($line['image_path']) ? [(string) $line['image_path']] : [])
+                )));
+
+                if ($options !== null && $imagePaths !== [] && empty($options['reference_images'])) {
+                    $options['reference_images'] = $imagePaths;
+                }
+
                 OrderItem::query()->create([
                     'order_id' => $order->id,
                     'product_id' => $line['product_id'],
@@ -97,8 +109,8 @@ final class PlaceOrder
                     'unit_price' => (float) $line['product']['price'],
                     'quantity' => $line['quantity'],
                     'line_total' => $line['line_total'],
-                    'options' => $line['options'] ?? null,
-                    'image' => $line['image_path'] ?? null,
+                    'options' => $options,
+                    'image' => $line['image_path'] ?? ($imagePaths[0] ?? null),
                 ]);
             }
 

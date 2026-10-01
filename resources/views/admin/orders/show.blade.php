@@ -42,14 +42,23 @@
                         <strong>{{ $item->product_name }}</strong>
                         × {{ $item->quantity }}
                         - {{ pkr($item->line_total) }}
-                        @if ($item->isCustom())
+                            @if ($item->isCustom())
                             <div class="admin-muted">{{ $item->optionsSummary() }}</div>
                             @if (! empty($item->options['notes']))
                                 <div class="admin-muted">Baker notes: {{ $item->options['notes'] }}</div>
                             @endif
-                            @if ($item->image)
-                                <div class="admin-current-photo">
-                                    <img src="{{ asset('storage/'.$item->image) }}" alt="Reference" width="96" height="96">
+                            @php
+                                $refs = array_values(array_filter(
+                                    is_array($item->options['reference_images'] ?? null)
+                                        ? $item->options['reference_images']
+                                        : ($item->image ? [$item->image] : [])
+                                ));
+                            @endphp
+                            @if ($refs !== [])
+                                <div class="admin-current-photo admin-current-photo--refs">
+                                    @foreach ($refs as $refIndex => $ref)
+                                        <img src="{{ asset(str_starts_with($ref, 'storage/') ? $ref : 'storage/'.$ref) }}" alt="Reference {{ $refIndex + 1 }}" width="96" height="96">
+                                    @endforeach
                                 </div>
                             @endif
                         @endif

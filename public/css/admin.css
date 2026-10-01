@@ -928,6 +928,10 @@
     gap: 0.85rem;
 }
 
+.admin-current-photo--refs {
+    margin-top: 0.65rem;
+}
+
 .admin-current-photo img {
     width: 96px;
     height: 96px;

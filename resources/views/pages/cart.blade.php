@@ -60,6 +60,19 @@
 
                                     @if ($line['is_custom'])
                                         <x-cart-line-extras :options="$line['options']" />
+                                        @if (! empty($line['product']['images']) && count($line['product']['images']) > 1)
+                                            <div class="cart-line__refs">
+                                                @foreach ($line['product']['images'] as $refIndex => $refImage)
+                                                    <img
+                                                        src="{{ asset($refImage) }}"
+                                                        alt="Reference {{ $refIndex + 1 }}"
+                                                        width="56"
+                                                        height="56"
+                                                        loading="lazy"
+                                                    >
+                                                @endforeach
+                                            </div>
+                                        @endif
                                         @php
                                             $extrasTotal = \App\Support\CartExtras::extrasTotal($line['options']);
                                         @endphp

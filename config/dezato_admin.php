@@ -108,12 +108,12 @@ return [
             'tip' => 'Pickup counter, delivery box, or catering table - one clear photo per card.',
         ],
         'reference' => [
-            'label' => 'Custom cake reference photo',
+            'label' => 'Custom cake reference photos',
             'size' => '1200 × 1200 px (or clear phone photo)',
             'ratio' => 'Square preferred',
             'formats' => 'JPG, PNG, or WebP',
             'max' => '3 MB',
-            'tip' => 'Customers upload inspiration photos. Clear, well-lit pictures help the bakery match the design.',
+            'tip' => 'Customers can upload up to 5 inspiration photos (décor from one, writing/shape from another). Clear, well-lit pictures help the bakery match the design.',
         ],
     ],
 ];

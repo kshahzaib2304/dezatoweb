@@ -40,6 +40,19 @@
 
                     @if ($line['is_custom'])
                         <x-cart-line-extras :options="$line['options']" class="cart-extras--drawer" />
+                        @if (! empty($line['product']['images']) && count($line['product']['images']) > 1)
+                            <div class="cart-drawer__refs">
+                                @foreach ($line['product']['images'] as $refIndex => $refImage)
+                                    <img
+                                        src="{{ asset($refImage) }}"
+                                        alt="Reference {{ $refIndex + 1 }}"
+                                        width="44"
+                                        height="44"
+                                        loading="lazy"
+                                    >
+                                @endforeach
+                            </div>
+                        @endif
                     @elseif (! empty($line['product']['weight']))
                         <p class="cart-drawer__meta">{{ $line['product']['weight'] }}</p>
                     @endif

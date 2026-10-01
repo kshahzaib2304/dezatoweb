@@ -8,7 +8,7 @@
         <header class="builder-head" data-reveal>
             <p class="home-kicker">Custom cake</p>
             <h1>Design your cake</h1>
-            <p>Upload a reference, choose size and flavours - price updates live in PKR. Please order at least one day before delivery or pickup.</p>
+            <p>Upload reference photos (décor from one, writing or shape from another), choose size and flavours - price updates live in PKR. Please order at least one day before delivery or pickup.</p>
         </header>
 
         @if (session('status'))
@@ -49,18 +49,24 @@
 
             <div class="builder-main">
                 <section class="builder-block">
-                    <h2>1. Reference image</h2>
+                    <h2>1. Reference photos</h2>
                     <label class="upload-zone" for="ref-image">
-                        <input id="ref-image" type="file" name="reference_image" accept="image/jpeg,image/png,image/webp" data-builder-upload>
-                        <span data-upload-label>Upload a cake photo or screenshot</span>
+                        <input
+                            id="ref-image"
+                            type="file"
+                            name="reference_images[]"
+                            accept="image/jpeg,image/png,image/webp"
+                            multiple
+                            data-builder-upload
+                            data-max-files="{{ $maxReferenceImages ?? 5 }}"
+                        >
+                        <span data-upload-label>Upload 1–{{ $maxReferenceImages ?? 5 }} cake photos or screenshots</span>
                     </label>
                     <p class="field-hint">
-                        Optional · {{ $referenceGuide['formats'] ?? 'JPG/PNG/WebP' }}, max {{ $referenceGuide['max'] ?? '3 MB' }}.
-                        Clear photos work best{{ isset($referenceGuide['size']) ? ' (about '.$referenceGuide['size'].')' : '' }}.
+                        Optional · up to {{ $maxReferenceImages ?? 5 }} photos · {{ $referenceGuide['formats'] ?? 'JPG/PNG/WebP' }}, max {{ $referenceGuide['max'] ?? '3 MB' }} each.
+                        Use separate photos for décor, shape, or writing style.
                     </p>
-                    <div class="upload-preview" data-upload-preview hidden>
-                        <img src="" alt="Reference preview">
-                    </div>
+                    <div class="upload-preview-grid" data-upload-preview hidden></div>
                 </section>
 
                 <section class="builder-block">

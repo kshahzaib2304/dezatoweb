@@ -36,7 +36,10 @@ final class CartExtras
                     'frosting' => 'Frosting',
                     default => null,
                 },
-                'amount' => $key === 'size' ? null : ($price > 0 ? $price : null),
+                // Flavour choices are included in the size price.
+                'amount' => in_array($key, ['base', 'filling', 'frosting', 'size', 'shape'], true)
+                    ? null
+                    : ($price > 0 ? $price : null),
             ];
         }
 

@@ -88,18 +88,22 @@ final class CakeBuilder
         )));
     }
 
+    public const MAX_REFERENCE_IMAGES = 5;
+
     /**
      * @param  array<string, mixed>  $input
+     * @param  list<string>  $imagePaths  Relative paths on the public disk (e.g. custom-cakes/…)
      * @return array{
      *     key: string,
      *     name: string,
      *     unit_price: int,
      *     summary: string,
      *     options: array<string, mixed>,
-     *     image: string|null
+     *     image: string|null,
+     *     images: list<string>
      * }
      */
-    public static function quote(array $input, ?string $imagePath = null): array
+    public static function quote(array $input, array $imagePaths = []): array
     {
         $config = self::config();
 
@@ -142,6 +146,10 @@ final class CakeBuilder
             : trim((string) ($input['message'] ?? ''));
         $notes = trim((string) ($input['notes'] ?? ''));
         $placementLabel = self::messagePlacements()[$placement];
+        $images = array_values(array_filter(array_map(
+            static fn ($path): string => trim((string) $path),
+            $imagePaths
+        )));
 
         $addonSummary = collect($addons)->map(function (array $row): string {
             $label = (string) ($row['label'] ?? 'Add-on');
@@ -185,6 +193,7 @@ final class CakeBuilder
             'message_placement_label' => $placementLabel,
             'message' => $message !== '' ? $message : null,
             'notes' => $notes !== '' ? $notes : null,
+            'reference_images' => $images,
             'pricing' => [
                 'base' => $basePrice,
                 'extras' => $extras,
@@ -198,7 +207,8 @@ final class CakeBuilder
             'unit_price' => $unitPrice,
             'summary' => implode(' · ', $summaryParts),
             'options' => $options,
-            'image' => $imagePath,
+            'image' => $images[0] ?? null,
+            'images' => $images,
         ];
     }
 

@@ -43,6 +43,11 @@ class AppServiceProvider extends ServiceProvider
             // Database may be unavailable during early install / migrate.
         }
 
+        $uploadRoot = public_path('storage');
+        if (! is_dir($uploadRoot)) {
+            @mkdir($uploadRoot, 0755, true);
+        }
+
         View::composer(['layouts.admin', 'admin.*'], function ($view): void {
             $view->with('adminNav', AdminNav::groups());
         });
