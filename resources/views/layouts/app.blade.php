@@ -54,9 +54,9 @@
         <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap" rel="stylesheet">
     </noscript>
 
-    <link rel="stylesheet" href="{{ asset('css/dezato.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/theme-home.css') }}">
-    <link rel="stylesheet" href="{{ asset('css/features.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/dezato.css') }}?v={{ filemtime(public_path('css/dezato.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/theme-home.css') }}?v={{ filemtime(public_path('css/theme-home.css')) }}">
+    <link rel="stylesheet" href="{{ asset('css/features.css') }}?v={{ filemtime(public_path('css/features.css')) }}">
     @stack('head')
 
     <script>
@@ -100,7 +100,7 @@
         @include('components.cart-drawer')
     @endunless
 
-    <script src="{{ asset('js/dezato.js') }}" defer></script>
+    <script src="{{ asset('js/dezato.js') }}?v={{ filemtime(public_path('js/dezato.js')) }}" defer></script>
     @stack('scripts')
 </body>
 </html>

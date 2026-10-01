@@ -148,40 +148,58 @@
 
     if (fulfillment) {
         const methodInput = doc.getElementById("fulfillment-method");
-        const locationInput = fulfillment.querySelector("[data-fulfillment-location]");
         const addressInput = fulfillment.querySelector("[data-fulfillment-address]");
         const areaSelect = fulfillment.querySelector("[data-fulfillment-area]");
+        const deliveryLocationInput = fulfillment.querySelector(
+            "[data-fulfillment-location-delivery]",
+        );
+        const storeRadios = [
+            ...fulfillment.querySelectorAll("[data-fulfillment-store]"),
+        ];
         const submitBtn = fulfillment.querySelector("[data-fulfillment-submit]");
         const locateBtn = fulfillment.querySelector("[data-fulfillment-locate]");
         const locateHint = fulfillment.querySelector("[data-fulfillment-locate-hint]");
         const tabs = [...fulfillment.querySelectorAll("[data-fulfillment-tab]")];
+        const panels = [...fulfillment.querySelectorAll("[data-fulfillment-panel]")];
 
-        const syncFromArea = () => {
+        const selectedStoreId = () => {
+            const checked = storeRadios.find((radio) => radio.checked);
+            return checked ? checked.value : "";
+        };
+
+        const syncSubmit = () => {
+            const method = methodInput?.value || "delivery";
+            const ready =
+                method === "pickup"
+                    ? Boolean(selectedStoreId())
+                    : Boolean(areaSelect?.value);
+
+            if (submitBtn) {
+                submitBtn.disabled = !ready;
+            }
+        };
+
+        const syncDeliveryFields = () => {
             const option = areaSelect?.selectedOptions?.[0];
             const hasArea = Boolean(option && option.value);
 
-            if (locationInput) {
-                locationInput.value = hasArea
+            if (deliveryLocationInput) {
+                deliveryLocationInput.value = hasArea
                     ? option.getAttribute("data-location-id") || ""
                     : "";
             }
 
             if (addressInput) {
-                const method = methodInput?.value || "delivery";
-                addressInput.value =
-                    method === "delivery" && hasArea
-                        ? option.getAttribute("data-label") || option.textContent.trim()
-                        : "";
-            }
-
-            if (submitBtn) {
-                submitBtn.disabled = !hasArea;
+                addressInput.value = hasArea
+                    ? option.getAttribute("data-label") || option.textContent.trim()
+                    : "";
             }
         };
 
         const setMethod = (method) => {
             const next =
                 method === "pickup" || method === "delivery" ? method : "delivery";
+            const isPickup = next === "pickup";
 
             if (methodInput) methodInput.value = next;
 
@@ -191,7 +209,33 @@
                 tab.setAttribute("aria-selected", active ? "true" : "false");
             });
 
-            syncFromArea();
+            panels.forEach((panel) => {
+                const match =
+                    panel.getAttribute("data-fulfillment-panel") === next;
+                panel.hidden = !match;
+            });
+
+            if (areaSelect) {
+                areaSelect.disabled = isPickup;
+                areaSelect.required = !isPickup;
+            }
+
+            if (deliveryLocationInput) {
+                deliveryLocationInput.disabled = isPickup;
+            }
+
+            storeRadios.forEach((radio) => {
+                radio.disabled = !isPickup;
+                radio.required = false;
+            });
+
+            if (isPickup) {
+                if (addressInput) addressInput.value = "";
+            } else {
+                syncDeliveryFields();
+            }
+
+            syncSubmit();
         };
 
         tabs.forEach((tab) => {
@@ -200,7 +244,44 @@
             });
         });
 
-        areaSelect?.addEventListener("change", syncFromArea);
+        areaSelect?.addEventListener("change", () => {
+            syncDeliveryFields();
+            syncSubmit();
+        });
+
+        storeRadios.forEach((radio) => {
+            radio.addEventListener("change", () => {
+                fulfillment
+                    .querySelectorAll(".fulfillment-store")
+                    .forEach((card) => {
+                        card.classList.toggle(
+                            "is-active",
+                            card.contains(radio) && radio.checked,
+                        );
+                    });
+                syncSubmit();
+            });
+        });
+
+        const nearestOption = (options, latitude, longitude) => {
+            let best = null;
+            let bestDistance = Number.POSITIVE_INFINITY;
+
+            options.forEach((option) => {
+                const lat = Number.parseFloat(option.dataset.lat);
+                const lng = Number.parseFloat(option.dataset.lng);
+                if (Number.isNaN(lat) || Number.isNaN(lng)) {
+                    return;
+                }
+                const distance = (latitude - lat) ** 2 + (longitude - lng) ** 2;
+                if (distance < bestDistance) {
+                    bestDistance = distance;
+                    best = option;
+                }
+            });
+
+            return best;
+        };
 
         locateBtn?.addEventListener("click", () => {
             if (!navigator.geolocation) {
@@ -229,31 +310,17 @@
                             option.dataset.lng !== undefined,
                     );
 
-                    let best = null;
-                    let bestDistance = Number.POSITIVE_INFINITY;
-
-                    options.forEach((option) => {
-                        const lat = Number.parseFloat(option.dataset.lat);
-                        const lng = Number.parseFloat(option.dataset.lng);
-                        if (Number.isNaN(lat) || Number.isNaN(lng)) {
-                            return;
-                        }
-                        const distance =
-                            (latitude - lat) ** 2 + (longitude - lng) ** 2;
-                        if (distance < bestDistance) {
-                            bestDistance = distance;
-                            best = option;
-                        }
-                    });
+                    const best = nearestOption(options, latitude, longitude);
 
                     if (best && areaSelect) {
                         areaSelect.value = best.value;
-                        syncFromArea();
+                        syncDeliveryFields();
+                        syncSubmit();
                     }
 
                     if (locateHint) {
                         locateHint.textContent = best
-                            ? "Karachi detected. Confirm your neighbourhood below."
+                            ? "Nearest area suggested. Confirm below."
                             : "Location found. Pick your neighbourhood from the list.";
                     }
                 },

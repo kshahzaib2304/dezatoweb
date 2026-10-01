@@ -8,6 +8,7 @@
         $method = Fulfillment::METHOD_DELIVERY;
     }
 
+    $stores = Catalog::locations()->values()->all();
     $locationsById = Catalog::locations()->keyBy('id');
     $areas = collect(KarachiAreas::all())->map(function (array $area) use ($locationsById): array {
         $location = $locationsById->get($area['location_id']);
@@ -16,7 +17,9 @@
 
         return $area;
     })->all();
+
     $selectedArea = old('area_id', $currentFulfillment['area_id'] ?? '');
+    $selectedStore = old('location_id', $currentFulfillment['location_id'] ?? '');
     $forceOpen = request()->boolean('fulfillment') || session('open_fulfillment');
     $autoOpen = $forceOpen || ((! ($hasFulfillment ?? false)) && (! ($welcomeSeen ?? false)));
 @endphp
@@ -46,7 +49,7 @@
 
         <div class="fulfillment-sheet" data-fulfillment>
             <div class="fulfillment-sheet__brand">
-                <img src="{{ asset($brandLogoMark ?? 'images/brand/logo-mark.svg') }}" width="72" height="72" alt="{{ $brandShortName ?? 'Dezato' }}">
+                <img src="{{ asset($brandLogoMark ?? 'images/brand/logo-mark.svg') }}" width="48" height="48" alt="{{ $brandShortName ?? 'Dezato' }}">
             </div>
 
             @if (session('status') && $forceOpen)
@@ -66,7 +69,7 @@
             <form method="post" action="{{ route('order.fulfillment.store') }}" class="fulfillment-sheet__form" data-fulfillment-form>
                 @csrf
 
-                <h2 id="fulfillment-modal-title" class="fulfillment-sheet__title">Select your order type</h2>
+                <h2 id="fulfillment-modal-title" class="fulfillment-sheet__title">How will you get your order?</h2>
 
                 <div class="fulfillment-switch" role="tablist" aria-label="Order type">
                     <button
@@ -86,56 +89,90 @@
                 </div>
 
                 <input type="hidden" name="method" id="fulfillment-method" value="{{ $method }}">
-                <input type="hidden" name="location_id" id="fulfillment-location" value="{{ old('location_id', $currentFulfillment['location_id'] ?? '') }}" data-fulfillment-location>
                 <input type="hidden" name="address" id="fulfillment-address" value="{{ old('address', $currentFulfillment['address'] ?? '') }}" data-fulfillment-address>
 
-                <p class="fulfillment-sheet__subtitle">Please select your location</p>
+                {{-- Delivery: Karachi neighbourhood --}}
+                <div
+                    class="fulfillment-panel"
+                    data-fulfillment-panel="delivery"
+                    @if ($method !== 'delivery') hidden @endif
+                >
+                    <p class="fulfillment-sheet__subtitle">Select your area in Karachi</p>
 
-                <button class="fulfillment-locate" type="button" data-fulfillment-locate>
-                    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor">
-                        <path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm0-6a1 1 0 0 1 1 1v1.06A8.004 8.004 0 0 1 20.94 11H22a1 1 0 1 1 0 2h-1.06A8.004 8.004 0 0 1 13 20.94V22a1 1 0 1 1-2 0v-1.06A8.004 8.004 0 0 1 3.06 13H2a1 1 0 1 1 0-2h1.06A8.004 8.004 0 0 1 11 3.06V2a1 1 0 0 1 1-1zm0 4a6 6 0 1 0 0 12 6 6 0 0 0 0-12z"/>
-                    </svg>
-                    <span>Use Current Location</span>
-                </button>
-                <p class="fulfillment-locate__hint" data-fulfillment-locate-hint hidden></p>
+                    <button class="fulfillment-locate" type="button" data-fulfillment-locate>
+                        <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" fill="currentColor">
+                            <path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm0-6a1 1 0 0 1 1 1v1.06A8.004 8.004 0 0 1 20.94 11H22a1 1 0 1 1 0 2h-1.06A8.004 8.004 0 0 1 13 20.94V22a1 1 0 1 1-2 0v-1.06A8.004 8.004 0 0 1 3.06 13H2a1 1 0 1 1 0-2h1.06A8.004 8.004 0 0 1 11 3.06V2a1 1 0 0 1 1-1zm0 4a6 6 0 1 0 0 12 6 6 0 0 0 0-12z"/>
+                        </svg>
+                        <span>Use current location</span>
+                    </button>
+                    <p class="fulfillment-locate__hint" data-fulfillment-locate-hint hidden></p>
 
-                <div class="fulfillment-city" role="radiogroup" aria-label="City">
-                    <label class="fulfillment-city__card is-active">
-                        <input type="radio" name="city" value="karachi" checked>
-                        <span class="fulfillment-city__icon" aria-hidden="true">
-                            <svg viewBox="0 0 48 48" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.6">
-                                <path d="M24 42c8-8 12-14 12-20a12 12 0 1 0-24 0c0 6 4 12 12 20z"/>
-                                <circle cx="24" cy="22" r="4"/>
-                            </svg>
-                        </span>
-                        <span>Karachi</span>
-                    </label>
-                </div>
+                    <div class="fulfillment-area">
+                        <label class="sr-only" for="fulfillment-area">Area</label>
+                        <select
+                            id="fulfillment-area"
+                            class="field-input fulfillment-area__select"
+                            name="area_id"
+                            data-fulfillment-area
+                            @if ($method === 'delivery') required @endif
+                        >
+                            <option value="">Select neighbourhood</option>
+                            @foreach ($areas as $area)
+                                <option
+                                    value="{{ $area['id'] }}"
+                                    data-location-id="{{ $area['location_id'] }}"
+                                    data-label="{{ $area['label'] }}"
+                                    @if ($area['lat'] !== null) data-lat="{{ $area['lat'] }}" @endif
+                                    @if ($area['lng'] !== null) data-lng="{{ $area['lng'] }}" @endif
+                                    @selected($selectedArea === $area['id'])
+                                >{{ $area['label'] }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-                <div class="fulfillment-area">
-                    <label class="sr-only" for="fulfillment-area">Area</label>
-                    <select
-                        id="fulfillment-area"
-                        class="field-input fulfillment-area__select"
-                        name="area_id"
-                        required
-                        data-fulfillment-area
+                    <input
+                        type="hidden"
+                        name="location_id"
+                        value="{{ $method === 'delivery' ? $selectedStore : '' }}"
+                        data-fulfillment-location-delivery
                     >
-                        <option value="">Please select your location</option>
-                        @foreach ($areas as $area)
-                            <option
-                                value="{{ $area['id'] }}"
-                                data-location-id="{{ $area['location_id'] }}"
-                                data-label="{{ $area['label'] }}"
-                                @if ($area['lat'] !== null) data-lat="{{ $area['lat'] }}" @endif
-                                @if ($area['lng'] !== null) data-lng="{{ $area['lng'] }}" @endif
-                                @selected($selectedArea === $area['id'])
-                            >{{ $area['label'] }}</option>
-                        @endforeach
-                    </select>
                 </div>
 
-                <button class="btn btn--primary btn--block fulfillment-submit" type="submit" data-fulfillment-submit disabled>Select</button>
+                {{-- Pickup: bakery stores only --}}
+                <div
+                    class="fulfillment-panel"
+                    data-fulfillment-panel="pickup"
+                    @if ($method !== 'pickup') hidden @endif
+                >
+                    <p class="fulfillment-sheet__subtitle">Choose a bakery</p>
+
+                    <div class="fulfillment-stores" role="radiogroup" aria-label="Pickup store">
+                        @forelse ($stores as $store)
+                            <label class="fulfillment-store {{ $selectedStore === $store['id'] && $method === 'pickup' ? 'is-active' : '' }}">
+                                <input
+                                    type="radio"
+                                    name="location_id"
+                                    value="{{ $store['id'] }}"
+                                    data-fulfillment-store
+                                    data-lat="{{ $store['lat'] ?? '' }}"
+                                    data-lng="{{ $store['lng'] ?? '' }}"
+                                    @checked($selectedStore === $store['id'] && $method === 'pickup')
+                                    @if ($method !== 'pickup') disabled @endif
+                                >
+                                <span class="fulfillment-store__body">
+                                    <strong>{{ $store['name'] }}</strong>
+                                    @if (! empty($store['address']))
+                                        <span>{{ $store['address'] }}</span>
+                                    @endif
+                                </span>
+                            </label>
+                        @empty
+                            <p class="fulfillment-locate__hint">No pickup stores are available right now.</p>
+                        @endforelse
+                    </div>
+                </div>
+
+                <button class="btn btn--primary btn--block fulfillment-submit" type="submit" data-fulfillment-submit disabled>Continue</button>
             </form>
 
             <form method="post" action="{{ route('order.fulfillment.dismiss') }}" id="fulfillment-dismiss-form" hidden>

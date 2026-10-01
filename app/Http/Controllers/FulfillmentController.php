@@ -27,7 +27,7 @@ class FulfillmentController extends Controller
 
         if ($location === null) {
             return back()
-                ->withErrors(['area_id' => 'Please choose a valid Karachi area.'])
+                ->withErrors(['location_id' => 'Please choose a valid store or area.'])
                 ->withInput()
                 ->with('open_fulfillment', true);
         }
