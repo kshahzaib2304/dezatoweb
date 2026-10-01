@@ -15,7 +15,9 @@ final class CakeBuilder
     public const SETTING_KEY = 'cake_builder';
 
     /** Bump when default bakery pricing/rules change so existing installs hydrate once. */
-    public const VERSION = 3;
+    public const VERSION = 4;
+
+    public const LEAD_TIME_GUIDELINE = 'Please order at least one day before your delivery or pickup date. Same-day custom cakes are not available.';
 
     /**
      * @return array<string, mixed>
@@ -201,10 +203,10 @@ final class CakeBuilder
     private static function normalize(array $config): array
     {
         $config['version'] = self::VERSION;
-        $config['guidelines'] = array_values(array_filter(array_map(
+        $config['guidelines'] = self::ensureLeadTimeGuideline(array_values(array_filter(array_map(
             static fn ($row): string => trim((string) $row),
             is_array($config['guidelines'] ?? null) ? $config['guidelines'] : []
-        )));
+        ))));
 
         foreach (['sizes', 'shapes', 'bases', 'fillings', 'frostings', 'colors', 'addons'] as $key) {
             if (! isset($config[$key]) || ! is_array($config[$key])) {
@@ -282,6 +284,21 @@ final class CakeBuilder
         }
 
         return $selected;
+    }
+
+    /**
+     * @param  list<string>  $guidelines
+     * @return list<string>
+     */
+    private static function ensureLeadTimeGuideline(array $guidelines): array
+    {
+        foreach ($guidelines as $line) {
+            if (preg_match('/\b(one day|1 day|a day|day prior|at least .+ day)\b/i', $line) === 1) {
+                return array_values($guidelines);
+            }
+        }
+
+        return array_values([self::LEAD_TIME_GUIDELINE, ...$guidelines]);
     }
 
     /**

@@ -109,8 +109,9 @@
                         name="event_date"
                         type="date"
                         value="{{ old('event_date') }}"
-                        min="{{ now()->toDateString() }}"
+                        min="{{ now()->addDay()->toDateString() }}"
                     >
+                    <p class="field-hint">Custom cakes need at least one day’s notice - choose tomorrow or later.</p>
                 </div>
                 <div class="form-row form-row--full">
                     <label for="custom-message">Message on cake</label>

@@ -69,8 +69,9 @@ return [
     ],
 
     'builder' => [
-        'version' => 2,
+        'version' => 4,
         'guidelines' => [
+            'Please order at least one day before your delivery or pickup date. Same-day custom cakes are not available.',
             'Fondant work starts from 4 lbs. Extensive fondant designs may need 5 or 6 lbs.',
             'Simple number or letter cakes (short text) start from 2 lbs.',
             'Heart cakes: minimum 2 lbs; 3 lbs is preferred for heavy icing.',

@@ -22,7 +22,15 @@ class StoreInquiryRequest extends FormRequest
             'name' => ['required_unless:type,newsletter', 'nullable', 'string', 'max:120'],
             'email' => ['required', 'email', 'max:160'],
             'phone' => ['nullable', 'string', 'max:40'],
-            'event_date' => ['nullable', 'date', 'after_or_equal:today'],
+            'event_date' => [
+                'nullable',
+                'date',
+                Rule::when(
+                    $this->input('type') === 'customization',
+                    ['after_or_equal:tomorrow'],
+                    ['after_or_equal:today'],
+                ),
+            ],
             'guests' => ['nullable', 'integer', 'min:1', 'max:5000'],
             'notes' => ['nullable', 'string', 'max:2000'],
             'flavour' => ['nullable', 'string', 'max:120'],
@@ -37,7 +45,9 @@ class StoreInquiryRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'event_date.after_or_equal' => 'Please choose today or a future date.',
+            'event_date.after_or_equal' => $this->input('type') === 'customization'
+                ? 'Custom cakes need at least one day’s notice. Please choose tomorrow or a later date.'
+                : 'Please choose today or a future date.',
         ];
     }
 }
