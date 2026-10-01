@@ -121,22 +121,8 @@
                     </div>
                 </section>
 
-                @if (! empty($b['diets']))
-                    <section class="builder-block">
-                        <h2>5. Dietary</h2>
-                        <div class="check-grid">
-                            @foreach ($b['diets'] as $diet)
-                                <label class="check-tile">
-                                    <input type="checkbox" name="diets[]" value="{{ $diet['id'] }}" data-price="{{ $diet['price'] }}" data-builder-price>
-                                    <span>{{ $diet['label'] }} <em>+{{ pkr($diet['price']) }}</em></span>
-                                </label>
-                            @endforeach
-                        </div>
-                    </section>
-                @endif
-
                 <section class="builder-block">
-                    <h2>6. Message &amp; colour</h2>
+                    <h2>5. Message &amp; colour</h2>
                     <div class="form-grid">
                         <div class="form-row form-row--full">
                             <label class="field-label" for="message">Text on cake</label>
@@ -177,7 +163,7 @@
                 </section>
 
                 <section class="builder-block">
-                    <h2>7. Add-ons &amp; décor</h2>
+                    <h2>6. Add-ons &amp; décor</h2>
                     <div class="addon-list">
                         @foreach ($b['addons'] as $addon)
                             @php
@@ -223,7 +209,7 @@
                 </section>
 
                 <section class="builder-block">
-                    <h2>8. Notes for baker</h2>
+                    <h2>7. Notes for baker</h2>
                     <textarea class="field-input field-textarea" name="notes" rows="4" placeholder="Allergies, theme details, delivery notes…"></textarea>
                 </section>
             </div>

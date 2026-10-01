@@ -38,8 +38,6 @@ class CakeBuilderController extends Controller
             'base' => ['required', 'string', 'max:40'],
             'filling' => ['required', 'string', 'max:40'],
             'frosting' => ['required', 'string', 'max:40'],
-            'diets' => ['nullable', 'array'],
-            'diets.*' => ['string', 'max:40'],
             'addons' => ['nullable', 'array'],
             'addons.*' => ['string', 'max:80'],
             'addon_qty' => ['nullable', 'array'],

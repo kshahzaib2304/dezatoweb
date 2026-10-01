@@ -111,12 +111,7 @@ return [
             ['id' => 'lotus-frosting', 'label' => 'Lotus frosting', 'price' => 200],
             ['id' => 'fondant', 'label' => 'Fondant finish', 'price' => 0],
         ],
-        'diets' => [
-            ['id' => 'eggless', 'label' => 'Eggless', 'price' => 200],
-            ['id' => 'vegan', 'label' => 'Vegan', 'price' => 400],
-            ['id' => 'gluten-free', 'label' => 'Gluten-free', 'price' => 350],
-            ['id' => 'sugar-free', 'label' => 'Sugar-free', 'price' => 300],
-        ],
+        'diets' => [],
         'colors' => [
             ['id' => 'ivory', 'label' => 'Ivory', 'hex' => '#f7f1e8'],
             ['id' => 'blush', 'label' => 'Blush', 'hex' => '#e8d0dc'],

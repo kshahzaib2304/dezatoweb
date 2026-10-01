@@ -94,7 +94,6 @@
             'bases' => 'Cake bases',
             'fillings' => 'Fillings',
             'frostings' => 'Frostings',
-            'diets' => 'Dietary extras',
         ] as $key => $title)
             <section class="admin-panel admin-panel--spaced">
                 <h2>{{ $title }}</h2>

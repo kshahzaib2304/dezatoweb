@@ -48,10 +48,6 @@ class CakeBuilderController extends Controller
             'frostings.*.id' => ['nullable', 'string', 'max:80'],
             'frostings.*.label' => ['required', 'string', 'max:60'],
             'frostings.*.price' => ['required', 'integer', 'min:0', 'max:100000'],
-            'diets' => ['nullable', 'array'],
-            'diets.*.id' => ['nullable', 'string', 'max:80'],
-            'diets.*.label' => ['required_with:diets', 'string', 'max:60'],
-            'diets.*.price' => ['required_with:diets', 'integer', 'min:0', 'max:100000'],
             'addons' => ['nullable', 'array'],
             'addons.*.id' => ['nullable', 'string', 'max:80'],
             'addons.*.label' => ['required_with:addons', 'string', 'max:120'],
@@ -79,7 +75,7 @@ class CakeBuilderController extends Controller
             'bases' => $this->mapPricedRows($data['bases'], 'base'),
             'fillings' => $this->mapPricedRows($data['fillings'], 'filling'),
             'frostings' => $this->mapPricedRows($data['frostings'], 'frosting'),
-            'diets' => $this->mapPricedRows($data['diets'] ?? [], 'diet'),
+            'diets' => [],
             'addons' => $this->mapAddonRows($data['addons'] ?? []),
             'colors' => collect($data['colors'] ?? [])->values()->map(function (array $row, int $index): array {
                 $label = trim((string) ($row['label'] ?? ''));

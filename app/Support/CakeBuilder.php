@@ -15,7 +15,7 @@ final class CakeBuilder
     public const SETTING_KEY = 'cake_builder';
 
     /** Bump when default bakery pricing/rules change so existing installs hydrate once. */
-    public const VERSION = 2;
+    public const VERSION = 3;
 
     /**
      * @return array<string, mixed>
@@ -96,7 +96,7 @@ final class CakeBuilder
             throw new InvalidArgumentException('Please complete size, shape, and flavour choices.');
         }
 
-        $diets = self::findOptions($config['diets'] ?? [], Arr::wrap($input['diets'] ?? []));
+        $diets = [];
         $addons = self::resolveAddons($config['addons'] ?? [], $input);
 
         $colorId = (string) ($input['color'] ?? '');
@@ -118,7 +118,6 @@ final class CakeBuilder
         $extras = (int) ($base['price'] ?? 0)
             + (int) ($filling['price'] ?? 0)
             + (int) ($frosting['price'] ?? 0)
-            + collect($diets)->sum(fn (array $row): int => (int) ($row['price'] ?? 0))
             + collect($addons)->sum(fn (array $row): int => (int) ($row['line_total'] ?? 0));
 
         $unitPrice = $basePrice + $extras;
@@ -184,7 +183,7 @@ final class CakeBuilder
     {
         $merged = $defaults;
 
-        foreach (['bases', 'fillings', 'frostings', 'diets', 'colors'] as $key) {
+        foreach (['bases', 'fillings', 'frostings', 'colors'] as $key) {
             if (! empty($stored[$key]) && is_array($stored[$key])) {
                 $merged[$key] = $stored[$key];
             }
@@ -207,11 +206,14 @@ final class CakeBuilder
             is_array($config['guidelines'] ?? null) ? $config['guidelines'] : []
         )));
 
-        foreach (['sizes', 'shapes', 'bases', 'fillings', 'frostings', 'diets', 'colors', 'addons'] as $key) {
+        foreach (['sizes', 'shapes', 'bases', 'fillings', 'frostings', 'colors', 'addons'] as $key) {
             if (! isset($config[$key]) || ! is_array($config[$key])) {
                 $config[$key] = [];
             }
         }
+
+        // Dietary extras are not offered - keep key empty for a stable config shape.
+        $config['diets'] = [];
 
         $config['addons'] = array_values(array_map(static function (array $row): array {
             $billing = ($row['billing'] ?? 'flat') === 'per_unit' ? 'per_unit' : 'flat';
