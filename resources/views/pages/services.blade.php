@@ -74,7 +74,13 @@
                 </div>
                 <div class="form-row">
                     <label for="inquiry-date">Event date</label>
-                    <input id="inquiry-date" name="event_date" type="date" value="{{ old('event_date') }}">
+                    <input
+                        id="inquiry-date"
+                        name="event_date"
+                        type="date"
+                        value="{{ old('event_date') }}"
+                        min="{{ now()->toDateString() }}"
+                    >
                 </div>
                 <div class="form-row">
                     <label for="inquiry-guests">Guest count</label>

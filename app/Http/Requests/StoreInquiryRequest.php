@@ -22,12 +22,22 @@ class StoreInquiryRequest extends FormRequest
             'name' => ['required_unless:type,newsletter', 'nullable', 'string', 'max:120'],
             'email' => ['required', 'email', 'max:160'],
             'phone' => ['nullable', 'string', 'max:40'],
-            'event_date' => ['nullable', 'date'],
+            'event_date' => ['nullable', 'date', 'after_or_equal:today'],
             'guests' => ['nullable', 'integer', 'min:1', 'max:5000'],
             'notes' => ['nullable', 'string', 'max:2000'],
             'flavour' => ['nullable', 'string', 'max:120'],
             'size' => ['nullable', 'string', 'max:80'],
             'message_on_cake' => ['nullable', 'string', 'max:120'],
+        ];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'event_date.after_or_equal' => 'Please choose today or a future date.',
         ];
     }
 }

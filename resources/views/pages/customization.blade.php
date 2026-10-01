@@ -104,7 +104,13 @@
                 </div>
                 <div class="form-row">
                     <label for="custom-date">Needed by</label>
-                    <input id="custom-date" name="event_date" type="date" value="{{ old('event_date') }}">
+                    <input
+                        id="custom-date"
+                        name="event_date"
+                        type="date"
+                        value="{{ old('event_date') }}"
+                        min="{{ now()->toDateString() }}"
+                    >
                 </div>
                 <div class="form-row form-row--full">
                     <label for="custom-message">Message on cake</label>
