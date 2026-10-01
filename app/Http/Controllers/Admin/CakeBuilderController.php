@@ -39,15 +39,12 @@ class CakeBuilderController extends Controller
             'bases' => ['required', 'array', 'min:1'],
             'bases.*.id' => ['nullable', 'string', 'max:80'],
             'bases.*.label' => ['required', 'string', 'max:60'],
-            'bases.*.price' => ['required', 'integer', 'min:0', 'max:100000'],
             'fillings' => ['required', 'array', 'min:1'],
             'fillings.*.id' => ['nullable', 'string', 'max:80'],
             'fillings.*.label' => ['required', 'string', 'max:60'],
-            'fillings.*.price' => ['required', 'integer', 'min:0', 'max:100000'],
             'frostings' => ['required', 'array', 'min:1'],
             'frostings.*.id' => ['nullable', 'string', 'max:80'],
             'frostings.*.label' => ['required', 'string', 'max:60'],
-            'frostings.*.price' => ['required', 'integer', 'min:0', 'max:100000'],
             'addons' => ['nullable', 'array'],
             'addons.*.id' => ['nullable', 'string', 'max:80'],
             'addons.*.label' => ['required_with:addons', 'string', 'max:120'],
@@ -72,9 +69,9 @@ class CakeBuilderController extends Controller
                 ->all(),
             'sizes' => $this->mapPricedRows($data['sizes'], 'size', withServes: true),
             'shapes' => $this->mapLabelRows($data['shapes'], 'shape'),
-            'bases' => $this->mapPricedRows($data['bases'], 'base'),
-            'fillings' => $this->mapPricedRows($data['fillings'], 'filling'),
-            'frostings' => $this->mapPricedRows($data['frostings'], 'frosting'),
+            'bases' => $this->mapFlavourRows($data['bases'], 'base'),
+            'fillings' => $this->mapFlavourRows($data['fillings'], 'filling'),
+            'frostings' => $this->mapFlavourRows($data['frostings'], 'frosting'),
             'diets' => [],
             'addons' => $this->mapAddonRows($data['addons'] ?? []),
             'colors' => collect($data['colors'] ?? [])->values()->map(function (array $row, int $index): array {
@@ -210,6 +207,34 @@ class CakeBuilderController extends Controller
         CakeBuilder::saveConfig(CakeBuilder::defaults());
 
         return back()->with('status', 'Restored bakery default sizes, add-ons, and guidelines. You can still edit anything.');
+    }
+
+    /**
+     * Flavour options are labels only - no surcharge, coffee excluded.
+     *
+     * @param  list<array<string, mixed>>  $rows
+     * @return list<array{id: string, label: string, price: int}>
+     */
+    private function mapFlavourRows(array $rows, string $prefix): array
+    {
+        return collect($rows)->values()
+            ->map(function (array $row, int $index) use ($prefix): ?array {
+                $label = trim((string) ($row['label'] ?? ''));
+                $id = (string) ($row['id'] ?? '') ?: (Str::slug($label) ?: $prefix.'-'.($index + 1));
+
+                if ($label === '' || Str::lower($id) === 'coffee' || Str::lower($label) === 'coffee') {
+                    return null;
+                }
+
+                return [
+                    'id' => $id,
+                    'label' => $label,
+                    'price' => 0,
+                ];
+            })
+            ->filter()
+            ->values()
+            ->all();
     }
 
     /**

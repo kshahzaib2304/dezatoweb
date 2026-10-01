@@ -96,25 +96,25 @@
                     <div class="form-grid">
                         <div class="form-row">
                             <label class="field-label" for="base">Base</label>
-                            <select id="base" class="field-input" name="base" data-builder-price>
+                            <select id="base" class="field-input" name="base">
                                 @foreach ($b['bases'] as $item)
-                                    <option value="{{ $item['id'] }}" data-price="{{ $item['price'] }}">{{ $item['label'] }}@if($item['price'] > 0) (+{{ pkr($item['price']) }})@endif</option>
+                                    <option value="{{ $item['id'] }}">{{ $item['label'] }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="form-row">
                             <label class="field-label" for="filling">Filling</label>
-                            <select id="filling" class="field-input" name="filling" data-builder-price>
+                            <select id="filling" class="field-input" name="filling">
                                 @foreach ($b['fillings'] as $item)
-                                    <option value="{{ $item['id'] }}" data-price="{{ $item['price'] }}">{{ $item['label'] }}@if($item['price'] > 0) (+{{ pkr($item['price']) }})@endif</option>
+                                    <option value="{{ $item['id'] }}">{{ $item['label'] }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="form-row form-row--full">
                             <label class="field-label" for="frosting">Frosting</label>
-                            <select id="frosting" class="field-input" name="frosting" data-builder-price>
+                            <select id="frosting" class="field-input" name="frosting">
                                 @foreach ($b['frostings'] as $item)
-                                    <option value="{{ $item['id'] }}" data-price="{{ $item['price'] }}">{{ $item['label'] }}@if($item['price'] > 0) (+{{ pkr($item['price']) }})@endif</option>
+                                    <option value="{{ $item['id'] }}">{{ $item['label'] }}</option>
                                 @endforeach
                             </select>
                         </div>

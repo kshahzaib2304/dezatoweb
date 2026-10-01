@@ -69,7 +69,7 @@ return [
     ],
 
     'builder' => [
-        'version' => 4,
+        'version' => 5,
         'guidelines' => [
             'Please order at least one day before your delivery or pickup date. Same-day custom cakes are not available.',
             'Fondant work starts from 4 lbs. Extensive fondant designs may need 5 or 6 lbs.',
@@ -94,22 +94,21 @@ return [
         ],
         'bases' => [
             ['id' => 'vanilla', 'label' => 'Vanilla', 'price' => 0],
-            ['id' => 'chocolate', 'label' => 'Chocolate', 'price' => 100],
-            ['id' => 'red-velvet', 'label' => 'Red Velvet', 'price' => 200],
-            ['id' => 'coffee', 'label' => 'Coffee', 'price' => 150],
+            ['id' => 'chocolate', 'label' => 'Chocolate', 'price' => 0],
+            ['id' => 'red-velvet', 'label' => 'Red Velvet', 'price' => 0],
         ],
         'fillings' => [
             ['id' => 'buttercream', 'label' => 'Buttercream', 'price' => 0],
-            ['id' => 'chocolate-ganache', 'label' => 'Chocolate ganache', 'price' => 150],
-            ['id' => 'lotus', 'label' => 'Lotus cream', 'price' => 250],
-            ['id' => 'nutella', 'label' => 'Nutella', 'price' => 250],
-            ['id' => 'three-milk', 'label' => 'Three milk soak', 'price' => 200],
+            ['id' => 'chocolate-ganache', 'label' => 'Chocolate ganache', 'price' => 0],
+            ['id' => 'lotus', 'label' => 'Lotus cream', 'price' => 0],
+            ['id' => 'nutella', 'label' => 'Nutella', 'price' => 0],
+            ['id' => 'three-milk', 'label' => 'Three milk soak', 'price' => 0],
         ],
         'frostings' => [
             ['id' => 'vanilla-frosting', 'label' => 'Vanilla frosting', 'price' => 0],
-            ['id' => 'chocolate-frosting', 'label' => 'Chocolate frosting', 'price' => 50],
-            ['id' => 'cream-cheese', 'label' => 'Cream cheese', 'price' => 150],
-            ['id' => 'lotus-frosting', 'label' => 'Lotus frosting', 'price' => 200],
+            ['id' => 'chocolate-frosting', 'label' => 'Chocolate frosting', 'price' => 0],
+            ['id' => 'cream-cheese', 'label' => 'Cream cheese', 'price' => 0],
+            ['id' => 'lotus-frosting', 'label' => 'Lotus frosting', 'price' => 0],
             ['id' => 'fondant', 'label' => 'Fondant finish', 'price' => 0],
         ],
         'diets' => [],

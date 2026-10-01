@@ -15,7 +15,7 @@ final class CakeBuilder
     public const SETTING_KEY = 'cake_builder';
 
     /** Bump when default bakery pricing/rules change so existing installs hydrate once. */
-    public const VERSION = 4;
+    public const VERSION = 5;
 
     public const LEAD_TIME_GUIDELINE = 'Please order at least one day before your delivery or pickup date. Same-day custom cakes are not available.';
 
@@ -117,10 +117,8 @@ final class CakeBuilder
         }
 
         $basePrice = (int) ($size['price'] ?? 0);
-        $extras = (int) ($base['price'] ?? 0)
-            + (int) ($filling['price'] ?? 0)
-            + (int) ($frosting['price'] ?? 0)
-            + collect($addons)->sum(fn (array $row): int => (int) ($row['line_total'] ?? 0));
+        // Base / filling / frosting are included in the size price - no flavour surcharges.
+        $extras = collect($addons)->sum(fn (array $row): int => (int) ($row['line_total'] ?? 0));
 
         $unitPrice = $basePrice + $extras;
         $message = trim((string) ($input['message'] ?? ''));
@@ -217,6 +215,10 @@ final class CakeBuilder
         // Dietary extras are not offered - keep key empty for a stable config shape.
         $config['diets'] = [];
 
+        foreach (['bases', 'fillings', 'frostings'] as $key) {
+            $config[$key] = self::normalizeFlavourOptions($config[$key]);
+        }
+
         $config['addons'] = array_values(array_map(static function (array $row): array {
             $billing = ($row['billing'] ?? 'flat') === 'per_unit' ? 'per_unit' : 'flat';
 
@@ -284,6 +286,42 @@ final class CakeBuilder
         }
 
         return $selected;
+    }
+
+    /**
+     * Flavour choices (base / filling / frosting) have no surcharge and coffee is not offered.
+     *
+     * @param  list<mixed>  $rows
+     * @return list<array<string, mixed>>
+     */
+    private static function normalizeFlavourOptions(array $rows): array
+    {
+        $out = [];
+
+        foreach ($rows as $row) {
+            if (! is_array($row)) {
+                continue;
+            }
+
+            $id = Str::lower(trim((string) ($row['id'] ?? '')));
+            $label = trim((string) ($row['label'] ?? ''));
+
+            if ($id === 'coffee' || Str::lower($label) === 'coffee') {
+                continue;
+            }
+
+            if ($label === '') {
+                continue;
+            }
+
+            $out[] = [
+                'id' => $id !== '' ? $id : Str::slug($label),
+                'label' => $label,
+                'price' => 0,
+            ];
+        }
+
+        return array_values($out);
     }
 
     /**

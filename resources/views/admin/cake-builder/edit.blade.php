@@ -6,6 +6,7 @@
         <ol class="admin-steps">
             <li>Edit <strong>Bakery rules</strong> (fondant, heart cakes, etc.) - shown to customers.</li>
             <li>Set <strong>size prices</strong> (starting price) and <strong>add-ons</strong> (extra charges).</li>
+            <li>Base, filling, and frosting choices are included - no flavour surcharges. Coffee is not offered.</li>
             <li>For flowers / stems / macarons, choose billing type <strong>Per item</strong> so customers pick a quantity.</li>
             <li>Use numbers only for prices (e.g. <code>1800</code> = ₨ 1,800).</li>
         </ol>
@@ -97,17 +98,13 @@
         ] as $key => $title)
             <section class="admin-panel admin-panel--spaced">
                 <h2>{{ $title }}</h2>
-                <p class="admin-lead">Extra charge on top of the size price. Use <strong>0</strong> if included free.</p>
+                <p class="admin-lead">Included in the size price - no extra charge for flavour choices. Coffee is not offered.</p>
                 @foreach (($builder[$key] ?? []) as $i => $row)
                     <div class="admin-price-row">
                         <input type="hidden" name="{{ $key }}[{{ $i }}][id]" value="{{ $row['id'] }}">
-                        <div class="form-row">
+                        <div class="form-row form-row--full">
                             <label class="field-label" for="{{ $key }}-{{ $i }}-label">Name</label>
                             <input id="{{ $key }}-{{ $i }}-label" class="field-input" type="text" name="{{ $key }}[{{ $i }}][label]" value="{{ old("$key.$i.label", $row['label']) }}" required>
-                        </div>
-                        <div class="form-row">
-                            <label class="field-label" for="{{ $key }}-{{ $i }}-price">Extra (PKR)</label>
-                            <input id="{{ $key }}-{{ $i }}-price" class="field-input" type="number" name="{{ $key }}[{{ $i }}][price]" value="{{ old("$key.$i.price", $row['price'] ?? 0) }}" min="0" required>
                         </div>
                     </div>
                 @endforeach
