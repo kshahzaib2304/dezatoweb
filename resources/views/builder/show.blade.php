@@ -125,8 +125,39 @@
                     <h2>5. Message &amp; colour</h2>
                     <div class="form-grid">
                         <div class="form-row form-row--full">
-                            <label class="field-label" for="message">Text on cake</label>
-                            <input id="message" class="field-input" type="text" name="message" maxlength="60" placeholder="Happy Birthday Ayaan">
+                            <p class="field-label" id="message-placement-label">Where should the text go?</p>
+                            <div
+                                class="option-grid option-grid--compact"
+                                role="radiogroup"
+                                aria-labelledby="message-placement-label"
+                                data-message-placement
+                            >
+                                @foreach ($messagePlacements as $placementId => $placementLabel)
+                                    <label class="option-tile">
+                                        <input
+                                            type="radio"
+                                            name="message_placement"
+                                            value="{{ $placementId }}"
+                                            @checked($placementId === 'cake')
+                                            data-message-placement-option
+                                        >
+                                        <span><strong>{{ $placementLabel }}</strong></span>
+                                    </label>
+                                @endforeach
+                            </div>
+                        </div>
+                        <div class="form-row form-row--full" data-message-field>
+                            <label class="field-label" for="message">Your message</label>
+                            <input
+                                id="message"
+                                class="field-input"
+                                type="text"
+                                name="message"
+                                maxlength="60"
+                                placeholder="Happy Birthday Ayaan"
+                                data-message-input
+                            >
+                            <p class="field-hint">Same wording is used for cake, plate, or both.</p>
                         </div>
                         <div class="form-row form-row--full">
                             <p class="field-label" id="icing-colour-label">Icing colour</p>
@@ -231,5 +262,5 @@
 @endsection
 
 @push('scripts')
-<script src="{{ asset('js/features.js') }}" defer></script>
+<script src="{{ asset('js/features.js') }}?v={{ filemtime(public_path('js/features.js')) }}" defer></script>
 @endpush

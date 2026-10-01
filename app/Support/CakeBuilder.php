@@ -20,6 +20,21 @@ final class CakeBuilder
     public const LEAD_TIME_GUIDELINE = 'Please order at least one day before your delivery or pickup date. Same-day custom cakes are not available.';
 
     /**
+     * Where the customer wants written text.
+     *
+     * @return array<string, string>
+     */
+    public static function messagePlacements(): array
+    {
+        return [
+            'cake' => 'Text on the cake',
+            'plate' => 'Text on the plate',
+            'both' => 'Both cake & plate',
+            'none' => 'No text',
+        ];
+    }
+
+    /**
      * @return array<string, mixed>
      */
     public static function config(): array
@@ -121,8 +136,12 @@ final class CakeBuilder
         $extras = collect($addons)->sum(fn (array $row): int => (int) ($row['line_total'] ?? 0));
 
         $unitPrice = $basePrice + $extras;
-        $message = trim((string) ($input['message'] ?? ''));
+        $placement = self::resolveMessagePlacement((string) ($input['message_placement'] ?? 'cake'));
+        $message = $placement === 'none'
+            ? ''
+            : trim((string) ($input['message'] ?? ''));
         $notes = trim((string) ($input['notes'] ?? ''));
+        $placementLabel = self::messagePlacements()[$placement];
 
         $addonSummary = collect($addons)->map(function (array $row): string {
             $label = (string) ($row['label'] ?? 'Add-on');
@@ -131,6 +150,13 @@ final class CakeBuilder
             return $qty > 1 ? $label.' × '.$qty : $label;
         })->all();
 
+        $messageSummary = null;
+        if ($placement === 'none') {
+            $messageSummary = 'No text';
+        } elseif ($message !== '') {
+            $messageSummary = '“'.$message.'” · '.$placementLabel;
+        }
+
         $summaryParts = array_filter([
             $size['label'] ?? null,
             $shape['label'] ?? null,
@@ -138,7 +164,7 @@ final class CakeBuilder
             $filling['label'] ?? null,
             $frosting['label'] ?? null,
             $colorLabel.' icing',
-            $message !== '' ? '“'.$message.'”' : null,
+            $messageSummary,
             ...$addonSummary,
         ]);
 
@@ -155,6 +181,8 @@ final class CakeBuilder
                 'label' => $colorLabel,
                 'hex' => $colorHex,
             ],
+            'message_placement' => $placement,
+            'message_placement_label' => $placementLabel,
             'message' => $message !== '' ? $message : null,
             'notes' => $notes !== '' ? $notes : null,
             'pricing' => [
@@ -322,6 +350,13 @@ final class CakeBuilder
         }
 
         return array_values($out);
+    }
+
+    private static function resolveMessagePlacement(string $value): string
+    {
+        $value = Str::lower(trim($value));
+
+        return array_key_exists($value, self::messagePlacements()) ? $value : 'cake';
     }
 
     /**

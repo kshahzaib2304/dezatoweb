@@ -57,7 +57,12 @@ class OrderItem extends Model
         }
 
         if (! empty($this->options['message'])) {
-            $parts[] = '“'.$this->options['message'].'”';
+            $placement = $this->options['message_placement_label'] ?? null;
+            $parts[] = $placement
+                ? '“'.$this->options['message'].'” ('.$placement.')'
+                : '“'.$this->options['message'].'”';
+        } elseif (($this->options['message_placement'] ?? null) === 'none') {
+            $parts[] = 'No text';
         }
 
         foreach ($this->options['diets'] ?? [] as $diet) {

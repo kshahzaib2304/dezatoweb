@@ -69,6 +69,35 @@
       if (label) label.textContent = file.name;
     });
 
+    /* Message placement: hide text field when "No text" is selected */
+    const messageField = builder.querySelector('[data-message-field]');
+    const messageInput = builder.querySelector('[data-message-input]');
+    const syncMessagePlacement = () => {
+      const selected = builder.querySelector(
+        'input[name="message_placement"]:checked',
+      );
+      const none = selected?.value === 'none';
+
+      if (messageField) {
+        messageField.hidden = none;
+      }
+
+      if (messageInput) {
+        messageInput.disabled = none;
+        messageInput.required = !none;
+        if (none) {
+          messageInput.value = '';
+        }
+      }
+    };
+
+    builder
+      .querySelectorAll('[data-message-placement-option]')
+      .forEach((input) => {
+        input.addEventListener('change', syncMessagePlacement);
+      });
+    syncMessagePlacement();
+
     /* Icing colour: presets + native color picker */
     const colorRoot = builder.querySelector('[data-icing-colors]');
     const colorHexField = builder.querySelector('[data-color-hex-field]');

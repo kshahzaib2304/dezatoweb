@@ -10,6 +10,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use InvalidArgumentException;
 
@@ -25,6 +26,7 @@ class CakeBuilderController extends Controller
             'canonical' => route('builder.show'),
             'builder' => CakeBuilder::config(),
             'guidelines' => CakeBuilder::guidelines(),
+            'messagePlacements' => CakeBuilder::messagePlacements(),
             'referenceGuide' => config('dezato_admin.media.reference'),
         ]);
     }
@@ -45,12 +47,20 @@ class CakeBuilderController extends Controller
             'color' => ['required', 'string', 'max:40'],
             'color_hex' => ['nullable', 'string', 'max:7'],
             'color_custom' => ['nullable', 'string', 'max:7'],
-            'message' => ['nullable', 'string', 'max:60'],
+            'message_placement' => ['required', 'string', Rule::in(array_keys(CakeBuilder::messagePlacements()))],
+            'message' => [
+                Rule::requiredIf(fn (): bool => $request->string('message_placement')->toString() !== 'none'),
+                'nullable',
+                'string',
+                'max:60',
+            ],
             'notes' => ['nullable', 'string', 'max:1000'],
             'reference_image' => ['nullable', 'image', 'max:3072'],
         ], [
             'reference_image.max' => 'Please use a reference photo smaller than 3 MB.',
             'reference_image.image' => 'Please upload a JPG, PNG, or WebP photo.',
+            'message.required' => 'Enter the text you want written, or choose “No text”.',
+            'message_placement.required' => 'Choose where the text should go.',
         ]);
 
         $imagePath = null;

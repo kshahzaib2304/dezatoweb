@@ -81,6 +81,12 @@ final class CartExtras
         if (! empty($options['message'])) {
             $rows[] = [
                 'label' => '“'.(string) $options['message'].'”',
+                'meta' => (string) ($options['message_placement_label'] ?? 'Message'),
+                'amount' => null,
+            ];
+        } elseif (($options['message_placement'] ?? null) === 'none') {
+            $rows[] = [
+                'label' => 'No text',
                 'meta' => 'Message',
                 'amount' => null,
             ];
